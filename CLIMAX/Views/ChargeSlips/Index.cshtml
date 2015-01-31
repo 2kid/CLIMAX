@@ -1,0 +1,69 @@
+﻿@model IEnumerable<CLIMAX.Models.ChargeSlip>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DateTimePurchased)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ModeOfPayment)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AmtOfPayment)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ApprovalNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GiftCertificateAmt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GiftCertificateNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CheckNo)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateTimePurchased)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ModeOfPayment)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AmtOfPayment)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ApprovalNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GiftCertificateAmt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GiftCertificateNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CheckNo)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ChargeSlipID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ChargeSlipID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ChargeSlipID })
+        </td>
+    </tr>
+}
+
+</table>

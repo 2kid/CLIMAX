@@ -1,0 +1,72 @@
+﻿@model CLIMAX.Models.Reservation
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Reservation</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.employee.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employee.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.patient.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.patient.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.reservationType.reservationType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.reservationType.reservationType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TreatmentID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TreatmentID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateTimeReserved)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateTimeReserved)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,42 @@
+﻿@model CLIMAX.Models.Reports
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Reports</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.employee.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employee.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.reportType.reportType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.reportType.reportType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateTimeGenerated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateTimeGenerated)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ReportsID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
