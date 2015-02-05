@@ -21,11 +21,14 @@ namespace CLIMAX
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
+                      "~/Scripts/respond.js",
+                      "~/Scripts/npm.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/bootstrap-3.3.2-dist/*.css",
+                       "~/Content/bootstrap-3.3.2-dist/*.map",
+                      "~/Content/site.css",
+                      "~/Content/MZ_main.css"));
         }
     }
 }
