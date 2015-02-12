@@ -10,118 +10,107 @@ using CLIMAX.Models;
 
 namespace CLIMAX.Controllers
 {
-    public class InventoriesController : Controller
+    public class RoleTypesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Inventories
+        // GET: RoleTypes
         public ActionResult Index()
         {
-            return View(db.Inventories.ToList());
+            return View(db.RoleType.ToList());
         }
 
-        // GET: Inventories/Details/5
+        // GET: RoleTypes/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventory inventory = db.Inventories.Find(id);
-            if (inventory == null)
+            RoleType roleType = db.RoleType.Find(id);
+            if (roleType == null)
             {
                 return HttpNotFound();
             }
-            return View(inventory);
+            return View(roleType);
         }
 
-        // GET: Inventories/Create
+        // GET: RoleTypes/Create
         public ActionResult Create()
         {
-            ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");
             return View();
         }
 
-        // POST: Inventories/Create
+        // POST: RoleTypes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "InventoryID,MaterialID,QtyInStock,BranchID")] Inventory inventory,FormCollection form)
+        public ActionResult Create([Bind(Include = "RoleTypeId,roleType")] RoleType roleType)
         {
             if (ModelState.IsValid)
             {
-                //string branchid = form["Branch"];
-                //int id;
-                //if(int.TryParse(branchid,out id))
-                //inventory.BranchID = id;
-                //else
-                //{
-                //    ModelState.AddModelError("", "Choose a branch");
-                //        return(inventory);
-                //}
-                inventory.LastDateUpdated = DateTime.Now;
-                db.Inventories.Add(inventory);
+                db.RoleType.Add(roleType);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(inventory);
+            return View(roleType);
         }
 
-        // GET: Inventories/Edit/5
+        // GET: RoleTypes/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventory inventory = db.Inventories.Find(id);
-            if (inventory == null)
+            RoleType roleType = db.RoleType.Find(id);
+            if (roleType == null)
             {
                 return HttpNotFound();
             }
-            return View(inventory);
+            return View(roleType);
         }
 
-        // POST: Inventories/Edit/5
+        // POST: RoleTypes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "InventoryID,MaterialID,QtyInStock,LastDateUpdated")] Inventory inventory)
+        public ActionResult Edit([Bind(Include = "RoleTypeId,roleType")] RoleType roleType)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(inventory).State = EntityState.Modified;
+                db.Entry(roleType).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(inventory);
+            return View(roleType);
         }
 
-        // GET: Inventories/Delete/5
+        // GET: RoleTypes/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventory inventory = db.Inventories.Find(id);
-            if (inventory == null)
+            RoleType roleType = db.RoleType.Find(id);
+            if (roleType == null)
             {
                 return HttpNotFound();
             }
-            return View(inventory);
+            return View(roleType);
         }
 
-        // POST: Inventories/Delete/5
+        // POST: RoleTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Inventory inventory = db.Inventories.Find(id);
-            db.Inventories.Remove(inventory);
+            RoleType roleType = db.RoleType.Find(id);
+            db.RoleType.Remove(roleType);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

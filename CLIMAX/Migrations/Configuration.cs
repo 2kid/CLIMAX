@@ -37,7 +37,7 @@ namespace CLIMAX.Migrations
             string password = "12345678";
             var newUser = new ApplicationUser()
             {
-                UserName = "sa",
+                UserName = "admin@yahoo.com",
                 Email = "admin@yahoo.com"
             };
 
