@@ -62,10 +62,18 @@
             @Html.DisplayNameFor(model => model.Gender)
         </dt>
 
+        @if(Model.Gender)
+        { 
         <dd>
-            @Html.DisplayFor(model => model.Gender)
+           Male
         </dd>
-
+        }
+        else
+        {
+            <dd>
+                Female
+            </dd>
+        }
         <dt>
             @Html.DisplayNameFor(model => model.CivilStatus)
         </dt>
@@ -91,22 +99,6 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.HomeAddress)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.HomeAddress)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EmailAddress)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EmailAddress)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.HomeNo)
         </dt>
 
@@ -115,11 +107,43 @@
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.Street)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Street)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LandlineNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LandlineNo)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.CellphoneNo)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.CellphoneNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailAddress)
         </dd>
 
         <dt>
@@ -139,11 +163,27 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.EmergencyContactName)
+            @Html.DisplayNameFor(model => model.EmergencyContactFName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.EmergencyContactName)
+            @Html.DisplayFor(model => model.EmergencyContactFName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmergencyContactMName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmergencyContactMName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmergencyContactLName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmergencyContactLName)
         </dd>
 
     </dl>

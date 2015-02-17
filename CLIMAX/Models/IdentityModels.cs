@@ -47,7 +47,6 @@ namespace CLIMAX.Models
        public DbSet<Reports> Reports { get; set; }
        public DbSet<ReportType> ReportTypes { get; set; }
        public DbSet<Reservation> Reservations { get; set; }
-       public DbSet<ReservationType> ReservationTypes { get; set; }
        public DbSet<RoleType> RoleType { get; set; }
        public DbSet<Session_ChargeSlip> Session_ChargeSlip { get; set; }
        public DbSet<Treatments> Treatments { get; set; }

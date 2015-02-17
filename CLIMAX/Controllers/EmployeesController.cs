@@ -17,14 +17,14 @@ namespace CLIMAX.Controllers
         // GET: Employees
         public ActionResult Index(FormCollection form)
         {
-            var employees = db.Employees.AsQueryable();
+            var employees = db.Employees.Include(a => a.roleType).ToList();
 
             string search = form["searchValue"];
-            if (string.IsNullOrEmpty(search))
+            if (!string.IsNullOrEmpty(search))
             {
-                employees = employees.Where(r => r.FullName.ToLower().Contains(search.ToLower()));
+                employees = employees.Where(r => r.FullName.ToLower().Contains(search.ToLower())).ToList();
             }
-            return View(employees.ToList());
+            return View(employees);
         }
 
         // GET: Employees/Details/5
@@ -45,6 +45,7 @@ namespace CLIMAX.Controllers
         // GET: Employees/Create
         public ActionResult Create()
         {
+            ViewBag.Roles = new SelectList(db.RoleType, "RoleTypeID", "Type");
             return View();
         }
 
@@ -53,7 +54,7 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "EmployeeID,LastName,FirstName,MiddleName,RoldTypeID")] Employee employee)
+        public ActionResult Create([Bind(Include = "EmployeeID,LastName,FirstName,MiddleName,RoleTypeID")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -61,7 +62,7 @@ namespace CLIMAX.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
+            ViewBag.Roles = new SelectList(db.RoleType, "RoleTypeID", "Type");
             return View(employee);
         }
 
@@ -77,6 +78,7 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.Roles = new SelectList(db.RoleType, "RoleTypeID", "Type");
             return View(employee);
         }
 
@@ -85,7 +87,7 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "EmployeeID,LastName,FirstName,MiddleName,RoldTypeID")] Employee employee)
+        public ActionResult Edit([Bind(Include = "EmployeeID,LastName,FirstName,MiddleName,RoleTypeID")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -93,6 +95,7 @@ namespace CLIMAX.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.Roles = new SelectList(db.RoleType, "RoleTypeID", "Type");
             return View(employee);
         }
 

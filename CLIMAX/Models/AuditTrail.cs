@@ -10,10 +10,11 @@ namespace CLIMAX.Models
         public int AuditTrailID { get; set; }
         public int EmployeeID { get; set; }
         public virtual Employee employee { get; set; }
+        public string ActionDetail { get; set; }
         public int RecordID { get; set; }
         public int ActionTypeID { get; set; }
         public virtual ActionTypes actionType { get; set; }
-    
+        public DateTime DateTimeOfAction { get; set; }
     
     }
 }

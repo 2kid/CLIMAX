@@ -15,27 +15,10 @@ namespace CLIMAX.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Reservations
-        public ActionResult Index(FormCollection form)
+        public ActionResult Index()
         {
-            var reservations = db.Reservations.Include(r => r.employee).Include(r => r.patient).Include(r => r.reservationType);
-
-            string name = form["nameValue"];
-            if(!string.IsNullOrEmpty(name))
-            {
-                reservations = reservations.Where(r => r.patient.FullName.ToLower().Contains(name));
-            }
-
-            string date = form["dateReserved"];
-            //if (!string.IsNullOrEmpty(date))
-            //{
-                DateTime dateReserved;
-                if (DateTime.TryParse(date, out dateReserved))
-                {
-                    reservations = reservations.Where(r => r.DateTimeReserved == dateReserved);
-                }
-            //}
-
-            return View(reservations.ToList());
+            var reservations = db.Reservations.Include(r => r.employee).Include(r => r.patient).Include(r => r.treatment).ToList();
+            return View(reservations);
         }
 
         // GET: Reservations/Details/5
@@ -56,9 +39,16 @@ namespace CLIMAX.Controllers
         // GET: Reservations/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName");
-            ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName");
-            ViewBag.ReservationTypeID = new SelectList(db.ReservationTypes, "ReservationTypeID", "reservationType");
+            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName");
+            ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FullName");
+            ViewBag.ReservationType = new SelectList(new List<SelectListItem>()
+                        {
+                            new SelectListItem(){
+                                Text = "Treatment", Value = "false"},
+                          new SelectListItem(){
+                                Text = "Surgical", Value = "true"}   
+                        }, "Value", "Text");
+            ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
             return View();
         }
 
@@ -67,18 +57,42 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ReservationID,TreatmentID,ReservationTypeID,DateTimeReserved,Notes,PatientID,EmployeeID")] Reservation reservation)
+        public ActionResult Create([Bind(Include = "ReservationID,TreatmentID,ReservationType,DateTimeReserved,Notes,PatientID,EmployeeID")] Reservation reservation)
         {
             if (ModelState.IsValid)
             {
+                if (reservation.ReservationType && reservation.EmployeeID == null)
+                {
+                    ModelState.AddModelError("", "Please specify who will perform the surgery.");
+                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName", reservation.EmployeeID);
+                    ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FullName", reservation.PatientID);
+
+                    ViewBag.ReservationType = new SelectList(new List<SelectListItem>()
+                        {
+                            new SelectListItem(){
+                                Text = "Treatment", Value = "false"},
+                          new SelectListItem(){
+                                Text = "Surgical", Value = "true"}   
+                        }, "Value", "Text");
+                    ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
+                    return View(reservation);
+                }
                 db.Reservations.Add(reservation);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", reservation.EmployeeID);
-            ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName", reservation.PatientID);
-            ViewBag.ReservationTypeID = new SelectList(db.ReservationTypes, "ReservationTypeID", "reservationType", reservation.ReservationTypeID);
+            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName", reservation.EmployeeID);
+            ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FullName", reservation.PatientID);
+
+            ViewBag.ReservationType = new SelectList(new List<SelectListItem>()
+                        {
+                            new SelectListItem(){
+                                Text = "Treatment", Value = "false"},
+                          new SelectListItem(){
+                                Text = "Surgical", Value = "true"}   
+                        }, "Value", "Text"); 
+            ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
             return View(reservation);
         }
 
@@ -94,9 +108,16 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", reservation.EmployeeID);
-            ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName", reservation.PatientID);
-            ViewBag.ReservationTypeID = new SelectList(db.ReservationTypes, "ReservationTypeID", "reservationType", reservation.ReservationTypeID);
+            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName", reservation.EmployeeID);
+            ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FullName", reservation.PatientID);
+            ViewBag.ReservationType = new SelectList(new List<SelectListItem>()
+                        {
+                            new SelectListItem(){
+                                Text = "Treatment", Value = "false"},
+                          new SelectListItem(){
+                                Text = "Surgical", Value = "true"}   
+                        }, "Value", "Text"); 
+            ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
             return View(reservation);
         }
 
@@ -105,17 +126,40 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ReservationID,TreatmentID,ReservationTypeID,DateTimeReserved,Notes,PatientID,EmployeeID")] Reservation reservation)
+        public ActionResult Edit([Bind(Include = "ReservationID,TreatmentID,ReservationType,DateTimeReserved,Notes,PatientID,EmployeeID")] Reservation reservation)
         {
             if (ModelState.IsValid)
             {
+                if (reservation.ReservationType && reservation.EmployeeID == null)
+                {
+                    ModelState.AddModelError("", "Please specify who will perform the surgery.");
+                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName", reservation.EmployeeID);
+                    ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FullName", reservation.PatientID);
+
+                    ViewBag.ReservationType = new SelectList(new List<SelectListItem>()
+                        {
+                            new SelectListItem(){
+                                Text = "Treatment", Value = "false"},
+                          new SelectListItem(){
+                                Text = "Surgical", Value = "true"}   
+                        }, "Value", "Text");
+                    ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
+                    return View(reservation);
+                }
                 db.Entry(reservation).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", reservation.EmployeeID);
-            ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName", reservation.PatientID);
-            ViewBag.ReservationTypeID = new SelectList(db.ReservationTypes, "ReservationTypeID", "reservationType", reservation.ReservationTypeID);
+            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName", reservation.EmployeeID);
+            ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FullName", reservation.PatientID);
+            ViewBag.ReservationType = new SelectList(new List<SelectListItem>()
+                        {
+                            new SelectListItem(){
+                                Text = "Treatment", Value = "false"},
+                          new SelectListItem(){
+                                Text = "Surgical", Value = "true"}   
+                        }, "Value", "Text");
+            ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
             return View(reservation);
         }
 

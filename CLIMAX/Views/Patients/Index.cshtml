@@ -12,12 +12,6 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.branch.BranchName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.company.CompanyName)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.FirstName)
         </th>
         <th>
@@ -42,37 +36,22 @@
             @Html.DisplayNameFor(model => model.Weight)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.HomeAddress)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EmailAddress)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.HomeNo)
+            @Html.DisplayNameFor(model => model.LandlineNo)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.CellphoneNo)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.EmailAddress)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Occupation)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EmergencyContactNo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EmergencyContactName)
         </th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.branch.BranchName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.company.CompanyName)
-        </td>
         <td>
             @Html.DisplayFor(modelItem => item.FirstName)
         </td>
@@ -85,9 +64,18 @@
         <td>
             @Html.DisplayFor(modelItem => item.BirthDate)
         </td>
+        @if(item.Gender)
+        { 
         <td>
-            @Html.DisplayFor(modelItem => item.Gender)
+          Male
         </td>
+        }
+        else
+        {
+            <td>
+              Female
+            </td>
+        }
         <td>
             @Html.DisplayFor(modelItem => item.CivilStatus)
         </td>
@@ -98,25 +86,16 @@
             @Html.DisplayFor(modelItem => item.Weight)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.HomeAddress)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmailAddress)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.HomeNo)
+            @Html.DisplayFor(modelItem => item.LandlineNo)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.CellphoneNo)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.EmailAddress)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.Occupation)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmergencyContactNo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmergencyContactName)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.PatientID }) |

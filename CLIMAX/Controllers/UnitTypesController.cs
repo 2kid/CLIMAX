@@ -46,7 +46,7 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UnitTypeID,unitType")] UnitType unitType)
+        public ActionResult Create([Bind(Include = "UnitTypeID,Type")] UnitType unitType)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +78,7 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UnitTypeID,unitType")] UnitType unitType)
+        public ActionResult Edit([Bind(Include = "UnitTypeID,Type")] UnitType unitType)
         {
             if (ModelState.IsValid)
             {
