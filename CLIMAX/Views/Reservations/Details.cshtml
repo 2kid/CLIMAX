@@ -27,29 +27,21 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.treatment.TreatmentName)
+            @Html.DisplayNameFor(model => model.reservationType.reservationType)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.treatment.TreatmentName)
+            @Html.DisplayFor(model => model.reservationType.reservationType)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.ReservationType)
+            @Html.DisplayNameFor(model => model.TreatmentID)
         </dt>
-        @if(Model.ReservationType)
-        {
-            <dd>
-               Surgical
-        </dd>
-        }
-        else
-        {
-            <dd>
-            Treatment
-            </dd>
 
-        }
+        <dd>
+            @Html.DisplayFor(model => model.TreatmentID)
+        </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.DateTimeReserved)
         </dt>
@@ -66,22 +58,6 @@
             @Html.DisplayFor(model => model.Notes)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.patient.FullName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.patient.FullName)
-        </dd>
-        @if (Model.employee != null) { 
-        <dt>
-          Therapist
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.employee.FullName)
-        </dd>
-        }
     </dl>
 </div>
 <p>

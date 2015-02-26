@@ -2,104 +2,34 @@
 
 @{
     ViewBag.Title = "Create";
-    string materials = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.MaterialList);
-
 }
 
 <h2>Create</h2>
 
 
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Treatments</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.TreatmentName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TreatmentName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TreatmentName, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-<div class="form-horizontal">
-    <h4>Treatments</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="row">
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
-            @Html.Hidden("Materials", materials)
-            <div class="col-md-6">
-                <div class="form-group">
-                    @Html.LabelFor(model => model.TreatmentName, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.TreatmentName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.TreatmentName, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.TreatmentPrice, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.TreatmentPrice, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.TreatmentPrice, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input name="submit" type="submit" value="Create" class="btn btn-default" />
-                    </div>
-                </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
             </div>
-        }
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
-    @Html.Hidden("Materials", materials)
-                        <div class="col-md-6">
-                <table>
-                    <tr>
-                        <th class="col-md-3">
-                            Item
-                        </th>
-                        <th class="col-md-3">Quantity</th>
-                        <th class="col-md-3">Price</th>
-                        <th class="col-md-3"></th>
-                    </tr>
-                    @{
-            double totalPrice = 0;
-                        if (ViewBag.MaterialList != null)
-                        {
-                            List<CLIMAX.Models.MaterialsViewModel> materialList = ViewBag.MaterialList;
-                            for (int i = 0; i < materialList.Count; i++)
-                            {
-                                totalPrice += materialList[i].TotalPrice;
-                                <tr>
-                                    <td class="col-md-3">@materialList[i].MaterialName</td>
-                                    <td class="col-md-3">@materialList[i].units</td>
-                                    <td class="col-md-3">@materialList[i].TotalPrice</td>
-                                    <td class="col-md-3"><button name="submit" type="submit" value="Remove-@i">Remove</button></td>
-                                </tr>
-                            }
-                        }
-                    }
-                    <tr>
-                        <td class="col-md-3">Total</td>
-                        <td class="col-md-3"></td>
-                        <th class="col-md-3">@totalPrice</th>
-                        <td class="col-md-3"></td>
-                    </tr>
-                </table>
-                <div class="row">
-                    <div class="form-group">
-                        @Html.Label("Medicines", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-6">
-                            @Html.DropDownList("Medicines", null, new { @class = "col-md-12" })
-                        </div>
-                        <div class="col-md-2">
-                            @Html.TextBox("MedicineQty", null, new { type = "number" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input name="submit" type="submit" value="Add Material" class="btn btn-default" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
+        </div>
     </div>
-</div>
-
+}
 
 <div>
     @Html.ActionLink("Back to List", "Index")
@@ -107,6 +37,4 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-<script src="~/signalr/hubs"></script>
-
 }

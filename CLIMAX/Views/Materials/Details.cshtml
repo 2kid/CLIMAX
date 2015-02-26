@@ -11,11 +11,11 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.unitType.Type)
+            @Html.DisplayNameFor(model => model.unitType.unitType)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.unitType.Type)
+            @Html.DisplayFor(model => model.unitType.unitType)
         </dd>
 
         <dt>
@@ -45,6 +45,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.MaterialID }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MaterialsID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

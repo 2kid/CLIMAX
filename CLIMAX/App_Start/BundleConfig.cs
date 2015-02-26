@@ -28,8 +28,7 @@ namespace CLIMAX
                       "~/Content/bootstrap-3.3.2-dist/*.css",
                        "~/Content/bootstrap-3.3.2-dist/*.map",
                       "~/Content/site.css",
-                      "~/Content/MZ_main.css",
-                       "~/Content/Moses_custom.css"));
+                      "~/Content/MZ_main.css"));
         }
     }
 }

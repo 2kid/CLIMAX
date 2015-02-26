@@ -38,7 +38,6 @@ namespace CLIMAX.Controllers
         // GET: Inventories/Create
         public ActionResult Create()
         {
-            ViewBag.Materials = new SelectList(db.Materials, "MaterialID", "MaterialName");
             ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");
             return View();
         }
@@ -52,14 +51,21 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
+                //string branchid = form["Branch"];
+                //int id;
+                //if(int.TryParse(branchid,out id))
+                //inventory.BranchID = id;
+                //else
+                //{
+                //    ModelState.AddModelError("", "Choose a branch");
+                //        return(inventory);
+                //}
                 inventory.LastDateUpdated = DateTime.Now;
                 db.Inventories.Add(inventory);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.Marterials = new SelectList(db.Materials, "MaterialID", "MaterialName");
-            ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");
-          
+
             return View(inventory);
         }
 
@@ -75,9 +81,6 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Materials = new SelectList(db.Materials, "MaterialID", "MaterialName");
-            ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");
-          
             return View(inventory);
         }
 
@@ -86,18 +89,14 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "InventoryID,MaterialID,QtyInStock,BranchID")] Inventory inventory)
+        public ActionResult Edit([Bind(Include = "InventoryID,MaterialID,QtyInStock,LastDateUpdated")] Inventory inventory)
         {
             if (ModelState.IsValid)
             {
-                inventory.LastDateUpdated = DateTime.Now;
                 db.Entry(inventory).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.Materials = new SelectList(db.Materials, "MaterialID", "MaterialName");
-            ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");
-          
             return View(inventory);
         }
 

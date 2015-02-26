@@ -46,7 +46,7 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "RoleTypeId,Type")] RoleType roleType)
+        public ActionResult Create([Bind(Include = "RoleTypeId,roleType")] RoleType roleType)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +78,7 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "RoleTypeId,Type")] RoleType roleType)
+        public ActionResult Edit([Bind(Include = "RoleTypeId,roleType")] RoleType roleType)
         {
             if (ModelState.IsValid)
             {

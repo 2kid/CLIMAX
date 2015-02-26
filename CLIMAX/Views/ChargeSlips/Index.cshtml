@@ -18,7 +18,10 @@
             @Html.DisplayNameFor(model => model.ModeOfPayment)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.AmtPayment)
+            @Html.DisplayNameFor(model => model.AmtOfPayment)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ApprovalNo)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.GiftCertificateAmt)
@@ -41,7 +44,10 @@
             @Html.DisplayFor(modelItem => item.ModeOfPayment)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.AmtPayment)
+            @Html.DisplayFor(modelItem => item.AmtOfPayment)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ApprovalNo)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.GiftCertificateAmt)
@@ -53,9 +59,9 @@
             @Html.DisplayFor(modelItem => item.CheckNo)
         </td>
         <td>
-            @*@Html.ActionLink("Edit", "Edit", new { id=item.ChargeSlipID }) |
+            @Html.ActionLink("Edit", "Edit", new { id=item.ChargeSlipID }) |
             @Html.ActionLink("Details", "Details", new { id=item.ChargeSlipID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ChargeSlipID })*@
+            @Html.ActionLink("Delete", "Delete", new { id=item.ChargeSlipID })
         </td>
     </tr>
 }

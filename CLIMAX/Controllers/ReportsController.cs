@@ -58,17 +58,11 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ReportsID,ReportTypeID,EmployeeID")] Reports reports,FormCollection form)
+        public ActionResult Create([Bind(Include = "ReportsID,ReportTypeID,EmployeeID")] Reports reports)
         {
             if (ModelState.IsValid)
             {
-                string startDate = form["start"];
-                string endDate = form["end"];
-                if(!string.IsNullOrEmpty(startDate))
-                    reports.DateStartOfReport = DateTime.Parse(startDate);
-                if (!string.IsNullOrEmpty(endDate))
-                    reports.DateEndOfReport = DateTime.Parse(endDate);
-
+                reports.DateTimeGenerated = DateTime.Now;
                 db.Reports.Add(reports);
                 db.SaveChanges();
                 return RedirectToAction("Index"); //details

@@ -13,5 +13,9 @@ namespace CLIMAX.Models
         public int MaterialID { get; set; }
         public virtual Materials material { get; set; }
         public int Qty { get; set; }
+    
+    
+    
+    
     }
 }

@@ -18,7 +18,6 @@ namespace CLIMAX.Controllers
         public ActionResult Index()
         {
             var materials = db.Materials.Include(m => m.unitType);
-
             return View(materials.ToList());
         }
 
@@ -40,7 +39,7 @@ namespace CLIMAX.Controllers
         // GET: Materials/Create
         public ActionResult Create()
         {
-            ViewBag.UnitTypeID = new SelectList(db.UnitTypes, "UnitTypeID", "Type");
+            ViewBag.UnitTypeID = new SelectList(db.UnitTypes, "UnitTypeID", "unitType");
             return View();
         }
 
@@ -49,7 +48,7 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MaterialID,MaterialName,Description,Price,UnitTypeID")] Materials materials)
+        public ActionResult Create([Bind(Include = "MaterialsID,MaterialName,Description,Price,UnitTypeID")] Materials materials)
         {
             if (ModelState.IsValid)
             {
@@ -58,7 +57,7 @@ namespace CLIMAX.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.UnitTypeID = new SelectList(db.UnitTypes, "UnitTypeID", "Type", materials.UnitTypeID);
+            ViewBag.UnitTypeID = new SelectList(db.UnitTypes, "UnitTypeID", "unitType", materials.UnitTypeID);
             return View(materials);
         }
 
@@ -74,7 +73,7 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.UnitTypeID = new SelectList(db.UnitTypes, "UnitTypeID", "Type", materials.UnitTypeID);
+            ViewBag.UnitTypeID = new SelectList(db.UnitTypes, "UnitTypeID", "unitType", materials.UnitTypeID);
             return View(materials);
         }
 
@@ -83,7 +82,7 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "MaterialID,MaterialName,Description,Price,UnitTypeID")] Materials materials)
+        public ActionResult Edit([Bind(Include = "MaterialsID,MaterialName,Description,Price,UnitTypeID")] Materials materials)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +90,7 @@ namespace CLIMAX.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.UnitTypeID = new SelectList(db.UnitTypes, "UnitTypeID", "Type", materials.UnitTypeID);
+            ViewBag.UnitTypeID = new SelectList(db.UnitTypes, "UnitTypeID", "unitType", materials.UnitTypeID);
             return View(materials);
         }
 

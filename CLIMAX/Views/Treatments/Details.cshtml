@@ -4,6 +4,8 @@
     ViewBag.Title = "Details";
 }
 
+<h2>Details</h2>
+
 <div>
     <h4>Treatments</h4>
     <hr />
@@ -15,16 +17,10 @@
         <dd>
             @Html.DisplayFor(model => model.TreatmentName)
         </dd>
-        <dt>Material / Qty</dt>
-        @foreach(CLIMAX.Models.MaterialsViewModel item in ViewBag.MaterialList)
-        {
-            <dd>@item.MaterialName / @item.units</dd>
-        }
+
     </dl>
 </div>
-<div class="row">
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.TreatmentsID }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TreatmentsID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

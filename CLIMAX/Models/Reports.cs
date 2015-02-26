@@ -15,8 +15,7 @@ namespace CLIMAX.Models
         public int EmployeeID { get; set; }
         public virtual Employee employee { get; set; }
       
-        public DateTime DateStartOfReport { get; set; }
-        public DateTime DateEndOfReport { get; set; }
+        public DateTime DateTimeGenerated { get; set; }
 
     }
 }

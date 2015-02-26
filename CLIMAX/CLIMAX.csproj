@@ -48,10 +48,6 @@
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -115,6 +111,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -164,15 +163,14 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BranchesController.cs" />
     <Compile Include="Controllers\ChargeSlipsController.cs" />
-    <Compile Include="Controllers\CompaniesController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
-    <Compile Include="Controllers\HistoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoriesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MaterialsController.cs" />
     <Compile Include="Controllers\PatientsController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\ReportTypesController.cs" />
     <Compile Include="Controllers\ReservationsController.cs" />
     <Compile Include="Controllers\RoleTypesController.cs" />
     <Compile Include="Controllers\TreatmentsController.cs" />
@@ -180,41 +178,17 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201502141323486_init.cs" />
-    <Compile Include="Migrations\201502141323486_init.Designer.cs">
-      <DependentUpon>201502141323486_init.cs</DependentUpon>
+    <Compile Include="Migrations\201501220305361_init.cs" />
+    <Compile Include="Migrations\201501220305361_init.Designer.cs">
+      <DependentUpon>201501220305361_init.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201502141402244_init1.cs" />
-    <Compile Include="Migrations\201502141402244_init1.Designer.cs">
-      <DependentUpon>201502141402244_init1.cs</DependentUpon>
+    <Compile Include="Migrations\201501310008428_init1.cs" />
+    <Compile Include="Migrations\201501310008428_init1.Designer.cs">
+      <DependentUpon>201501310008428_init1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201502141445072_init2.cs" />
-    <Compile Include="Migrations\201502141445072_init2.Designer.cs">
-      <DependentUpon>201502141445072_init2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502150937271_init3.cs" />
-    <Compile Include="Migrations\201502150937271_init3.Designer.cs">
-      <DependentUpon>201502150937271_init3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502160218347_init4.cs" />
-    <Compile Include="Migrations\201502160218347_init4.Designer.cs">
-      <DependentUpon>201502160218347_init4.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502160232392_init5.cs" />
-    <Compile Include="Migrations\201502160232392_init5.Designer.cs">
-      <DependentUpon>201502160232392_init5.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502161113138_init6.cs" />
-    <Compile Include="Migrations\201502161113138_init6.Designer.cs">
-      <DependentUpon>201502161113138_init6.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502161633308_init7.cs" />
-    <Compile Include="Migrations\201502161633308_init7.Designer.cs">
-      <DependentUpon>201502161633308_init7.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502170129211_init8.cs" />
-    <Compile Include="Migrations\201502170129211_init8.Designer.cs">
-      <DependentUpon>201502170129211_init8.cs</DependentUpon>
+    <Compile Include="Migrations\201502121154542_init2.cs" />
+    <Compile Include="Migrations\201502121154542_init2.Designer.cs">
+      <DependentUpon>201502121154542_init2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -236,9 +210,9 @@
     <Compile Include="Models\Reports.cs" />
     <Compile Include="Models\ReportType.cs" />
     <Compile Include="Models\Reservation.cs" />
+    <Compile Include="Models\ReservationType.cs" />
     <Compile Include="Models\RoleType.cs" />
     <Compile Include="Models\Session_ChargeSlip.cs" />
-    <Compile Include="Models\Survey.cs" />
     <Compile Include="Models\Treatments.cs" />
     <Compile Include="Models\UnitType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -251,11 +225,8 @@
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap.min.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\MainBG.jpg" />
-    <Content Include="Content\Moses_custom.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\npm.js" />
     <Content Include="Content\MZ_main.css" />
     <Content Include="favicon.ico" />
@@ -319,17 +290,28 @@
     <Content Include="Views\ChargeSlips\Create.cshtml" />
     <Content Include="Views\ChargeSlips\Delete.cshtml" />
     <Content Include="Views\ChargeSlips\Details.cshtml" />
+    <Content Include="Views\ChargeSlips\Edit.cshtml" />
     <Content Include="Views\ChargeSlips\Index.cshtml" />
     <Content Include="Views\Employees\Create.cshtml" />
     <Content Include="Views\Employees\Delete.cshtml" />
     <Content Include="Views\Employees\Details.cshtml" />
     <Content Include="Views\Employees\Edit.cshtml" />
     <Content Include="Views\Employees\Index.cshtml" />
+    <Content Include="Views\Patients\Create.cshtml" />
+    <Content Include="Views\Patients\Delete.cshtml" />
+    <Content Include="Views\Patients\Details.cshtml" />
+    <Content Include="Views\Patients\Edit.cshtml" />
+    <Content Include="Views\Patients\Index.cshtml" />
     <Content Include="Views\Materials\Create.cshtml" />
     <Content Include="Views\Materials\Delete.cshtml" />
     <Content Include="Views\Materials\Details.cshtml" />
     <Content Include="Views\Materials\Edit.cshtml" />
     <Content Include="Views\Materials\Index.cshtml" />
+    <Content Include="Views\Reservations\Create.cshtml" />
+    <Content Include="Views\Reservations\Delete.cshtml" />
+    <Content Include="Views\Reservations\Details.cshtml" />
+    <Content Include="Views\Reservations\Edit.cshtml" />
+    <Content Include="Views\Reservations\Index.cshtml" />
     <Content Include="Views\Inventories\Create.cshtml" />
     <Content Include="Views\Inventories\Delete.cshtml" />
     <Content Include="Views\Inventories\Details.cshtml" />
@@ -359,31 +341,12 @@
     <Content Include="Views\UnitTypes\Details.cshtml" />
     <Content Include="Views\UnitTypes\Edit.cshtml" />
     <Content Include="Views\UnitTypes\Index.cshtml" />
-    <Content Include="Views\Companies\Create.cshtml" />
-    <Content Include="Views\Companies\Delete.cshtml" />
-    <Content Include="Views\Companies\Details.cshtml" />
-    <Content Include="Views\Companies\Edit.cshtml" />
-    <Content Include="Views\Companies\Index.cshtml" />
-    <Content Include="Views\Histories\Create.cshtml" />
-    <Content Include="Views\Histories\Delete.cshtml" />
-    <Content Include="Views\Histories\Details.cshtml" />
-    <Content Include="Views\Histories\Edit.cshtml" />
-    <Content Include="Views\Histories\Index.cshtml" />
-    <Content Include="Views\Patients\Create.cshtml" />
-    <Content Include="Views\Patients\Delete.cshtml" />
-    <Content Include="Views\Patients\Details.cshtml" />
-    <Content Include="Views\Patients\Edit.cshtml" />
-    <Content Include="Views\Patients\Index.cshtml" />
     <Content Include="Views\RoleTypes\Create.cshtml" />
     <Content Include="Views\RoleTypes\Delete.cshtml" />
     <Content Include="Views\RoleTypes\Details.cshtml" />
     <Content Include="Views\RoleTypes\Edit.cshtml" />
     <Content Include="Views\RoleTypes\Index.cshtml" />
-    <Content Include="Views\Reservations\Create.cshtml" />
-    <Content Include="Views\Reservations\Delete.cshtml" />
-    <Content Include="Views\Reservations\Details.cshtml" />
-    <Content Include="Views\Reservations\Edit.cshtml" />
-    <Content Include="Views\Reservations\Index.cshtml" />
+    <Content Include="Views\Home\SMS.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -396,32 +359,14 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201502141323486_init.resx">
-      <DependentUpon>201502141323486_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201501220305361_init.resx">
+      <DependentUpon>201501220305361_init.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502141402244_init1.resx">
-      <DependentUpon>201502141402244_init1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201501310008428_init1.resx">
+      <DependentUpon>201501310008428_init1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502141445072_init2.resx">
-      <DependentUpon>201502141445072_init2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502150937271_init3.resx">
-      <DependentUpon>201502150937271_init3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502160218347_init4.resx">
-      <DependentUpon>201502160218347_init4.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502160232392_init5.resx">
-      <DependentUpon>201502160232392_init5.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502161113138_init6.resx">
-      <DependentUpon>201502161113138_init6.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502161633308_init7.resx">
-      <DependentUpon>201502161633308_init7.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502170129211_init8.resx">
-      <DependentUpon>201502170129211_init8.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201502121154542_init2.resx">
+      <DependentUpon>201502121154542_init2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
