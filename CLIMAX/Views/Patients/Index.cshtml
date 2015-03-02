@@ -1,108 +1,107 @@
-﻿@model IEnumerable<CLIMAX.Models.Patient>
+﻿@model IEnumerable<climax.models.patient>
 
-@{
-    ViewBag.Title = "Index";
-}
+    @{
+        ViewBag.Title = "Index";
+    }
 
-<h2>Index</h2>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Patient Records</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Brief information of all Dermstrata Patients<br /><br />
+                        <p>
+                            @Html.ActionLink("Create New", "Create")
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="dataTable_wrapper">
+                            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <thead>
+                                    <tr>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MiddleName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.BirthDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Gender)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CivilStatus)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Height)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Weight)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LandlineNo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CellphoneNo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EmailAddress)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Occupation)
-        </th>
-        <th></th>
-    </tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.FirstName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.MiddleName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.LastName)
+                                        </th>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MiddleName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.BirthDate)
-        </td>
-        @if(item.Gender)
-        { 
-        <td>
-          Male
-        </td>
-        }
-        else
-        {
-            <td>
-              Female
-            </td>
-        }
-        <td>
-            @Html.DisplayFor(modelItem => item.CivilStatus)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Height)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Weight)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LandlineNo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CellphoneNo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmailAddress)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Occupation)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.PatientID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.PatientID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.PatientID })
-        </td>
-    </tr>
-}
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Gender)
+                                        </th>
 
-</table>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.LandlineNo)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CellphoneNo)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.EmailAddress)
+                                        </th>
+
+                                        <th>Settings</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="odd gradeX">
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.FirstName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MiddleName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LastName)
+                                            </td>
+
+                                            @if (item.Gender)
+                                            {
+                                                <td>
+                                                    Male
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    Female
+                                                </td>
+                                            }
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LandlineNo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CellphoneNo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.EmailAddress)
+                                            </td>
+
+                                            <td>
+                                                @Html.ActionLink("Edit", "Edit", new { id = item.PatientID }) |
+                                                @Html.ActionLink("Details", "Details", new { id = item.PatientID }) |
+                                                @Html.ActionLink("Delete", "Delete", new { id = item.PatientID })
+                                            </td>
+                                        </tr>
+                                    }
+
+                            </table>
+
+</climax.models.patient>
+
+   
