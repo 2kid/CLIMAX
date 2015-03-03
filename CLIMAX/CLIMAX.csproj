@@ -249,11 +249,12 @@
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap.css" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap.min.css" />
+    <Content Include="Content\bootstrap-3.3.2-dist\simple-sidebar.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Content\MainBG.jpg" />
     <Content Include="Content\Moses_custom.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\npm.js" />
