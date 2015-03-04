@@ -10,6 +10,9 @@ namespace CLIMAX.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
+        public int? EmployeeID { get; set; }
+        public virtual Employee employee { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -47,7 +50,6 @@ namespace CLIMAX.Models
        public DbSet<Reports> Reports { get; set; }
        public DbSet<ReportType> ReportTypes { get; set; }
        public DbSet<Reservation> Reservations { get; set; }
-       public DbSet<ReservationType> ReservationTypes { get; set; }
        public DbSet<RoleType> RoleType { get; set; }
        public DbSet<Session_ChargeSlip> Session_ChargeSlip { get; set; }
        public DbSet<Treatments> Treatments { get; set; }

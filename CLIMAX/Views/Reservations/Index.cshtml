@@ -12,16 +12,13 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.employee.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.patient.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.reservationType.reservationType)
+          Patient
         </th>
         <th>
             @Html.DisplayNameFor(model => model.TreatmentID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReservationType)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.DateTimeReserved)
@@ -29,29 +26,48 @@
         <th>
             @Html.DisplayNameFor(model => model.Notes)
         </th>
+        <th>
+            Therapist
+        </th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.employee.LastName)
+            @Html.DisplayFor(modelItem => item.patient.FullName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.patient.FirstName)
+            @Html.DisplayFor(modelItem => item.treatment.TreatmentName)
         </td>
+        @if(item.ReservationType)
+        { 
         <td>
-            @Html.DisplayFor(modelItem => item.reservationType.reservationType)
+           Surgical
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TreatmentID)
-        </td>
+        }
+        else
+        {
+            <td>
+                Treatment
+            </td>
+        }
         <td>
             @Html.DisplayFor(modelItem => item.DateTimeReserved)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Notes)
         </td>
+       @if(item.employee!=null)
+       {
+           <td>
+               @Html.DisplayFor(modelItem => item.employee.FullName)
+           </td>
+       }
+       else
+       {
+           <td></td>
+       }
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ReservationID }) |
             @Html.ActionLink("Details", "Details", new { id=item.ReservationID }) |

@@ -13,18 +13,19 @@ namespace CLIMAX.Controllers
     public class PatientsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
+      //  private string Audit
         // GET: Patients
         public ActionResult Index(FormCollection form)
         {
-            var patients = db.Patients.Include(p => p.branch).Include(p => p.company);
+            var patients = db.Patients.Include(p => p.branch).Include(p => p.company).ToList();
 
             string search = form["searchValue"];
-            if (string.IsNullOrEmpty(search))
+            if (!string.IsNullOrEmpty(search))
             {
-                patients = patients.Where(r => r.FullName.ToLower().Contains(search.ToLower()));
+                patients = patients.Where(r => r.FullName.ToLower().Contains(search.ToLower())).ToList();
             }
-            return View(patients.ToList());
+
+            return View(patients);
         }
 
         // GET: Patients/Details/5
@@ -47,6 +48,25 @@ namespace CLIMAX.Controllers
         {
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName");
             ViewBag.CompanyID = new SelectList(db.Companies, "CompanyID", "CompanyName");
+
+            IEnumerable<SelectListItem> item = new List<SelectListItem>()
+            {
+                new SelectListItem(){ Text = "Female", Value = "false"},
+                new SelectListItem(){Text = "Male", Value = "true"}   
+            };
+
+            IEnumerable<SelectListItem> civilStatus = new List<SelectListItem>()
+            {
+                new SelectListItem(){ Text = "Single", Value = "Single"},
+                new SelectListItem(){Text = "Married", Value = "Married"},
+                new SelectListItem(){Text = "Widowed", Value = "Widowed"},
+                new SelectListItem(){Text = "Divorced", Value = "Divorced"},
+                new SelectListItem(){Text = "Separated", Value = "Separated"}
+            };
+
+
+            ViewBag.Gender = new SelectList(item, "Value", "Text");
+            ViewBag.CivilStatus = civilStatus;
             return View();
         }
 
@@ -55,8 +75,9 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "PatientID,FirstName,MiddleName,LastName,BirthDate,Gender,CivilStatus,Height,Weight,HomeAddress,EmailAddress,HomeNo,CellphoneNo,Occupation,CompanyID,EmergencyContactNo,EmergencyContactName,BranchID")] Patient patient)
+        public ActionResult Create([Bind(Include = "PatientID,FirstName,MiddleName,LastName,BirthDate,Gender,CivilStatus,Height,Weight,HomeNo,Street,City,LandlineNo,CellphoneNo,EmailAddress,Occupation,CompanyID,EmergencyContactNo,EmergencyContactFName,EmergencyContactMName,EmergencyContactLName,BranchID")] Patient patient)
         {
+
             if (ModelState.IsValid)
             {
                 db.Patients.Add(patient);
@@ -66,6 +87,26 @@ namespace CLIMAX.Controllers
 
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName", patient.BranchID);
             ViewBag.CompanyID = new SelectList(db.Companies, "CompanyID", "CompanyName", patient.CompanyID);
+            IEnumerable<SelectListItem> item = new List<SelectListItem>()
+            {
+                new SelectListItem(){
+                    Text = "Female", Value = "false"},
+              new SelectListItem(){
+                    Text = "Male", Value = "true"}   
+            };
+
+            IEnumerable<SelectListItem> civilStatus = new List<SelectListItem>()
+            {
+                new SelectListItem(){ Text = "Single", Value = "Single"},
+                new SelectListItem(){Text = "Married", Value = "Married"},
+                new SelectListItem(){Text = "Widowed", Value = "Widowed"},
+                new SelectListItem(){Text = "Divorced", Value = "Divorced"},
+                new SelectListItem(){Text = "Separated", Value = "Separated"}
+            };
+
+
+            ViewBag.Gender = new SelectList(item, "Value", "Text");
+            ViewBag.CivilStatus = civilStatus;
             return View(patient);
         }
 
@@ -83,6 +124,26 @@ namespace CLIMAX.Controllers
             }
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName", patient.BranchID);
             ViewBag.CompanyID = new SelectList(db.Companies, "CompanyID", "CompanyName", patient.CompanyID);
+            IEnumerable<SelectListItem> item = new List<SelectListItem>()
+            {
+                new SelectListItem(){
+                    Text = "Female", Value = "false"},
+              new SelectListItem(){
+                    Text = "Male", Value = "true"}   
+            };
+
+            IEnumerable<SelectListItem> civilStatus = new List<SelectListItem>()
+            {
+                new SelectListItem(){ Text = "Single", Value = "Single"},
+                new SelectListItem(){Text = "Married", Value = "Married"},
+                new SelectListItem(){Text = "Widowed", Value = "Widowed"},
+                new SelectListItem(){Text = "Divorced", Value = "Divorced"},
+                new SelectListItem(){Text = "Separated", Value = "Separated"}
+            };
+
+
+            ViewBag.Gender = new SelectList(item, "Value", "Text");
+            ViewBag.CivilStatus = civilStatus;
             return View(patient);
         }
 
@@ -91,7 +152,7 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PatientID,FirstName,MiddleName,LastName,BirthDate,Gender,CivilStatus,Height,Weight,HomeAddress,EmailAddress,HomeNo,CellphoneNo,Occupation,CompanyID,EmergencyContactNo,EmergencyContactName,BranchID")] Patient patient)
+        public ActionResult Edit([Bind(Include = "PatientID,FirstName,MiddleName,LastName,BirthDate,Gender,CivilStatus,Height,Weight,HomeNo,Street,City,LandlineNo,CellphoneNo,EmailAddress,Occupation,CompanyID,EmergencyContactNo,EmergencyContactFName,EmergencyContactMName,EmergencyContactLName,BranchID")] Patient patient)
         {
             if (ModelState.IsValid)
             {
@@ -101,6 +162,26 @@ namespace CLIMAX.Controllers
             }
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName", patient.BranchID);
             ViewBag.CompanyID = new SelectList(db.Companies, "CompanyID", "CompanyName", patient.CompanyID);
+            IEnumerable<SelectListItem> item = new List<SelectListItem>()
+            {
+                new SelectListItem(){
+                    Text = "Female", Value = "false"},
+              new SelectListItem(){
+                    Text = "Male", Value = "true"}   
+            };
+
+            IEnumerable<SelectListItem> civilStatus = new List<SelectListItem>()
+            {
+                new SelectListItem(){ Text = "Single", Value = "Single"},
+                new SelectListItem(){Text = "Married", Value = "Married"},
+                new SelectListItem(){Text = "Widowed", Value = "Widowed"},
+                new SelectListItem(){Text = "Divorced", Value = "Divorced"},
+                new SelectListItem(){Text = "Separated", Value = "Separated"}
+            };
+
+
+            ViewBag.Gender = new SelectList(item, "Value", "Text");
+            ViewBag.CivilStatus = civilStatus;
             return View(patient);
         }
 
@@ -128,6 +209,12 @@ namespace CLIMAX.Controllers
             db.Patients.Remove(patient);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        private void CreateAudit(string action)
+        {
+            AuditTrail newAudit = new AuditTrail();
+          //  newAudit.
         }
 
         protected override void Dispose(bool disposing)

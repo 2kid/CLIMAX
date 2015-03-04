@@ -21,7 +21,7 @@
             @Html.DisplayNameFor(model => model.MiddleName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.RoldTypeID)
+            @Html.DisplayNameFor(model => model.roleType.Type)
         </th>
         <th></th>
     </tr>
@@ -38,7 +38,7 @@
             @Html.DisplayFor(modelItem => item.MiddleName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.RoldTypeID)
+            @Html.DisplayFor(modelItem => item.roleType.Type)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.EmployeeID }) |

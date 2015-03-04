@@ -12,10 +12,12 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.MaterialID)
+            @Html.DisplayNameFor(model => model.material.MaterialName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.QtyInStock)
+        </th>
+        <th>
         </th>
         <th>
             @Html.DisplayNameFor(model => model.LastDateUpdated)
@@ -26,11 +28,22 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.MaterialID)
+            @Html.DisplayFor(modelItem => item.material.MaterialName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.QtyInStock)
         </td>
+        @if(item.isLowInStock)
+        { 
+        <th>
+           <b class="text-danger">Warning: Please restock!</b>
+        </th>
+        }
+        else
+        {
+            <td>
+            </td>
+        }
         <td>
             @Html.DisplayFor(modelItem => item.LastDateUpdated)
         </td>
