@@ -48,7 +48,12 @@ namespace CLIMAX
                       "~/Content/_all-skins.min.css",
                       "~/Content/AdminLTE.min.css",
                       "~/Content/MZ_main.css",
-                       "~/Content/Moses_custom.css"));
+                      "~/Content/Moses_custom.css"));
+
+          
+
+            
+
         }
     }
 }
