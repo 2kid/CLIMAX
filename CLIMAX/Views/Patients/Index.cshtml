@@ -12,6 +12,22 @@
             <!-- /.col-lg-12 -->
         </div>
         <!-- /.row -->
+
+
+        <!-- search form 
+        <form action="#" method="get" class="sidebar-form">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search..." />
+                <span class="input-group-btn">
+                    <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </form>
+        <!-- /.search form -->
+        
+
+
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
@@ -91,12 +107,19 @@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.EmailAddress)
                                             </td>
-
                                             <td>
-                                                @Html.ActionLink("Edit", "Edit", new { id = item.PatientID }) |
-                                                @Html.ActionLink("Details", "Details", new { id = item.PatientID }) |
-                                                @Html.ActionLink("Delete", "Delete", new { id = item.PatientID })
+                                                <button type="button" class="btn btn-default" aria-label="Left Align">
+                                                    <span class="glyphicon glyphicon-user" aria-hidden="true">@Html.ActionLink(" ", "Details", new { id = item.PatientID })</span>
+                                                </button>
+                                                <button type="button" class="btn btn-default" aria-label="Left Align">
+                                                    <span class="glyphicon glyphicon-edit" aria-hidden="true">@Html.ActionLink(" ", "Edit", new { id = item.PatientID })</span>
+                                                </button>
+                                               
+                                                <button type="button" class="btn btn-default" aria-label="Left Align">
+                                                    <span class="glyphicon glyphicon-trash" aria-hidden="true">@Html.ActionLink(" ", "Delete", new { id = item.PatientID })</span>
+                                                </button>
                                             </td>
+                                           
                                         </tr>
                                     }
 

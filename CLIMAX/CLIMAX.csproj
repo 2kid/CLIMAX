@@ -261,10 +261,12 @@
     <Content Include="Content\plain3.jpeg" />
     <Content Include="Content\start.png" />
     <Content Include="Content\style.css" />
+    <Content Include="Scripts\app.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\css3-animate-it.js" />
     <Content Include="Scripts\custom.js" />
+    <Content Include="Scripts\jQuery-2.1.3.min.js" />
     <Content Include="Scripts\jquery.appear.js" />
     <Content Include="Scripts\jquery.easing.min.js" />
     <Content Include="Scripts\jquery.js" />
@@ -275,11 +277,9 @@
     <Content Include="Scripts\jquery.sticky.js" />
     <Content Include="Scripts\nivo-lightbox.min.js" />
     <Content Include="Scripts\npm.js" />
-    <Content Include="Content\MZ_main.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap.css.map" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
