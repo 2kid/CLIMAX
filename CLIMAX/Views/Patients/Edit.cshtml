@@ -44,7 +44,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.BirthDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.BirthDate, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                @Html.TextBox("BirthDate", Model.BirthDate.ToString("yyyy-MM-dd"), new { @class = "form-control", type = "date" })
                 @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -62,7 +62,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CivilStatus, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CivilStatus, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownListFor(model => model.CivilStatus, (IEnumerable<SelectListItem>)ViewBag.CivilStatus)
                 @Html.ValidationMessageFor(model => model.CivilStatus, "", new { @class = "text-danger" })
             </div>
         </div>

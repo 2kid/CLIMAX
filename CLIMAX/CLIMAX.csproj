@@ -52,9 +52,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Rotativa">
-      <HintPath>..\packages\Rotativa.1.6.3\lib\net40\Rotativa.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -175,8 +172,8 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MaterialsController.cs" />
     <Compile Include="Controllers\PatientsController.cs" />
+    <Compile Include="Controllers\ProceduresController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
-    <Compile Include="Controllers\ReportTypeController.cs" />
     <Compile Include="Controllers\ReservationsController.cs" />
     <Compile Include="Controllers\RoleTypesController.cs" />
     <Compile Include="Controllers\TreatmentsController.cs" />
@@ -184,41 +181,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201502141323486_init.cs" />
-    <Compile Include="Migrations\201502141323486_init.Designer.cs">
-      <DependentUpon>201502141323486_init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502141402244_init1.cs" />
-    <Compile Include="Migrations\201502141402244_init1.Designer.cs">
-      <DependentUpon>201502141402244_init1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502141445072_init2.cs" />
-    <Compile Include="Migrations\201502141445072_init2.Designer.cs">
-      <DependentUpon>201502141445072_init2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502150937271_init3.cs" />
-    <Compile Include="Migrations\201502150937271_init3.Designer.cs">
-      <DependentUpon>201502150937271_init3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502160218347_init4.cs" />
-    <Compile Include="Migrations\201502160218347_init4.Designer.cs">
-      <DependentUpon>201502160218347_init4.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502160232392_init5.cs" />
-    <Compile Include="Migrations\201502160232392_init5.Designer.cs">
-      <DependentUpon>201502160232392_init5.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502161113138_init6.cs" />
-    <Compile Include="Migrations\201502161113138_init6.Designer.cs">
-      <DependentUpon>201502161113138_init6.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502161633308_init7.cs" />
-    <Compile Include="Migrations\201502161633308_init7.Designer.cs">
-      <DependentUpon>201502161633308_init7.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502170129211_init8.cs" />
-    <Compile Include="Migrations\201502170129211_init8.Designer.cs">
-      <DependentUpon>201502170129211_init8.cs</DependentUpon>
+    <Compile Include="Migrations\201502260628445_init.cs" />
+    <Compile Include="Migrations\201502260628445_init.Designer.cs">
+      <DependentUpon>201502260628445_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -236,7 +201,6 @@
     <Compile Include="Models\Materials.cs" />
     <Compile Include="Models\Medicine_ChargeSlip.cs" />
     <Compile Include="Models\Patient.cs" />
-    <Compile Include="Models\PatientReportsPDF.cs" />
     <Compile Include="Models\Procedure.cs" />
     <Compile Include="Models\Reports.cs" />
     <Compile Include="Models\ReportType.cs" />
@@ -254,15 +218,11 @@
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap.css" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap.min.css" />
-    <Content Include="Content\bootstrap-3.3.2-dist\simple-sidebar.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\MainBG.jpg" />
     <Content Include="Content\Moses_custom.css" />
-    <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\npm.js" />
     <Content Include="Content\MZ_main.css" />
     <Content Include="favicon.ico" />
@@ -275,7 +235,6 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="App_Browsers\qt.browser" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -316,13 +275,8 @@
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\SendCode.cshtml" />
     <Content Include="Views\Account\VerifyCode.cshtml" />
-    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
     <Content Include="Views\Manage\ChangePassword.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
-    <Content Include="Views\Manage\ManageLogins.cshtml" />
-    <Content Include="Views\Manage\SetPassword.cshtml" />
-    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
-    <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\ChargeSlips\Create.cshtml" />
     <Content Include="Views\ChargeSlips\Delete.cshtml" />
@@ -392,13 +346,11 @@
     <Content Include="Views\Reservations\Details.cshtml" />
     <Content Include="Views\Reservations\Edit.cshtml" />
     <Content Include="Views\Reservations\Index.cshtml" />
-    <Content Include="Views\Home\SMS.cshtml" />
-    <Content Include="Views\Reports\Create.cshtml" />
-    <Content Include="Views\ReportType\Create.cshtml" />
-    <Content Include="Views\ReportType\Delete.cshtml" />
-    <Content Include="Views\ReportType\Details.cshtml" />
-    <Content Include="Views\ReportType\Edit.cshtml" />
-    <Content Include="Views\ReportType\Index.cshtml" />
+    <Content Include="Views\Procedures\Create.cshtml" />
+    <Content Include="Views\Procedures\Delete.cshtml" />
+    <Content Include="Views\Procedures\Details.cshtml" />
+    <Content Include="Views\Procedures\Edit.cshtml" />
+    <Content Include="Views\Procedures\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -411,32 +363,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201502141323486_init.resx">
-      <DependentUpon>201502141323486_init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502141402244_init1.resx">
-      <DependentUpon>201502141402244_init1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502141445072_init2.resx">
-      <DependentUpon>201502141445072_init2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502150937271_init3.resx">
-      <DependentUpon>201502150937271_init3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502160218347_init4.resx">
-      <DependentUpon>201502160218347_init4.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502160232392_init5.resx">
-      <DependentUpon>201502160232392_init5.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502161113138_init6.resx">
-      <DependentUpon>201502161113138_init6.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502161633308_init7.resx">
-      <DependentUpon>201502161633308_init7.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502170129211_init8.resx">
-      <DependentUpon>201502170129211_init8.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201502260628445_init.resx">
+      <DependentUpon>201502260628445_init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

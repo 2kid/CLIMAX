@@ -17,6 +17,7 @@ namespace CLIMAX.Controllers
         // GET: Branches
         public ActionResult Index()
         {
+            
             return View(db.Branches.ToList());
         }
 

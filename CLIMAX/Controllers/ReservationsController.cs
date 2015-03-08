@@ -39,7 +39,7 @@ namespace CLIMAX.Controllers
         // GET: Reservations/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName");
+            ViewBag.EmployeeID = new SelectList(db.Employees.Include(a=>a.roleType).Where(r=>r.roleType.Type == "Therapist"), "EmployeeID", "FullName");
             ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FullName");
             ViewBag.ReservationType = new SelectList(new List<SelectListItem>()
                         {
