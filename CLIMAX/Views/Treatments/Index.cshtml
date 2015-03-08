@@ -9,11 +9,6 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-@using(Html.BeginForm())
-{
-    @Html.TextBox("searchValue")
-    <button type="submit" class="btn btn-primary">Search</button>
-}
 <table class="table">
     <tr>
         <th>
@@ -24,6 +19,7 @@
         </th>
         <th></th>
     </tr>
+
 @foreach (var item in Model) {
     <tr>
         <td>
@@ -33,10 +29,9 @@
             @Html.DisplayFor(modelItem => item.TreatmentPrice)
         </td>
         <td>
-            @Html.ActionLink("View Procedures", "Index", "Procedures", new { id = item.TreatmentsID }, new { @class = "btn btn-primary" }) |
             @Html.ActionLink("Edit", "Edit", new { id = item.TreatmentsID }, new { @class="btn btn-primary"}) |
-            @Html.ActionLink("Details", "Details", new { id = item.TreatmentsID }, new { @class = "btn btn-primary" }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.TreatmentsID }, new { @class="btn btn-primary"}) 
+            @Html.ActionLink("Details", "Details", new { id=item.TreatmentsID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.TreatmentsID })
         </td>
     </tr>
 }

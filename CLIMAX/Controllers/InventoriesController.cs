@@ -10,7 +10,6 @@ using CLIMAX.Models;
 
 namespace CLIMAX.Controllers
 {
-    [Authorize]
     public class InventoriesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -18,13 +17,7 @@ namespace CLIMAX.Controllers
         // GET: Inventories
         public ActionResult Index()
         {
-            Employee currentUser = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee).SingleOrDefault();
-            if (currentUser != null && currentUser.BranchID != 0)
-            {
-                 return View(db.Inventories.Where(r => r.BranchID == currentUser.BranchID).ToList());
-            }
-            else
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            return View(db.Inventories.ToList());
         }
 
         // GET: Inventories/Details/5
@@ -42,46 +35,35 @@ namespace CLIMAX.Controllers
             return View(inventory);
         }
 
-        [Authorize(Roles="OIC")]
         // GET: Inventories/Create
         public ActionResult Create()
         {
             ViewBag.Materials = new SelectList(db.Materials, "MaterialID", "MaterialName");
+            ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");
             return View();
         }
 
         // POST: Inventories/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "OIC")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "InventoryID,MaterialID,QtyInStock,QtyToAlert")] Inventory inventory, FormCollection form)
+        public ActionResult Create([Bind(Include = "InventoryID,MaterialID,QtyInStock,BranchID")] Inventory inventory,FormCollection form)
         {
             if (ModelState.IsValid)
-            {  
-                Employee currentUser = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee).SingleOrDefault();
-                if (currentUser.BranchID != 0 && currentUser.roleType.Type == "Officer in Charge")
-                {
-                    inventory.BranchID = currentUser.BranchID;
-                    inventory.LastDateUpdated = DateTime.Now;
-                    db.Inventories.Add(inventory);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "You need to be the Officer in Charge to add an inventory item.");
-                }
+            {
+                inventory.LastDateUpdated = DateTime.Now;
+                db.Inventories.Add(inventory);
+                db.SaveChanges();
+                return RedirectToAction("Index");
             }
             ViewBag.Marterials = new SelectList(db.Materials, "MaterialID", "MaterialName");
-           // ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");        
+            ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");
+          
             return View(inventory);
         }
 
-        private static int QtyInStock;
         // GET: Inventories/Edit/5
-        [Authorize(Roles = "OIC")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -93,8 +75,6 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
-            QtyInStock = inventory.QtyInStock;
-
             ViewBag.Materials = new SelectList(db.Materials, "MaterialID", "MaterialName");
             ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");
           
@@ -104,36 +84,16 @@ namespace CLIMAX.Controllers
         // POST: Inventories/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "OIC")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "InventoryID,MaterialID,BranchID,QtyToAlert")] Inventory inventory, FormCollection form)
+        public ActionResult Edit([Bind(Include = "InventoryID,MaterialID,QtyInStock,BranchID")] Inventory inventory)
         {
             if (ModelState.IsValid)
             {
-                Employee currentUser = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee).SingleOrDefault();
-                if (currentUser.BranchID != 0 && currentUser.roleType.Type == "Officer in Charge")
-                {
-                    int addQty;
-                    int subtractQty;
-                    if(int.TryParse(form["addQty"],out addQty))
-                    {
-                        inventory.QtyInStock = QtyInStock = QtyInStock + addQty;
-                    }
-                    if (int.TryParse(form["subtractQty"], out subtractQty))
-                    {
-                        inventory.QtyInStock = QtyInStock = QtyInStock - subtractQty;
-                    }
-                    inventory.BranchID = currentUser.BranchID;
-                    inventory.LastDateUpdated = DateTime.Now;
-                    db.Entry(inventory).State = EntityState.Modified;
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "You need to be the Officer in Charge to add an inventory item.");
-                }
+                inventory.LastDateUpdated = DateTime.Now;
+                db.Entry(inventory).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
             }
             ViewBag.Materials = new SelectList(db.Materials, "MaterialID", "MaterialName");
             ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");

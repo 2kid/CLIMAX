@@ -18,7 +18,7 @@
             @Html.DisplayNameFor(model => model.reportType.Type)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DateTimeGenerated)
+            @Html.DisplayNameFor(model => model.DateStartOfReport)
         </th>
         <th></th>
     </tr>
@@ -32,7 +32,7 @@
             @Html.DisplayFor(modelItem => item.reportType.Type)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.DateTimeGenerated)
+            @Html.DisplayFor(modelItem => item.DateStartOfReport)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ReportsID }) |

@@ -2,7 +2,9 @@
 
 @{
     ViewBag.Title = "Create";
-    double grossPrice = 0;
+  //  string materials = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.MedicineOrders);
+   // string treatments = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.TreatmentOrders);
+    double grossPrice = 0;     
 }
 
 
@@ -43,18 +45,16 @@
                     @Html.LabelFor(model => model.DiscountRate, htmlAttributes: new { @class = "control-label col-md-2" })
                     <span class="col-md-1"></span>
                      <div class="col-md-3">
-                        @Html.TextBoxFor(model => model.DiscountRate,new { @class = "form-control", type = "number", min = "0", max = "100" })
+                        @Html.TextBoxFor(model => model.DiscountRate, new { @class = "form-control", type = "number", min = "1", max = "100" })
                     </div>
                     <h4 class="left col-md-1">%</h4>
-                    @Html.ValidationMessageFor(model => model.DiscountRate, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.AmtDiscount, new { @class = "control-label col-md-2" })
                    <span class="col-md-1">PHP</span>
                      <div class="col-md-4">
-                       @Html.TextBoxFor(model => model.AmtDiscount, null, new { @class = "form-control", type = "number", min = "0", max = "99999" })
-                         @Html.ValidationMessageFor(model => model.AmtDiscount, "", new { @class = "text-danger" })
-                     </div>
+                       @Html.TextBoxFor(model => model.AmtDiscount, null, new { @class = "form-control", type = "number", min = "1", max = "99999" })
+                    </div>
                 </div>
 
                 <hr />
@@ -403,35 +403,15 @@
             if($("#ModeOfPayment option:selected").text()== "Check")
             {
                 $("#check-panel").show();
-                $("#AmtPayment").val(TotalPrice);
-                $("#AmtPayment").attr("readonly","");
             }
             else
             {
                 $("#check-panel").hide();
-                $("#AmtPayment").removeAttr("readonly");
             }
         });
 
         $("#certificate").click(function(){
             $("#certificate-panel").toggle();
-        });
-
-        //Non LINQ expressions
-        $("#MedicineQty").keydown(filterNumeric);
-        $("#MedicineQty").change(function(){
-            if($.isNumeric($(this).val())==false)
-            {
-                $(this).val(0);
-            }
-        });
-
-        $("#TreatmentQty").keydown(filterNumeric);
-        $("#TreatmentQty").change(function(){
-            if($.isNumeric($(this).val())==false)
-            {
-                $(this).val(0);
-            }
         });
     });
 </script>

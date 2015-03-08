@@ -13,23 +13,9 @@ namespace CLIMAX.Models
         public virtual Materials material { get; set; }
         [Display(Name = "Quantity in Stock")]
         public int QtyInStock { get; set; }
-        [Display(Name = "Quantity to alert")]
-        public int? QtyToAlert { get; set; }
         [Display(Name = "Last Date Updated")]
         public DateTime LastDateUpdated { get; set; }
         public int BranchID { get; set; }
         public Branch branch { get; set; }
-
-        public bool isLowInStock {
-            get
-            {
-                if (QtyToAlert != null && QtyInStock <= QtyToAlert)
-                {
-                    return true;
-                }
-                else
-                    return false;
-            }
-        }
     }
 }

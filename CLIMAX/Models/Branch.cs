@@ -14,7 +14,7 @@ namespace CLIMAX.Models
         public string BranchName { get; set; }
         public string Location { get; set; }
         
-        [Display(Name = "Contact No")]
+         [Display(Name = "Contact No")]
         public string ContactNo { get; set; }
         public virtual List<Patient> Patients { get; set; }
     }

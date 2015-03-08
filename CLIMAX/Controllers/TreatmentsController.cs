@@ -17,15 +17,9 @@ namespace CLIMAX.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Treatments
-        public ActionResult Index(FormCollection form)
+        public ActionResult Index()
         {
-            var treatments = db.Treatments.ToList();
-            string search = form["searchValue"];
-            if(!string.IsNullOrEmpty(search))
-            {
-                treatments = treatments.Where(r => r.TreatmentName.Contains(search)).ToList();
-            }
-            return View(treatments);
+            return View(db.Treatments.ToList());
         }
 
         // GET: Treatments/Details/5
@@ -48,7 +42,7 @@ namespace CLIMAX.Controllers
         // GET: Treatments/Create
         public ActionResult Create()
         {
-            ViewBag.MaterialsList = materialList = new List<MaterialsViewModel>();
+            ViewBag.MaterialsList = new List<MaterialsViewModel>();
             ViewBag.Medicines = new SelectList(db.Materials, "MaterialID", "MaterialName");
             return View();
         }
@@ -60,6 +54,7 @@ namespace CLIMAX.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "TreatmentsID,TreatmentName,TreatmentPrice")] Treatments treatments, FormCollection form)
         {
+           // List<MaterialsViewModel> materialList = JsonConvert.DeserializeObject<List<MaterialsViewModel>>(form["Materials"]);
             if (materialList == null)
             {
                 materialList = new List<MaterialsViewModel>();

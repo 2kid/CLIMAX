@@ -64,6 +64,8 @@ namespace CLIMAX.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "ChargeSlipID,PatientID,EmployeeID,DiscountRate,AmtDiscount,AmtDue,ModeOfPayment,AmtPayment,GiftCertificateAmt,GiftCertificateNo,CheckNo")] ChargeSlip chargeSlip, FormCollection form)
         {
+            //  List<MaterialsViewModel> materialList = JsonConvert.DeserializeObject<List<MaterialsViewModel>>(form["Materials"]);
+            // List<Treatments> TreatmentList = JsonConvert.DeserializeObject<List<Treatments>>(form["TreatmentOrders"]);
             ViewBag.PaymentMethod = new List<SelectListItem>()
             {
                 new SelectListItem(){Text = "Cash", Value = "Cash"},
@@ -89,75 +91,29 @@ namespace CLIMAX.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if(chargeSlip.AmtPayment < chargeSlip.AmtDue)
-                    {
-                        ModelState.AddModelError("", "The amount paid cannot be less than the amount due");
-                        ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
-                        ViewBag.Medicines = new SelectList(db.Materials, "MaterialID", "MaterialName");
-                        ViewBag.TreatmentOrders = treatmentOrders;
-                        ViewBag.MaterialOrders = materialOrders;
-                        return View(chargeSlip);
-                    }
-
-                    else if (chargeSlip.ModeOfPayment == "Check" && chargeSlip.AmtPayment != chargeSlip.AmtDue)
-                    {
-                        ModelState.AddModelError("", "Check Payments must be exactly the same as amount due");
-                        ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
-                        ViewBag.Medicines = new SelectList(db.Materials, "MaterialID", "MaterialName");
-                        ViewBag.TreatmentOrders = treatmentOrders;
-                        ViewBag.MaterialOrders = materialOrders;
-                        return View(chargeSlip);
-                    }
-
                     chargeSlip.DateTimePurchased = DateTime.Now;
                     db.ChargeSlips.Add(chargeSlip);
                     db.SaveChanges();
-
-                    int branchId = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee.BranchID).SingleOrDefault();
-                    if (branchId != 0)
+                    foreach (TreatmentsViewModel item in treatmentOrders)
                     {
-                        foreach (TreatmentsViewModel item in treatmentOrders)
+                        Session_ChargeSlip session = new Session_ChargeSlip()
                         {
-                            Session_ChargeSlip session = new Session_ChargeSlip()
-                            {
-                                TreatmentID = item.TreatmentsID,
-                                ChargeSlipID = chargeSlip.ChargeSlipID
-                            };
-                            db.Session_ChargeSlip.Add(session);
-                            await db.SaveChangesAsync();
-
-                            List<MaterialList> materialList = db.MaterialList.Where(r => r.TreatmentID == item.TreatmentsID).ToList();
-                            foreach (MaterialList material_treatment in materialList)
-                            {
-                                Inventory inventory = db.Inventories.Where(r => r.MaterialID == material_treatment.MaterialID && r.BranchID == branchId).SingleOrDefault();
-                                if (inventory != null)
-                                {
-                                    inventory.QtyInStock -= material_treatment.Qty;
-                                    db.Entry(inventory).State = EntityState.Modified;
-                                    await db.SaveChangesAsync();
-                                }
-                            }
-
-                        }
-                        foreach (MaterialsViewModel item in materialOrders)
-                        {
-                            Medicine_ChargeSlip medicine = new Medicine_ChargeSlip()
-                                        {
-                                            ChargeSlipID = chargeSlip.ChargeSlipID,
-                                            MaterialID = item.MaterialID,
-                                            Qty = item.Qty
-                                        };
-                            db.Medicine_ChargeSlip.Add(medicine);
-                            await db.SaveChangesAsync();
-
-                            Inventory inventory = db.Inventories.Where(r => r.MaterialID == medicine.MaterialID && r.BranchID == branchId).SingleOrDefault();
-                            if (inventory != null)
-                            {
-                                inventory.QtyInStock -= medicine.Qty;
-                                db.Entry(inventory).State = EntityState.Modified;
-                                await db.SaveChangesAsync();
-                            }
-                        }
+                            TreatmentID = item.TreatmentsID,
+                            ChargeSlipID = chargeSlip.ChargeSlipID
+                        };
+                        db.Session_ChargeSlip.Add(session);
+                        await db.SaveChangesAsync();
+                    }
+                    foreach (MaterialsViewModel item in materialOrders)
+                    {
+                        Medicine_ChargeSlip medicine = new Medicine_ChargeSlip()
+                                    {
+                                        ChargeSlipID = chargeSlip.ChargeSlipID,
+                                        MaterialID = item.MaterialID,
+                                        Qty = item.Qty
+                                    };
+                        db.Medicine_ChargeSlip.Add(medicine);
+                        await db.SaveChangesAsync();
                     }
                     return RedirectToAction("Index");
                 }
@@ -252,12 +208,6 @@ namespace CLIMAX.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             #endregion
-
-         
-            ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
-            ViewBag.Medicines = new SelectList(db.Materials, "MaterialID", "MaterialName");
-            ViewBag.TreatmentOrders = treatmentOrders;
-            ViewBag.MaterialOrders = materialOrders;       
             return View(chargeSlip);
         }
 

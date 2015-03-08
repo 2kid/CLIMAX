@@ -13,20 +13,36 @@ namespace CLIMAX.Controllers
     public class ReportsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-        
-        // GET: Reports
-        public ActionResult Index(FormCollection form)
+        public ActionResult GeneratePDFPatients()
         {
-            var reports = db.Reports.Include(r => r.employee).Include(r => r.reportType);
+            return new Rotativa.ActionAsPdf("Index");
+        }
+       
+        // GET: Reports
+        public ActionResult Index(Reports report, FormCollection form)
+        {
+            if(report.reportType.Type == "Transactional")
+            {
 
-            string employeeId = form["employeeId"];
+            }
+            else if(report.reportType.Type == "Patients")
+            {
+                var patients = db.Patients.Include(p => p.branch).Include(p => p.company).ToList();
+
+                return View(patients);
+            }
+
+            return View();
+            //var reports = db.Reports.Include(r => r.employee).Include(r => r.reportType);
+
+            //string employeeId = form["employeeId"];
             
 
-            string reportTypeId = form["reportTypeId"];
+            //string reportTypeId = form["reportTypeId"];
 
 
-          
-            return View(reports.ToList());
+            
+            //return View(reports.ToList());
         }
 
         // GET: Reports/Details/5
@@ -47,9 +63,8 @@ namespace CLIMAX.Controllers
         // GET: Reports/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName");
-            ViewBag.ReportTypeID = new SelectList(db.ReportTypes, "ReportTypeID", "reportType");
-
+            var rep = new SelectList(db.ReportTypes, "ReportTypeID", "Type");
+            ViewBag.ReportTypeID = rep;
             return View();
         }
 
@@ -69,12 +84,13 @@ namespace CLIMAX.Controllers
                 if (!string.IsNullOrEmpty(endDate))
                     reports.DateEndOfReport = DateTime.Parse(endDate);
 
+                reports.EmployeeID = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.EmployeeID).SingleOrDefault();
                 db.Reports.Add(reports);
                 db.SaveChanges();
-                return RedirectToAction("Index"); //details
+                return RedirectToAction("Index", new { Report = reports});
+                //                return RedirectToAction("Index"); //details
             }
 
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", reports.EmployeeID);
             ViewBag.ReportTypeID = new SelectList(db.ReportTypes, "ReportTypeID", "reportType", reports.ReportTypeID);
             return View(reports);
         }

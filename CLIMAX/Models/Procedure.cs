@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -13,7 +12,7 @@ namespace CLIMAX.Models
         [Required]
         [Display(Name = "Procedure Name")]
         public string ProcedureName { get; set; }
-        [ForeignKey("treatment")]
+        [Required]
         public int TreatmentID { get; set; }
         public virtual Treatments treatment { get; set; }
         [Display(Name = "Step No")]

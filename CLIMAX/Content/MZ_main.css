@@ -15,7 +15,6 @@ position: center center;
 }
 body{
   /* Location of the image */
-  background-image: url(MainBG.jpg);
   
   /* Image is centered vertically and horizontally at all times */
   background-position: center center;

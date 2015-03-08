@@ -19,9 +19,6 @@ namespace CLIMAX.Models
         public int RoleTypeID { get; set; }
         public virtual RoleType roleType { get; set; }
 
-        public int BranchID { get; set; }
-        public virtual Branch Branch { get; set; }
-
         public string FullName
         {
             get { return FirstName + " " + MiddleName + " " + LastName; }
