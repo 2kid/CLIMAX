@@ -56,6 +56,8 @@ namespace CLIMAX.Controllers
                 procedure.TreatmentID = TreatmentID;
                 db.Procedure.Add(procedure);
                 db.SaveChanges();
+                Audit.CreateAudit(procedure.ProcedureName, "Create", "Procedure", procedure.ProcedureID, User.Identity.Name);
+
                 return RedirectToAction("Index", new { id = TreatmentID });
             }
 
@@ -87,7 +89,9 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(procedure).State = EntityState.Modified;
-                db.SaveChanges();
+                Audit.CreateAudit(procedure.ProcedureName, "Edit", "Procedure", procedure.ProcedureID, User.Identity.Name);
+
+                // db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(procedure);
@@ -115,7 +119,9 @@ namespace CLIMAX.Controllers
         {
             Procedure procedure = db.Procedure.Find(id);
             db.Procedure.Remove(procedure);
-            db.SaveChanges();
+            Audit.CreateAudit(procedure.ProcedureName, "Delete", "Procedure", procedure.ProcedureID, User.Identity.Name);
+
+            //  db.SaveChanges();
             return RedirectToAction("Index");
         }
 

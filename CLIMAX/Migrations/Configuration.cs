@@ -18,25 +18,31 @@ namespace CLIMAX.Migrations
         protected override void Seed(CLIMAX.Models.ApplicationDbContext context)
         {
             context.Branches.AddOrUpdate(
-            new Branch() { BranchName = "*" },
-            new Branch() { BranchName = "branch1" },
-            new Branch() { BranchName = "branch2" });
+            new Branch() { BranchID = 1, BranchName = "*" },
+            new Branch() { BranchID = 2, BranchName = "branch1" },
+            new Branch() { BranchID = 3, BranchName = "branch2" });
+
+            context.ReportTypes.AddOrUpdate(
+                new ReportType() { ReportTypeID = 1, Type = "Transactional"},
+                new ReportType() { ReportTypeID = 2, Type = "Patients"}      
+                );
+
 
             context.RoleType.AddOrUpdate(
-            new RoleType() { Type = "Beauty Consultant" },
-            new RoleType() { Type = "Therapist" },
-            new RoleType() { Type = "Officer in Charge" },
-            new RoleType() { Type = "Auditor" },
-            new RoleType() { Type = "Administrator" });
+            new RoleType() { RoleTypeId = 1, Type = "Beauty Consultant" },
+            new RoleType() { RoleTypeId = 2, Type = "Therapist" },
+            new RoleType() { RoleTypeId = 3, Type = "Officer in Charge" },
+            new RoleType() { RoleTypeId = 4, Type = "Auditor" },
+            new RoleType() { RoleTypeId = 5, Type = "Administrator" });
 
             context.UnitTypes.AddOrUpdate(
-            new UnitType() { Type = "Grams" },
-            new UnitType() { Type = "MilliLiters" });
+            new UnitType() { UnitTypeID = 1, Type = "Grams" },
+            new UnitType() { UnitTypeID = 2, Type = "MilliLiters" });
 
             context.ActionTypes.AddOrUpdate(
-            new ActionTypes() { AffectedRecord = "Patient", Action = "Create", Description = "A new patient record was created. - " },
-            new ActionTypes() { AffectedRecord = "Patient", Action = "Delete", Description = "A patient record was deleted. - " },
-            new ActionTypes() { AffectedRecord = "Patient", Action = "Edit", Description = "A patient record was updated. - " },
+            new ActionTypes() { ActionTypesID = 1, AffectedRecord = "Patient", Action = "Create", Description = "A new patient record was created. - " },
+            new ActionTypes() { ActionTypesID = 2, AffectedRecord = "Patient", Action = "Delete", Description = "A patient record was deleted. - " },
+            new ActionTypes() { ActionTypesID = 3, AffectedRecord = "Patient", Action = "Edit", Description = "A patient record was updated. - " },
             new ActionTypes() { AffectedRecord = "Employee", Action = "Create", Description = "A new employee record was created. - " },
             new ActionTypes() { AffectedRecord = "Employee", Action = "Delete", Description = "An employee record was deleted. - " },
             new ActionTypes() { AffectedRecord = "Employee", Action = "Edit", Description = "An employee record was updated. - " },
@@ -81,7 +87,11 @@ namespace CLIMAX.Migrations
             context.Materials.AddOrUpdate(
             new Materials() { MaterialName = "Material", Price = 12, UnitTypeID = 1, Description = "Desc" },
             new Materials() { MaterialName = "Cream", Price = 30, UnitTypeID = 1, Description = "Desc" });
-           
+
+            context.Employees.AddOrUpdate(
+               new Employee() { BranchID = 1, EmployeeID = 1, FirstName = "sa" , RoleTypeID = 5 }
+               );
+
             context.SaveChanges();
           
             bool success = false;
@@ -97,7 +107,8 @@ namespace CLIMAX.Migrations
             var newUser = new ApplicationUser()
             {
                 UserName = "admin@yahoo.com",
-                Email = "admin@yahoo.com"
+                Email = "admin@yahoo.com",
+                EmployeeID = 1
             };
             try
             {

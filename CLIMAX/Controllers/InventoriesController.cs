@@ -67,6 +67,9 @@ namespace CLIMAX.Controllers
                     inventory.LastDateUpdated = DateTime.Now;
                     db.Inventories.Add(inventory);
                     db.SaveChanges();
+                    string material = db.Materials.Find(inventory.MaterialID).MaterialName;
+                    Audit.CreateAudit(material, "Create", "Inventory", inventory.InventoryID, User.Identity.Name);
+
                     return RedirectToAction("Index");
                 }
                 else
@@ -127,7 +130,10 @@ namespace CLIMAX.Controllers
                     inventory.BranchID = currentUser.BranchID;
                     inventory.LastDateUpdated = DateTime.Now;
                     db.Entry(inventory).State = EntityState.Modified;
-                    db.SaveChanges();
+                    string material = db.Materials.Find(inventory.MaterialID).MaterialName;
+                    Audit.CreateAudit(material, "Edit", "Inventory", inventory.InventoryID, User.Identity.Name);
+
+                    //db.SaveChanges();
                     return RedirectToAction("Index");
                 }
                 else
@@ -163,7 +169,10 @@ namespace CLIMAX.Controllers
         {
             Inventory inventory = db.Inventories.Find(id);
             db.Inventories.Remove(inventory);
-            db.SaveChanges();
+            string material = db.Materials.Find(inventory.MaterialID).MaterialName;
+            Audit.CreateAudit(material, "Delete", "Inventory", inventory.InventoryID, User.Identity.Name);
+
+            // db.SaveChanges();
             return RedirectToAction("Index");
         }
 

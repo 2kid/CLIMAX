@@ -63,4 +63,9 @@ namespace CLIMAX.Models
         }
     }
 
+    public class PatientViewModel
+    {
+
+    }
+
 }

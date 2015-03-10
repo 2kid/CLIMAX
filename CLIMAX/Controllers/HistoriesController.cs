@@ -55,6 +55,8 @@ namespace CLIMAX.Controllers
             {
                 db.History.Add(history);
                 db.SaveChanges();
+                String patient = db.Patients.Find(history.PatientID).FullName;
+                Audit.CreateAudit(patient, "Create", "History", history.HistoryID, User.Identity.Name);
                 return RedirectToAction("Index");
             }
 
@@ -90,7 +92,10 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(history).State = EntityState.Modified;
-                db.SaveChanges();
+                String patient = db.Patients.Find(history.PatientID).FullName;
+                Audit.CreateAudit(patient, "Edit", "History", history.HistoryID, User.Identity.Name);
+
+                // db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", history.EmployeeID);
@@ -120,7 +125,10 @@ namespace CLIMAX.Controllers
         {
             History history = db.History.Find(id);
             db.History.Remove(history);
-            db.SaveChanges();
+            String patient = db.Patients.Find(history.PatientID).FullName;
+            Audit.CreateAudit(patient, "Delete", "History", history.HistoryID, User.Identity.Name);
+
+            //db.SaveChanges();
             return RedirectToAction("Index");
         }
 

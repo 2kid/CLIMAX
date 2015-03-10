@@ -166,6 +166,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Audit.cs" />
     <Compile Include="Controllers\BranchesController.cs" />
     <Compile Include="Controllers\ChargeSlipsController.cs" />
     <Compile Include="Controllers\CompaniesController.cs" />
@@ -184,6 +185,10 @@
     <Compile Include="Controllers\UnitTypesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503100704317_init.cs" />
+    <Compile Include="Migrations\201503100704317_init.Designer.cs">
+      <DependentUpon>201503100704317_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -248,7 +253,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -342,6 +349,7 @@
     <Content Include="Views\Procedures\Edit.cshtml" />
     <Content Include="Views\Procedures\Index.cshtml" />
     <Content Include="Views\Account\AdminIndex.cshtml" />
+    <Content Include="Views\Reports\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -352,6 +360,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201503100704317_init.resx">
+      <DependentUpon>201503100704317_init.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -52,6 +52,7 @@ namespace CLIMAX.Controllers
             {
                 db.Companies.Add(company);
                 db.SaveChanges();
+                Audit.CreateAudit(company.CompanyName, "Create", "Company", company.CompanyID, User.Identity.Name);
                 return RedirectToAction("Index");
             }
 
@@ -83,7 +84,8 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(company).State = EntityState.Modified;
-                db.SaveChanges();
+                Audit.CreateAudit(company.CompanyName, "Edit", "Company", company.CompanyID, User.Identity.Name);
+                // db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(company);
@@ -111,7 +113,8 @@ namespace CLIMAX.Controllers
         {
             Company company = db.Companies.Find(id);
             db.Companies.Remove(company);
-            db.SaveChanges();
+            Audit.CreateAudit(company.CompanyName, "Delete", "Company", company.CompanyID, User.Identity.Name);
+            // db.SaveChanges();
             return RedirectToAction("Index");
         }
 

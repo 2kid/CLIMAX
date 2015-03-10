@@ -82,6 +82,7 @@ namespace CLIMAX.Controllers
             {
                 db.Patients.Add(patient);
                 db.SaveChanges();
+                Audit.CreateAudit(patient.FullName, "Create", "Patient", patient.PatientID, User.Identity.Name);
                 return RedirectToAction("Index");
             }
 
@@ -157,7 +158,8 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(patient).State = EntityState.Modified;
-                db.SaveChanges();
+                Audit.CreateAudit(patient.FullName, "Edit", "Patient", patient.PatientID, User.Identity.Name);
+                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName", patient.BranchID);
@@ -207,14 +209,9 @@ namespace CLIMAX.Controllers
         {
             Patient patient = db.Patients.Find(id);
             db.Patients.Remove(patient);
-            db.SaveChanges();
+            Audit.CreateAudit(patient.FullName, "Delete", "Patient", patient.PatientID, User.Identity.Name);
+            //db.SaveChanges();
             return RedirectToAction("Index");
-        }
-
-        private void CreateAudit(string action)
-        {
-            AuditTrail newAudit = new AuditTrail();
-          //  newAudit.
         }
 
         protected override void Dispose(bool disposing)

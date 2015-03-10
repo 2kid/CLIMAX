@@ -112,7 +112,8 @@ namespace CLIMAX.Controllers
                     chargeSlip.DateTimePurchased = DateTime.Now;
                     db.ChargeSlips.Add(chargeSlip);
                     db.SaveChanges();
-
+                    string patient = db.Patients.Find(chargeSlip.PatientID).FullName;
+                    Audit.CreateAudit(patient, "Create", "ChargeSlip", chargeSlip.ChargeSlipID, User.Identity.Name);
                     int branchId = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee.BranchID).SingleOrDefault();
                     if (branchId != 0)
                     {
@@ -121,7 +122,8 @@ namespace CLIMAX.Controllers
                             Session_ChargeSlip session = new Session_ChargeSlip()
                             {
                                 TreatmentID = item.TreatmentsID,
-                                ChargeSlipID = chargeSlip.ChargeSlipID
+                                ChargeSlipID = chargeSlip.ChargeSlipID,
+                                Qty = item.Qty
                             };
                             db.Session_ChargeSlip.Add(session);
                             await db.SaveChangesAsync();
@@ -260,63 +262,6 @@ namespace CLIMAX.Controllers
             ViewBag.MaterialOrders = materialOrders;       
             return View(chargeSlip);
         }
-
-        //// GET: ChargeSlips/Edit/5
-        //public ActionResult Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    ChargeSlip chargeSlip = db.ChargeSlips.Find(id);
-        //    if (chargeSlip == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(chargeSlip);
-        //}
-
-        //// POST: ChargeSlips/Edit/5
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Include = "ChargeSlipID,DateTimePurchased,ModeOfPayment,AmtOfPayment,ApprovalNo,GiftCertificateAmt,GiftCertificateNo,CheckNo")] ChargeSlip chargeSlip)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(chargeSlip).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(chargeSlip);
-        //}
-
-        //// GET: ChargeSlips/Delete/5
-        //public ActionResult Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    ChargeSlip chargeSlip = db.ChargeSlips.Find(id);
-        //    if (chargeSlip == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(chargeSlip);
-        //}
-
-        //// POST: ChargeSlips/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    ChargeSlip chargeSlip = db.ChargeSlips.Find(id);
-        //    db.ChargeSlips.Remove(chargeSlip);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
 
         protected override void Dispose(bool disposing)
         {

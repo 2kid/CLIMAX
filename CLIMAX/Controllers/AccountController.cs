@@ -145,7 +145,7 @@ namespace CLIMAX.Controllers
                             result = UserManager.AddToRole(user.Id, "Admin");
                             break;
                     }
-               
+                    Audit.CreateAudit(user.UserName, "Create", "Account", 0, User.Identity.Name);
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);

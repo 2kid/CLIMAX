@@ -55,6 +55,8 @@ namespace CLIMAX.Controllers
             {
                 db.Materials.Add(materials);
                 db.SaveChanges();
+                Audit.CreateAudit(materials.MaterialName, "Create", "Material", materials.MaterialID, User.Identity.Name);
+
                 return RedirectToAction("Index");
             }
 
@@ -88,7 +90,9 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(materials).State = EntityState.Modified;
-                db.SaveChanges();
+                Audit.CreateAudit(materials.MaterialName, "Edit", "Material", materials.MaterialID, User.Identity.Name);
+
+                // db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.UnitTypeID = new SelectList(db.UnitTypes, "UnitTypeID", "Type", materials.UnitTypeID);
@@ -117,7 +121,9 @@ namespace CLIMAX.Controllers
         {
             Materials materials = db.Materials.Find(id);
             db.Materials.Remove(materials);
-            db.SaveChanges();
+            Audit.CreateAudit(materials.MaterialName, "Delete", "Material", materials.MaterialID, User.Identity.Name);
+
+            //db.SaveChanges();
             return RedirectToAction("Index");
         }
 

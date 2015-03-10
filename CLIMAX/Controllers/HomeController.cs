@@ -25,6 +25,8 @@ namespace CLIMAX.Controllers
                 SP.Write("AT+CMGS=" + ph_no + Char.ConvertFromUtf32(13));
                 SP.Write(message + Char.ConvertFromUtf32(26) + Char.ConvertFromUtf32(13));
                 SP.Close();
+                Audit.CreateAudit(message, "Send", "None", 0, User.Identity.Name);
+
             }
             catch
             {

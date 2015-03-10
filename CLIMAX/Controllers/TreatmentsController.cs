@@ -70,6 +70,7 @@ namespace CLIMAX.Controllers
                 {             
                     db.Treatments.Add(treatments);
                     db.SaveChanges();
+                    Audit.CreateAudit(treatments.TreatmentName, "Create", "Treatment", treatments.TreatmentsID, User.Identity.Name);
 
                     foreach (MaterialsViewModel item in materialList)
                     {
@@ -81,6 +82,7 @@ namespace CLIMAX.Controllers
                         };
                         db.MaterialList.Add(treatment_medicine_List);
                         await db.SaveChangesAsync();
+
                     }
 
                     return RedirectToAction("Index");
@@ -171,7 +173,9 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(treatments).State = EntityState.Modified;
-                db.SaveChanges();
+                Audit.CreateAudit(treatments.TreatmentName, "Edit", "Treatment", treatments.TreatmentsID, User.Identity.Name);
+
+                // db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(treatments);
@@ -199,7 +203,9 @@ namespace CLIMAX.Controllers
         {
             Treatments treatments = db.Treatments.Find(id);
             db.Treatments.Remove(treatments);
-            db.SaveChanges();
+            Audit.CreateAudit(treatments.TreatmentName, "Delete", "Treatment", treatments.TreatmentsID, User.Identity.Name);
+
+            // db.SaveChanges();
             return RedirectToAction("Index");
         }
 

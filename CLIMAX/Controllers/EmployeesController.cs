@@ -67,6 +67,7 @@ namespace CLIMAX.Controllers
                     employee.BranchID = currentUser.BranchID;
                     db.Employees.Add(employee);
                     db.SaveChanges();
+                    Audit.CreateAudit(employee.FullName, "Create", "Employee", employee.EmployeeID, User.Identity.Name);
                     return RedirectToAction("Index");
                 }
                 else
@@ -112,7 +113,8 @@ namespace CLIMAX.Controllers
                 {
                     employee.BranchID = currentUser.BranchID;
                     db.Entry(employee).State = EntityState.Modified;
-                    db.SaveChanges();
+                    Audit.CreateAudit(employee.FullName, "Edit", "Employee", employee.EmployeeID, User.Identity.Name);
+                    //db.SaveChanges();
                     return RedirectToAction("Index");
                 }
             }
@@ -142,7 +144,8 @@ namespace CLIMAX.Controllers
         {
             Employee employee = db.Employees.Find(id);
             db.Employees.Remove(employee);
-            db.SaveChanges();
+            Audit.CreateAudit(employee.FullName, "Delete", "Employee", employee.EmployeeID, User.Identity.Name);
+            //db.SaveChanges();
             return RedirectToAction("Index");
         }
 

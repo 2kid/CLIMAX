@@ -169,5 +169,6 @@ C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Microsoft.Owin.Security.Microso
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.csprojResolveAssemblyReference.cache
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.dll
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.pdb
+C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Rotativa.dll
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.Migrations.init.resources
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.csproj.GenerateResource.Cache

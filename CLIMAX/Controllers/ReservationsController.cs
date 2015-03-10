@@ -79,6 +79,9 @@ namespace CLIMAX.Controllers
                 }
                 db.Reservations.Add(reservation);
                 db.SaveChanges();
+                string patient = db.Patients.Find(reservation.PatientID).FullName;
+                Audit.CreateAudit(patient, "Create", "Reservation", reservation.ReservationID, User.Identity.Name);
+
                 return RedirectToAction("Index");
             }
 
@@ -147,7 +150,10 @@ namespace CLIMAX.Controllers
                     return View(reservation);
                 }
                 db.Entry(reservation).State = EntityState.Modified;
-                db.SaveChanges();
+                string patient = db.Patients.Find(reservation.PatientID).FullName;
+                Audit.CreateAudit(patient, "Edit", "Reservation", reservation.ReservationID, User.Identity.Name);
+
+                // db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName", reservation.EmployeeID);
@@ -185,7 +191,10 @@ namespace CLIMAX.Controllers
         {
             Reservation reservation = db.Reservations.Find(id);
             db.Reservations.Remove(reservation);
-            db.SaveChanges();
+            string patient = db.Patients.Find(reservation.PatientID).FullName;
+            Audit.CreateAudit(patient, "Delete", "Reservation", reservation.ReservationID, User.Identity.Name);
+
+            // db.SaveChanges();
             return RedirectToAction("Index");
         }
 

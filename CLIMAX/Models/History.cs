@@ -8,6 +8,7 @@ namespace CLIMAX.Models
     public class History
     {
         public int HistoryID { get; set; }
+        //which session is it
         public int SessionNo { get; set; }
       
         public int PatientID { get; set; }

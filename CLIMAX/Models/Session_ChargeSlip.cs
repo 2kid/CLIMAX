@@ -12,7 +12,7 @@ namespace CLIMAX.Models
         [ForeignKey("treatment")]
         public int TreatmentID { get; set; }
         public virtual Treatments treatment { get; set; }
-
+        public int Qty { get; set; }
         public int ChargeSlipID { get; set; }
         public virtual ChargeSlip chargeSlip { get; set; }
     }
