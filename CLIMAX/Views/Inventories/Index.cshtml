@@ -20,7 +20,9 @@
         <th>
             @Html.DisplayNameFor(model => model.LastDateUpdated)
         </th>
-        <th></th>
+        <th>
+            Settings
+        </th>
     </tr>
 
 @foreach (var item in Model) {
@@ -35,10 +37,19 @@
             @Html.DisplayFor(modelItem => item.LastDateUpdated)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.InventoryID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.InventoryID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.InventoryID })
+            <button type="button" class="btn btn-default" aria-label="Left Align">
+                @Html.ActionLink("Details", "Details", new { id = item.InventoryID })
+            </button>
+            <button type="button" class="btn btn-default" aria-label="Left Align">
+                @Html.ActionLink("Edit", "Edit", new { id = item.InventoryID })
+            </button>
+
+            <button type="button" class="btn btn-default" aria-label="Left Align">
+                @Html.ActionLink("Delete", "Delete", new { id = item.InventoryID })
+            </button>
         </td>
+        
+       
     </tr>
 }
 

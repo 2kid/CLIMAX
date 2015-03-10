@@ -68,11 +68,20 @@
        {
            <td></td>
        }
+        
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ReservationID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ReservationID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ReservationID })
+            <button type="button" class="btn btn-default" aria-label="Left Align">
+                @Html.ActionLink("Details", "Details", new { id = item.ReservationID })
+            </button>
+            <button type="button" class="btn btn-default" aria-label="Left Align">
+                @Html.ActionLink("Edit", "Edit", new { id = item.ReservationID })
+            </button>
+
+            <button type="button" class="btn btn-default" aria-label="Left Align">
+                @Html.ActionLink("Delete", "Delete", new { id = item.ReservationID })
+            </button>
         </td>
+        
     </tr>
 }
 

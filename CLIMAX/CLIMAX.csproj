@@ -253,12 +253,8 @@
     <Content Include="Content\bootstrap-3.3.2-dist\simple-sidebar.css" />
     <Content Include="Content\default.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Content\MainBG.jpg" />
     <Content Include="Content\Moses_custom.css" />
     <Content Include="Content\nivo-lightbox.css" />
-    <Content Include="Content\plain.png" />
-    <Content Include="Content\plain2.png" />
-    <Content Include="Content\plain3.jpeg" />
     <Content Include="Content\start.png" />
     <Content Include="Content\style.css" />
     <Content Include="Scripts\app.min.js" />

@@ -164,7 +164,7 @@ blockquote strong {
 
 /* ------- Navigation ------------ */
 #navigation {
-	background: #fff;
+	background-color:rgba(61, 201, 179, 1);
 	z-index: 9999;
 	width:100%;
     box-sizing:border-box;
@@ -174,7 +174,8 @@ blockquote strong {
 
 
 .navbar {
-    margin-bottom: 0;
+    margin-bottom: 0; 
+    background-color:rgba(61, 201, 179, 1);
 }
 
 .navbar-brand {
@@ -201,6 +202,7 @@ blockquote strong {
     color: #444;
 	text-transform: uppercase;
 	font-weight: 700;
+    background-color:rgba(61, 201, 179, 1);
 }
 
 .navbar-custom.top-nav-collapse ul.nav li a {
@@ -417,7 +419,16 @@ hr.bold {
 --- Intro
 ============================ */
 
-.hero { background: url(start.png) no-repeat center center; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; padding: 200px 0 200px 0; height: auto; }
+.hero { 
+    background: url(start.png) no-repeat center center; 
+    -webkit-background-size: cover; 
+    -moz-background-size: cover; 
+    -o-background-size: cover; 
+    background-size: cover; 
+    padding: 200px 0 200px 0; 
+    height: auto; 
+
+}
 .hero h1 { font-size: 40px; letter-spacing: 12px; margin: 40px 0 10px; font-weight: 900; color: #000000;}
 .hero h1 span { color: #000000; display: inline-block; }
 .hero p { font-size: 24px; font-weight: 400; color: #fefefe; }
@@ -993,7 +1004,7 @@ a.btn:focus{
         padding: 20px 0;
         border-bottom: 0;
         letter-spacing: 1px;
-        background: 0 0;
+        background: rgba(61, 201, 179, 1); 
         -webkit-transition: background .5s ease-in-out,padding .5s ease-in-out;
         -moz-transition: background .5s ease-in-out,padding .5s ease-in-out;
         transition: background .5s ease-in-out,padding .5s ease-in-out;

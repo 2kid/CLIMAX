@@ -3,57 +3,46 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title</title>
+    <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
 <body>
-    <header class="main-header">
-        <!-- Logo -->
-        
-        <!-- Header Navbar: style can be found in header.less -->
-        <nav class="navbar" role="navigation">
-            <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                <span class="sr-only">Toggle navigation</span>
-            </a>
-        </nav>
-    </header>
+    <nav class="navbar navbar-custom">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">CLIMAX</a>
+            </div>
 
-    <aside class="main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
-           
-            
-           
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Patients", "Index", "Patients") </li>
+                    <li>@Html.ActionLink("Charge Slip", "Index", "ChargeSlips")</li>
+                    <li>@Html.ActionLink("Reservations", "Index", "Reservations")</li>
+                    <li>@Html.ActionLink("Treatment Module", "Index", "Treatments")</li>
+                    <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
+                    <li>@Html.ActionLink("Inventory", "Index", "Inventories")</li>
+                    <li>@Html.ActionLink("Reports", "Index", "Reports")</li>
+                    <li>@Html.ActionLink("Audit Trail", "Index", "Inventories")</li>
 
-
-            <!-- sidebar menu: : style can be found in sidebar.less -->
-            <ul class="sidebar-menu">
-                <li class="header">MAIN NAVIGATION</li>
-                <li>@Html.ActionLink("Patients", "Index", "Patients") </li>
-                <li>@Html.ActionLink("Charge Slip", "Index", "ChargeSlips")</li>
-                <li>@Html.ActionLink("Reservations", "Index", "Reservations")</li>
-                <li>@Html.ActionLink("Treatment Module", "Index", "Treatments")</li>
-                <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
-                <li>@Html.ActionLink("Inventory", "Index", "Inventories")</li>
-                <li>@Html.ActionLink("Reports", "Index", "Reports")</li>
-                <li>@Html.ActionLink("Audit Trail", "Index", "Inventories")</li>
-               
-            </ul>
-        </section>
-        <!-- /.sidebar -->
-    </aside>
-
-
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <!-- <footer>
-             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-         </footer>-->
+       
     </div>
 
     @Scripts.Render("~/bundles/jquery")

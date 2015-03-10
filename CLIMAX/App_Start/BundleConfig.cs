@@ -43,16 +43,10 @@ namespace CLIMAX
                        "~/Content/default.css",
                        "~/Content/animations.css",
                        "~/Content/style.css",
-                       "~/Content/default.css",
-                      "~/Content/site.css",
-                      "~/Content/_all-skins.min.css",
-                      "~/Content/AdminLTE.min.css",
-                      "~/Content/MZ_main.css",
+                      "~/Content/Site.css",
                       "~/Content/Moses_custom.css"));
 
           
-
-            
 
         }
     }
