@@ -219,13 +219,29 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\AdminLTE.min.css" />
+    <Content Include="Content\animate-custom.css" />
+    <Content Include="Content\animations.css" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap.css" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\default.css" />
+    <Content Include="Content\demo.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\MainBG.jpg" />
+    <Content Include="Content\map.jpg" />
     <Content Include="Content\Moses_custom.css" />
+    <Content Include="Content\nivo-lightbox.css" />
+    <Content Include="Content\plain.png" />
+    <Content Include="Content\plain2.png" />
+    <Content Include="Content\plain3.jpeg" />
+    <Content Include="Content\start.png" />
+    <Content Include="Content\style.css" />
+    <Content Include="Content\style2.css" />
+    <Content Include="Content\_all-skins.min.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\npm.js" />
@@ -240,6 +256,7 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\Thumbs.db" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

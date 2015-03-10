@@ -78,6 +78,7 @@
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-repeat: repeat-x;
   border-color: #245580;
+  color: black;
 }
 .btn-primary:hover,
 .btn-primary:focus {

@@ -38,17 +38,9 @@
                 @Html.ValidationMessageFor(model => model.QtyToAlert, "", new { @class = "text-danger" })
             </div>
         </div>
-
-        @*<div class="form-group">
-            @Html.LabelFor(model => model.BranchID,"Branch", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.BranchID, (IEnumerable<SelectListItem>)ViewBag.Branch)
-                @Html.ValidationMessageFor(model => model.BranchID, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </div>
     </div>
