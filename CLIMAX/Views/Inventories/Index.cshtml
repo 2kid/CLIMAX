@@ -18,11 +18,11 @@
             @Html.DisplayNameFor(model => model.QtyInStock)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.LastDateUpdated)
         </th>
         <th>
-            Settings
+            @Html.DisplayNameFor(model => model.LastDateUpdated)
         </th>
+        <th></th>
     </tr>
 
 @foreach (var item in Model) {
@@ -33,23 +33,25 @@
         <td>
             @Html.DisplayFor(modelItem => item.QtyInStock)
         </td>
+        @if(item.isLowInStock)
+        { 
+        <th>
+           <b class="text-danger">Warning: Please restock!</b>
+        </th>
+        }
+        else
+        {
+            <td>
+            </td>
+        }
         <td>
             @Html.DisplayFor(modelItem => item.LastDateUpdated)
         </td>
         <td>
-            <button type="button" class="btn btn-default" aria-label="Left Align">
-                @Html.ActionLink("Details", "Details", new { id = item.InventoryID })
-            </button>
-            <button type="button" class="btn btn-default" aria-label="Left Align">
-                @Html.ActionLink("Edit", "Edit", new { id = item.InventoryID })
-            </button>
-
-            <button type="button" class="btn btn-default" aria-label="Left Align">
-                @Html.ActionLink("Delete", "Delete", new { id = item.InventoryID })
-            </button>
+            @Html.ActionLink("Edit", "Edit", new { id=item.InventoryID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.InventoryID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.InventoryID })
         </td>
-        
-       
     </tr>
 }
 

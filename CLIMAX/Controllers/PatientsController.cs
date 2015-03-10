@@ -13,7 +13,7 @@ namespace CLIMAX.Controllers
     public class PatientsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
+      //  private string Audit
         // GET: Patients
         public ActionResult Index(FormCollection form)
         {
@@ -51,13 +51,22 @@ namespace CLIMAX.Controllers
 
             IEnumerable<SelectListItem> item = new List<SelectListItem>()
             {
-                new SelectListItem(){
-                    Text = "Female", Value = "false"},
-              new SelectListItem(){
-                    Text = "Male", Value = "true"}   
+                new SelectListItem(){ Text = "Female", Value = "false"},
+                new SelectListItem(){Text = "Male", Value = "true"}   
             };
 
-            ViewBag.Gender = new SelectList(item,"Value","Text");
+            IEnumerable<SelectListItem> civilStatus = new List<SelectListItem>()
+            {
+                new SelectListItem(){ Text = "Single", Value = "Single"},
+                new SelectListItem(){Text = "Married", Value = "Married"},
+                new SelectListItem(){Text = "Widowed", Value = "Widowed"},
+                new SelectListItem(){Text = "Divorced", Value = "Divorced"},
+                new SelectListItem(){Text = "Separated", Value = "Separated"}
+            };
+
+
+            ViewBag.Gender = new SelectList(item, "Value", "Text");
+            ViewBag.CivilStatus = civilStatus;
             return View();
         }
 
@@ -73,6 +82,7 @@ namespace CLIMAX.Controllers
             {
                 db.Patients.Add(patient);
                 db.SaveChanges();
+                Audit.CreateAudit(patient.FullName, "Create", "Patient", patient.PatientID, User.Identity.Name);
                 return RedirectToAction("Index");
             }
 
@@ -86,7 +96,18 @@ namespace CLIMAX.Controllers
                     Text = "Male", Value = "true"}   
             };
 
+            IEnumerable<SelectListItem> civilStatus = new List<SelectListItem>()
+            {
+                new SelectListItem(){ Text = "Single", Value = "Single"},
+                new SelectListItem(){Text = "Married", Value = "Married"},
+                new SelectListItem(){Text = "Widowed", Value = "Widowed"},
+                new SelectListItem(){Text = "Divorced", Value = "Divorced"},
+                new SelectListItem(){Text = "Separated", Value = "Separated"}
+            };
+
+
             ViewBag.Gender = new SelectList(item, "Value", "Text");
+            ViewBag.CivilStatus = civilStatus;
             return View(patient);
         }
 
@@ -112,7 +133,18 @@ namespace CLIMAX.Controllers
                     Text = "Male", Value = "true"}   
             };
 
+            IEnumerable<SelectListItem> civilStatus = new List<SelectListItem>()
+            {
+                new SelectListItem(){ Text = "Single", Value = "Single"},
+                new SelectListItem(){Text = "Married", Value = "Married"},
+                new SelectListItem(){Text = "Widowed", Value = "Widowed"},
+                new SelectListItem(){Text = "Divorced", Value = "Divorced"},
+                new SelectListItem(){Text = "Separated", Value = "Separated"}
+            };
+
+
             ViewBag.Gender = new SelectList(item, "Value", "Text");
+            ViewBag.CivilStatus = civilStatus;
             return View(patient);
         }
 
@@ -126,7 +158,8 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(patient).State = EntityState.Modified;
-                db.SaveChanges();
+                Audit.CreateAudit(patient.FullName, "Edit", "Patient", patient.PatientID, User.Identity.Name);
+                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName", patient.BranchID);
@@ -139,7 +172,18 @@ namespace CLIMAX.Controllers
                     Text = "Male", Value = "true"}   
             };
 
+            IEnumerable<SelectListItem> civilStatus = new List<SelectListItem>()
+            {
+                new SelectListItem(){ Text = "Single", Value = "Single"},
+                new SelectListItem(){Text = "Married", Value = "Married"},
+                new SelectListItem(){Text = "Widowed", Value = "Widowed"},
+                new SelectListItem(){Text = "Divorced", Value = "Divorced"},
+                new SelectListItem(){Text = "Separated", Value = "Separated"}
+            };
+
+
             ViewBag.Gender = new SelectList(item, "Value", "Text");
+            ViewBag.CivilStatus = civilStatus;
             return View(patient);
         }
 
@@ -165,7 +209,8 @@ namespace CLIMAX.Controllers
         {
             Patient patient = db.Patients.Find(id);
             db.Patients.Remove(patient);
-            db.SaveChanges();
+            Audit.CreateAudit(patient.FullName, "Delete", "Patient", patient.PatientID, User.Identity.Name);
+            //db.SaveChanges();
             return RedirectToAction("Index");
         }
 

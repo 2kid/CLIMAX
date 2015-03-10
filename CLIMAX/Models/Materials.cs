@@ -15,9 +15,8 @@ namespace CLIMAX.Models
         [Display(Name = "Material Name")]
         public string MaterialName { get; set; }
         public string Description { get; set; }
-        [Required]
         public double Price { get; set; }
-        [Required]
+      
         public int UnitTypeID { get; set; }
         public virtual UnitType unitType { get; set; }
     }

@@ -15,6 +15,8 @@ namespace CLIMAX.Models
         public string MiddleName { get; set; }
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
+       // [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)] 
+       // [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime BirthDate { get; set; }
         public bool Gender { get; set; }
         public string CivilStatus { get; set; }
@@ -39,7 +41,7 @@ namespace CLIMAX.Models
  
         //Profession Details
         public string Occupation { get; set; }
-        public int CompanyID { get; set; }
+        public int? CompanyID { get; set; }
         public virtual Company company { get; set; }
 
         //Emergency Details
@@ -60,4 +62,10 @@ namespace CLIMAX.Models
             get { return FirstName + " " + MiddleName + " " + LastName; }
         }
     }
+
+    public class PatientViewModel
+    {
+
+    }
+
 }

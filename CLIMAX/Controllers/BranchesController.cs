@@ -17,6 +17,7 @@ namespace CLIMAX.Controllers
         // GET: Branches
         public ActionResult Index()
         {
+            
             return View(db.Branches.ToList());
         }
 
@@ -52,6 +53,7 @@ namespace CLIMAX.Controllers
             {
                 db.Branches.Add(branch);
                 db.SaveChanges();
+                Audit.CreateAudit(branch.BranchName, "Create", "Branch", branch.BranchID, User.Identity.Name);
                 return RedirectToAction("Index");
             }
 
@@ -83,7 +85,8 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(branch).State = EntityState.Modified;
-                db.SaveChanges();
+                //db.SaveChanges();
+                Audit.CreateAudit(branch.BranchName, "Edit", "Branch", branch.BranchID, User.Identity.Name); 
                 return RedirectToAction("Index");
             }
             return View(branch);
@@ -111,7 +114,8 @@ namespace CLIMAX.Controllers
         {
             Branch branch = db.Branches.Find(id);
             db.Branches.Remove(branch);
-            db.SaveChanges();
+            Audit.CreateAudit(branch.BranchName, "Delete", "Branch", branch.BranchID, User.Identity.Name);
+            //db.SaveChanges();
             return RedirectToAction("Index");
         }
 

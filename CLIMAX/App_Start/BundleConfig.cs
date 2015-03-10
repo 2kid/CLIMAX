@@ -22,32 +22,14 @@ namespace CLIMAX
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
-                      "~/Scripts/jquery.min.js",
-                      "~/Scripts/jquery.sticky.js",
-                      "~/Scripts/jquery.easing.min.js",
-                      "~/Scripts/jquery.scrollTo.js",
-                      "~/Scripts/jquery.appear.js",
-                      "~/Scripts/stellar.js",
-                      "~/Scripts/nivo-lightbox.min.js",
-                      "~/Scripts/custom.js",
-                      "~/Scripts/css3-animate-it.js",
-                      "~/Scripts/jQuery-2.1.3.min.js",
-                      "~/Scripts/app.min.js",
                       "~/Scripts/npm.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap-3.3.2-dist/*.css",
                        "~/Content/bootstrap-3.3.2-dist/*.map",
-                       "~/Content/font-awesome.min.css",
-                       "~/Content/nivo-lightbox.css",
-                       "~/Content/default.css",
-                       "~/Content/animations.css",
-                       "~/Content/style.css",
-                      "~/Content/Site.css",
-                      "~/Content/Moses_custom.css"));
-
-          
-
+                      "~/Content/site.css",
+                      "~/Content/MZ_main.css",
+                       "~/Content/Moses_custom.css"));
         }
     }
 }

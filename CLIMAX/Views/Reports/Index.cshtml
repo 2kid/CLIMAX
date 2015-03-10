@@ -1,45 +1,98 @@
-﻿@model IEnumerable<CLIMAX.Models.Reports>
+﻿@model CLIMAX.Models.Reports
 
 @{
     ViewBag.Title = "Index";
 }
+<h2 class="text-center">@ViewBag.Type</h2>
 
-<h2>Index</h2>
+<div class="row">
+    <h5 class="col-md-4">@Model.DateStartOfReport - @Model.DateEndOfReport</h5>
+</div>
+@*filter by branch*@
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@if (ViewBag.Type == "Sales Report")
+{ 
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.employee.LastName)
+            Charge Slip No.
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.reportType.Type)
+           Patient Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DateStartOfReport)
+          Treatment
         </th>
-        <th></th>
+        <th>
+            Treatment Qty
+        </th>
+        <th>
+          Treatment Amount
+        </th>
+        <th>
+            Medicine
+        </th>
+        <th>
+            Medicine Qty
+        </th>
+        <th>
+            Medicine Amount
+        </th>
+        <th>
+            Total
+        </th>
+        <th>
+            Discount
+        </th>
+        <th>
+            Revenue
+        </th>
+        <th>
+            Therapist
+        </th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (CLIMAX.Models.ChargeSlipViewModel item in ViewBag.Transactions) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.employee.LastName)
+            @Html.DisplayFor(modelItem => item.ChargeSlipID)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.reportType.Type)
+            @Html.DisplayFor(modelItem => item.Patient)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.DateStartOfReport)
+            @Html.DisplayFor(modelItem => item.Treatment)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ReportsID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ReportsID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ReportsID })
+            @Html.DisplayFor(modelItem => item.TreatmentQty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TreatmentAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Medicine)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MedicineQty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MedicineAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Total)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DiscountAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AmountDue)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Therapist)
         </td>
     </tr>
 }
 
 </table>
+}
+

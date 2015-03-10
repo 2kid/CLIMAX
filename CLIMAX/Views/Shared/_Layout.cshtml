@@ -9,44 +9,85 @@
 
 </head>
 <body>
-    <nav class="navbar navbar-custom">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">CLIMAX</a>
-            </div>
+    <header class="navbar-fixed-top navbar-inverse" role="banner">
+            <div class="container">
+                <nav role="navigation">
+                    <div class="container-fluid">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="#">CLIMAX</a>
+                        </div>
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav">
+                                <div id="wrapper">
 
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Patients", "Index", "Patients") </li>
-                    <li>@Html.ActionLink("Charge Slip", "Index", "ChargeSlips")</li>
-                    <li>@Html.ActionLink("Reservations", "Index", "Reservations")</li>
-                    <li>@Html.ActionLink("Treatment Module", "Index", "Treatments")</li>
-                    <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
-                    <li>@Html.ActionLink("Inventory", "Index", "Inventories")</li>
-                    <li>@Html.ActionLink("Reports", "Index", "Reports")</li>
-                    <li>@Html.ActionLink("Audit Trail", "Index", "Inventories")</li>
+                                    <!-- Sidebar -->
+                                    <div id="sidebar-wrapper">
+                                        <ul class="sidebar-nav">
+                                            <li class="sidebar-brand">
+                                                <a href="Home">
+                                                    CLIMAX
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="Patients">Patients</a>
+                                            </li>
+                                            <li>
+                                                <a href="ChargeSlips">Charge Slip</a>
+                                            </li>
+                                            <li>
+                                                <a href="Reservations">Reservation</a>
+                                            </li>
+                                            <li>
+                                                <a href="Treatments">Treatment Module</a>
+                                            </li>
+                                            <li>
+                                                <a href="Employees">Employees</a>
+                                            </li>
+                                            <li>
+                                                <a href="Inventories">Inventory</a>
+                                            </li>
+                                            <li>
+                                                <a href="Reports">Reports</a>
+                                            </li>
+                                            <li>
+                                                @Html.ActionLink("Register", "Register", "Account")
+                                            </li>
+                                            <li>
+                                                <a href=" Patients/GeneratePDF">Generate PDF for Patients</a>
+                                            </li>
+                                            <li>
+                                                <a href=" Home/SMS">SMS Update</a>
+                                            </li>
 
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-                </ul>
+                                        </ul>
+                                    </div>
+                                    <!-- /#sidebar-wrapper -->
+                                </div>
+                                <!-- /#wrapper -->                               
+                            </ul>
+                        </div><!-- /.navbar-collapse -->
+                    </div><!-- /.container-fluid -->
+                </nav>
             </div>
+        </header>
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            </footer>
         </div>
-    </nav>
 
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-       
-    </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-</body>
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+    </body>
 </html>

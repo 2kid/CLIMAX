@@ -3,13 +3,9 @@
 @{
     ViewBag.Title = "Create";
     string materials = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.MaterialList);
-
 }
 
 <h2>Create</h2>
-
-
-
 <div class="form-horizontal">
     <h4>Treatments</h4>
     <hr />
@@ -56,7 +52,7 @@
                         <th class="col-md-3"></th>
                     </tr>
                     @{
-            double totalPrice = 0;
+                        double totalPrice = 0;
                         if (ViewBag.MaterialList != null)
                         {
                             List<CLIMAX.Models.MaterialsViewModel> materialList = ViewBag.MaterialList;
@@ -107,6 +103,32 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-<script src="~/signalr/hubs"></script>
+    <script>
+        function filterNumeric(e) {
+            // Allow only backspace and delete
+            if ( $.inArray(e.keyCode, [46, 8, 9]) !== -1 ||
+                // Allow: Ctrl+A
+                (e.keyCode == 65 && e.ctrlKey === true) ||
+                // Allow: home, end, left, right, down, up
+                (e.keyCode >= 35 && e.keyCode <= 40)) {
+                // let it happen, don't do anything
+                return;
+            }
+            else {
+                // Ensure that it is a number and stop the keypress
+                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                    e.preventDefault();
+                }
+            }
+        }
 
+        $(document).ready(function () {
+            $("#MedicineQty").keydown(filterNumeric);
+            $("#MedicineQty").change(function () {
+                if ($.isNumeric($(this).val()) == false) {
+                    $(this).val(0);
+                }
+            });
+        });
+     </script>
 }
