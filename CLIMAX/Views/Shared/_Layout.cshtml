@@ -9,6 +9,7 @@
 
 </head>
 <body>
+    <!--
     <nav class="navbar navbar-custom">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -19,9 +20,9 @@
                 </button>
                 <a class="navbar-brand" href="#">CLIMAX</a>
             </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
+            <div class="collapse navbar-collapse" role="naviagtion" id="myNavbar">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Patients", "Index", "Patients") </li>
+                    <li>@*Html.ActionLink("Patients", "Index", "Patients") </li>
                     <li>@Html.ActionLink("Charge Slip", "Index", "ChargeSlips")</li>
                     <li>@Html.ActionLink("Reservations", "Index", "Reservations")</li>
                     <li>@Html.ActionLink("Treatment Module", "Index", "Treatments")</li>
@@ -40,13 +41,55 @@
                 </ul>
             </div>
         </div>
-    </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-    </div>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-</body>
-</html>
+    </nav>-->
+
+    <nav id="navigation">
+        <nav class="navbar navbar-custom" role="navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="site-logo">
+                            <div class="brand">
+                                @Html.ActionLink("CLIMAX", "Index", "Home")
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-10">
+
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                        </div>
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="collapse navbar-collapse" id="menu">
+                            <ul class="nav navbar-nav navbar-left">
+                                    <li>@Html.ActionLink("Patients", "Index", "Patients") </li>
+                                    <li>@Html.ActionLink("Charge Slip", "Index", "ChargeSlips")</li>
+                                    <li>@Html.ActionLink("Reservations", "Index", "Reservations")</li>
+                                    <li>@Html.ActionLink("Treatment Module", "Index", "Treatments")</li>
+                                    <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
+                                    <li>@Html.ActionLink("Inventory", "Index", "Inventories")</li>
+                                    <li>@Html.ActionLink("Reports", "Index", "Reports")</li>
+                                    <li>@Html.ActionLink("Audit Trail", "Index", "Inventories")</li>
+                                </ul>
+                          </div>
+                          </div>
+                    </div>
+                </div>
+            </nav>
+        </nav>
+
+
+                <div class="container body-content">
+                    @RenderBody()
+                    <hr />
+                </div>
+                @Scripts.Render("~/bundles/jquery")
+                @Scripts.Render("~/bundles/bootstrap")
+                @RenderSection("scripts", required: false)
+            </body>
+            </html>
