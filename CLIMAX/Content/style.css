@@ -13,7 +13,7 @@ body {
     font-family: 'Ek Mukta', sans-serif;
 	font-weight: 300;
     color: #666;
-    background-color: #fff;
+    background-color: rgba(0, 0, 0, .05);
 	font-size: 16px;
     line-height: 1.6em;
 	font-weight: 400;
@@ -164,20 +164,17 @@ blockquote strong {
 
 /* ------- Navigation ------------ */
 #navigation {
-	background-color:rgba(61, 201, 179, 1);
+	background: rgba(61, 201, 179, 1);
 	z-index: 9999;
-    padding-top: 50px;
 	width:100%;
     box-sizing:border-box;
 	border-bottom: 1px solid #eee;
 	box-shadow:0px 0px 20px rgba(0, 0, 0, 0.1);
-    
 }
 
 
 .navbar {
-    margin-bottom: 0; 
-    background-color:rgba(61, 201, 179, 1);
+    margin-bottom: 0;
 }
 
 .navbar-brand {
@@ -190,12 +187,19 @@ blockquote strong {
 }
 
 .nav.navbar-nav {
-    background-color: rgba(255,255,255,.6);
+    background-color: rgba(61, 201, 179, 1);
+
 }
+.nav.navbar-nav.layout {
+    background-color: #fff;
+}
+
 
 .navbar-custom.top-nav-collapse .nav.navbar-nav {
     background-color: rgba(0,0,0,0);
 }
+
+
 
 
 .navbar-custom ul.nav li a {
@@ -204,7 +208,6 @@ blockquote strong {
     color: #444;
 	text-transform: uppercase;
 	font-weight: 700;
-    background-color:rgba(61, 201, 179, 1);
 }
 
 .navbar-custom.top-nav-collapse ul.nav li a {
@@ -401,12 +404,12 @@ hr.bold {
 }
 
 .bg-gray {
-	background: #f5f5f5;
+	background: #f9f9f9;
 }
 
 
 .bg-dark {
-	background: #f5f5f5;
+	background: #404040;
 }
 
 /* --- section color var --- */
@@ -421,38 +424,11 @@ hr.bold {
 --- Intro
 ============================ */
 
-.hero { 
-    background: url(start.png) no-repeat center center; 
-    -webkit-background-size: cover; 
-    -moz-background-size: cover; 
-    -o-background-size: cover; 
-    background-size: cover; 
-    padding: 200px 0 200px 0; 
-    height: auto; 
-
-}
+.hero { background: url(start.png) no-repeat center center; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; padding: 200px 0 200px 0; height: auto; }
 .hero h1 { font-size: 40px; letter-spacing: 12px; margin: 40px 0 10px; font-weight: 900; color: #000000;}
 .hero h1 span { color: #000000; display: inline-block; }
 .hero p { font-size: 24px; font-weight: 400; color: #fefefe; }
-.learn-more-btn { 
-    background: rgba(61, 201, 179, 1); 
-    padding: 20px 40px; 
-    border-radius: 5px; 
-    -moz-border-radius: 5px; 
-    -webkit-border-radius: 5px; 
-    -o-border-radius: 5px; 
-    color: #fff; 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
-    display: inline-block; 
-    -webkit-box-shadow: 0px 3px 0px 0px #309383; 
-    -moz-box-shadow: 0px 3px 0px 0px #309383; 
-    box-shadow: 0px 3px 0px 0px #309383; 
-    margin: 60px 0 0; 
-    font-weight: bold; 
-
-}
-
+.learn-more-btn { background: rgba(61, 201, 179, 1); padding: 20px 40px; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; color: #fff; text-transform: uppercase; letter-spacing: 1px; display: inline-block; -webkit-box-shadow: 0px 3px 0px 0px #309383; -moz-box-shadow: 0px 3px 0px 0px #309383; box-shadow: 0px 3px 0px 0px #309383; margin: 60px 0 0; font-weight: bold; }
 .learn-more-btn:hover, .learn-more-btn:focus { background: rgba(61, 201, 179, 0.6); color: #fff; }
 
 
@@ -610,10 +586,11 @@ hr.bold {
 	width: 60%;
 	border-radius: 25px;
 	border: 2px dashed rgba(61, 201, 179, 1);
+	overflow: scroll;
 
 }
 #modal-body{
-	background-color: #f5f5f5;
+	background-color: gray;
 	width: 50%;
 	opacity: .5;
 }
@@ -840,7 +817,7 @@ form.search-form input:focus {
 ============================ */
 
 footer {
-    background-color: #f5f5f5;
+    background-color: #404040;
 }
 
 footer {
@@ -1006,7 +983,7 @@ a.btn:focus{
         padding: 20px 0;
         border-bottom: 0;
         letter-spacing: 1px;
-        background: rgba(61, 201, 179, 1); 
+        background: 0 0;
         -webkit-transition: background .5s ease-in-out,padding .5s ease-in-out;
         -moz-transition: background .5s ease-in-out,padding .5s ease-in-out;
         transition: background .5s ease-in-out,padding .5s ease-in-out;
@@ -1098,4 +1075,3 @@ a.btn:focus{
 		margin-bottom: 30px;
 	}
 }
-

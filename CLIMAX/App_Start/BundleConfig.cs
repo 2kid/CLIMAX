@@ -38,7 +38,6 @@ namespace CLIMAX
             bundles.Add(new StyleBundle("~/Content/css").Include(
                        "~/Content/bootstrap-3.3.2-dist/*.css",
                        "~/Content/bootstrap-3.3.2-dist/*.map",
-                       "~/Content/font-awesome.min.css",
                        "~/Content/nivo-lightbox.css",
                        "~/Content/default.css",
                        "~/Content/animations.css",
