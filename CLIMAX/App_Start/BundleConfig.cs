@@ -44,6 +44,8 @@ namespace CLIMAX
                        "~/Content/animations.css",
                        "~/Content/style.css",
                       "~/Content/Site.css",
+                      "~/Content/_all-skins.min.css",
+                      "~/Content/AdminLTE.min.css",
                       "~/Content/Moses_custom.css",
                       "~/Content/fullcalendar.css",
                       "~/Content/fullcalendar.print.css",

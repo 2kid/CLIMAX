@@ -232,6 +232,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\AdminLTE.min.css" />
     <Content Include="Content\animations.css" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap-theme.min.css" />
@@ -295,6 +296,7 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\_all-skins.min.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\MZ_main.css" />

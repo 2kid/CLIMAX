@@ -1,49 +1,46 @@
 ﻿@model IEnumerable<CLIMAX.Models.AuditTrail>
 
-@{
-    ViewBag.Title = "Audit Trails - Index";
+    @{
+        ViewBag.Title = "Audit Trails - Index";
+    }
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- The time line -->
+            
+            <ul class="timeline">
+
+                <!-- timeline time label -->
+                <li class="time-label">
+                    <span class="bg-red">
+                        Record ID
+                    </span>
+                </li>
+                <!-- /.timeline-label -->
+
+@foreach (var item in Model)
+            {
+                <!-- timeline item -->
+                <li>
+                    @Html.DisplayFor(modelItem => item.RecordID)
+                    <div class="timeline-item">
+                        <span class="time"><i class="fa fa-clock-o"></i> @Html.DisplayFor(modelItem => item.DateTimeOfAction)</span>
+                        <h3 class="timeline-header">@Html.DisplayFor(modelItem => item.employee.LastName): @Html.DisplayFor(modelItem => item.actionType.AffectedRecord)</h3>
+
+                        <div class="timeline-body">
+                            Details: <br/> @Html.DisplayFor(modelItem => item.ActionDetail)
+                        </div>
+                        
+                    </div>
+                </li>
 }
+            </ul>
+        </div>
+    </div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.actionType.AffectedRecord)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.employee.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ActionDetail)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RecordID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DateTimeOfAction)
-        </th>
-    </tr>
+                <!-- END timeline item -->
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.actionType.AffectedRecord)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.employee.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ActionDetail)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RecordID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateTimeOfAction)
-        </td>
-    </tr>
-}
 
-</table>
+
+        
