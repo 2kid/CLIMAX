@@ -224,6 +224,10 @@
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap.css" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap.min.css" />
     <Content Include="Content\animations.css" />
+    <Content Include="Content\csshome\bootstrap-responsive.min.css" />
+    <Content Include="Content\csshome\bootstrap.min.css" />
+    <Content Include="Content\csshome\style-responsive.css" />
+    <Content Include="Content\csshome\style.css" />
     <Content Include="Content\default.css" />
     <Content Include="Content\nivo-lightbox.css" />
     <Content Include="Content\style.css" />
