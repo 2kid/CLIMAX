@@ -79,6 +79,38 @@ namespace CLIMAX.Controllers
             return RedirectToAction("AdminIndex");
         }
 
+        public ActionResult EditAccount(string email)
+        {
+            return View(new SetPasswordViewModel() { Email = email});
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditAccount(SetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.Email == "admin@yahoo.com")
+                {
+                    ModelState.AddModelError("", "You cannot change the password of this account.");
+                    return View(model);
+                }
+
+                string userId = db.Users.Where(r=>r.UserName == model.Email).Select(u=>u.Id).Single();
+                var result = UserManager.RemovePassword(userId);
+                result = UserManager.AddPassword(userId, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("AdminIndex");
+                }
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+
         //
         // GET: /Account/Login
         [AllowAnonymous]

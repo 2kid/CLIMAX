@@ -7,7 +7,7 @@
 
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create") | @Html.ActionLink("View Calendar", "Calendar")
 </p>
 <table class="table">
     <tr>
@@ -70,8 +70,8 @@
        }
         <td>
             @Html.ActionLink("Edit", "Edit", new { id = item.ReservationID }, new {  @class="btn btn-default"}) |
-            @Html.ActionLink("Details", "Details", new { id = item.ReservationID }, new { @class = "btn btn-default" })) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.ReservationID }, new { @class = "btn btn-default" }))
+            @Html.ActionLink("Details", "Details", new { id = item.ReservationID }, new { @class = "btn btn-default" }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.ReservationID }, new { @class = "btn btn-default" })
         </td>
     </tr>
 }

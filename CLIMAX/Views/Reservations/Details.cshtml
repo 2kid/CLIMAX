@@ -4,11 +4,9 @@
     ViewBag.Title = "Reservation - Details";
 }
 
-
-
+<br />
+<br />
 <div>
-    <h4>Reservation</h4>
-    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.employee.LastName)
@@ -86,5 +84,6 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ReservationID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index") |
+    @Html.ActionLink("Back to Calendar", "Calendar")
 </p>

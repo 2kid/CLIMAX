@@ -31,10 +31,7 @@ namespace CLIMAX
                       "~/Scripts/nivo-lightbox.min.js",
                       "~/Scripts/custom.js",
                       "~/Scripts/css3-animate-it.js",
-                      "~/Scripts/jQuery-2.1.3.min.js",
-                      "~/Scripts/jquery-ui-1.11.4.min.js",
-                      "~/Scripts/jquery-ui-1.7.2.custom.min.js",
-                      "~/Scripts/fullcalendar.min.js"));
+                      "~/Scripts/jQuery-2.1.3.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                        "~/Content/bootstrap-3.3.2-dist/*.css",
@@ -44,12 +41,7 @@ namespace CLIMAX
                        "~/Content/animations.css",
                        "~/Content/style.css",
                       "~/Content/Site.css",
-                      "~/Content/_all-skins.min.css",
-                      "~/Content/AdminLTE.min.css",
-                      "~/Content/Moses_custom.css",
-                      "~/Content/fullcalendar.css",
-                      "~/Content/fullcalendar.print.css",
-                      "~/Content/jquery-ui-1.7.2.custom.min.js"));
+                      "~/Content/Moses_custom.css"));
         }
     }
 }

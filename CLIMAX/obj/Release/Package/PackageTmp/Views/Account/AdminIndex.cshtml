@@ -34,18 +34,19 @@
             </td>
             @if (item.UserName != "admin@yahoo.com")
             {
-            <td>
-                @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |*@
-                @if (item.isActive)
-                {
-                    @Html.ActionLink("Disable", "Disable", new { id = item.Id })
-                }
-                else
-                {
-                    @Html.ActionLink("Enable", "Enable", new { id = item.Id })
-                }
+                <td>
+                    @Html.ActionLink("Edit", "EditAccount", new { email = item.UserName }) |
 
-            </td>
+                    @if (item.isActive)
+                    {
+                        @Html.ActionLink("Disable", "Disable", new { id = item.Id })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Enable", "Enable", new { id = item.Id })
+                    }
+
+                </td>
             }
             else
             {

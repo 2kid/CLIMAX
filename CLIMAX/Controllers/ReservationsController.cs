@@ -8,9 +8,11 @@ using System.Web;
 using System.Web.Mvc;
 using CLIMAX.Models;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace CLIMAX.Controllers
 {
+    [Authorize]
     public class ReservationsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -268,30 +270,69 @@ namespace CLIMAX.Controllers
 
         public ActionResult Calendar()
         {
+            var events = db.Reservations.ToList();
+
+            var clientList = new List<object>();
+            foreach (var e in events)
+            {
+                string type = "";
+                if (e.ReservationType)
+                {
+                    type = "surgical";
+                }
+                else
+                {
+                    type = "treatment";
+                }
+                clientList.Add(
+                    new
+                    {
+                        id = e.ReservationID.ToString(),
+                        title = type,
+                        description = "Reserved for: " + e.patient.FullName,// + "\n" + e.Notes,
+                        start = e.DateTimeReserved.ToString(),
+                        end = e.DateTimeReserved.AddHours(1).ToString()
+                    });
+            }
+
+            ViewBag.Reservations = JsonConvert.SerializeObject(clientList);
             return View();
         }
 
+        [HttpGet]
         public JsonResult GetEvents(double start, double end)
-        {       
+        {
             var fromDate = ConvertFromUnixTimestamp(start);
             var toDate = ConvertFromUnixTimestamp(end);
+            //var epoch = new DateTime(1970, 1, 1);
+            //var fromDate = epoch.AddMilliseconds(start);
+            //var toDate = epoch.AddMilliseconds(end);
             var events = db.Reservations.Where(r => fromDate.CompareTo(r.DateTimeReserved) == -1 && toDate.CompareTo(r.DateTimeReserved) == 1).ToList();//repository.GetEvents(fromDate, toDate);
 
             var clientList = new List<object>();
             foreach (var e in events)
             {
+                string type = "";
+                if(e.ReservationType)
+                {
+                   type = "surgical";
+                }
+                else
+                {
+                    type = "treatment";
+                }
                 clientList.Add(
                     new
                     {
                         id = e.ReservationID,
-                        title = e.ReservationType.ToString(),
+                        title = type,
                         description = "Reserved for: "+ e.patient.FullName + "\n" + e.Notes,
                         start = e.DateTimeReserved,
                         end = e.DateTimeReserved.AddHours(1),
+                        allDay = false
                     });
             }
             return Json(clientList.ToArray(), JsonRequestBehavior.AllowGet);
-
         }
 
         private static DateTime ConvertFromUnixTimestamp(double timestamp)
