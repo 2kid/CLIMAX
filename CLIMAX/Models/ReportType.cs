@@ -11,6 +11,5 @@ namespace CLIMAX.Models
         public int ReportTypeID { get; set; }
         [Required]
         public string Type { get; set; }
-        //public virtual List<Reports> reports { get; set; }
     }
 }

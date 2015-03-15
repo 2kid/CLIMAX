@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CLIMAX.Models;
+using System.Text.RegularExpressions;
 
 namespace CLIMAX.Controllers
 {
@@ -15,9 +16,10 @@ namespace CLIMAX.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Histories
-        public ActionResult Index()
+        public ActionResult Index(int id)
         {
-            var history = db.History.Include(h => h.employee).Include(h => h.patient);
+            var history = db.History.Include(h => h.employee).Include(h => h.patient).Where(r=>r.PatientID == id);
+            ViewBag.PatientID = id;
             return View(history.ToList());
         }
 
@@ -37,10 +39,10 @@ namespace CLIMAX.Controllers
         }
 
         // GET: Histories/Create
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
             ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName");
-            ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName");
+            ViewBag.Patient = db.Patients.Find(id).FullName;
             return View();
         }
 
@@ -53,6 +55,21 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (!Regex.IsMatch(history.DateTimeStart.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
+                {
+                    ModelState.AddModelError("DateTimeStart", "The field Date & Time Start is invalid");
+                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", history.EmployeeID);
+                    ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName", history.PatientID);
+                    return View(history);
+                }
+
+                if (!Regex.IsMatch(history.DateTimeEnd.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
+                {
+                    ModelState.AddModelError("DateTimeEnd", "The field Date & Time End is invalid");
+                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", history.EmployeeID);
+                    ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName", history.PatientID);
+                    return View(history);
+                }
                 db.History.Add(history);
                 db.SaveChanges();
                 String patient = db.Patients.Find(history.PatientID).FullName;
@@ -91,11 +108,25 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (!Regex.IsMatch(history.DateTimeStart.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
+                {
+                    ModelState.AddModelError("DateTimeStart", "The field Date & Time Start is invalid");
+                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", history.EmployeeID);
+                    ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName", history.PatientID);
+                    return View(history);
+                }
+
+                if (!Regex.IsMatch(history.DateTimeEnd.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
+                {
+                    ModelState.AddModelError("DateTimeEnd", "The field Date & Time End is invalid");
+                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", history.EmployeeID);
+                    ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName", history.PatientID);
+                    return View(history);
+                }
                 db.Entry(history).State = EntityState.Modified;
                 String patient = db.Patients.Find(history.PatientID).FullName;
                 Audit.CreateAudit(patient, "Edit", "History", history.HistoryID, User.Identity.Name);
-
-                // db.SaveChanges();
+                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", history.EmployeeID);
@@ -128,7 +159,7 @@ namespace CLIMAX.Controllers
             String patient = db.Patients.Find(history.PatientID).FullName;
             Audit.CreateAudit(patient, "Delete", "History", history.HistoryID, User.Identity.Name);
 
-            //db.SaveChanges();
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

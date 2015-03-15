@@ -14,9 +14,13 @@ namespace CLIMAX.Models
         [Required]
         [Display(Name = "Material Name")]
         public string MaterialName { get; set; }
+        [StringLength(250)]
         public string Description { get; set; }
-        public double Price { get; set; }
-      
+        [RegularExpression("^[1-9]{1}[0-9]{0,4}(.[0-9]{2})?$",ErrorMessage="Price must contain two decimal places and cannot exceed 99999.99.")]
+        [DataType(DataType.Currency)]
+        [Range(1, 99999.99)]
+        [DisplayFormat(DataFormatString = "{0:F2}", ApplyFormatInEditMode = true)]
+        public double Price { get; set; }     
         public int UnitTypeID { get; set; }
         public virtual UnitType unitType { get; set; }
     }

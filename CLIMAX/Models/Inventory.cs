@@ -12,8 +12,10 @@ namespace CLIMAX.Models
         public int MaterialID { get; set; }
         public virtual Materials material { get; set; }
         [Display(Name = "Quantity in Stock")]
+        [RegularExpression("^[1-9]{1}[0-9]{0,3}$", ErrorMessage = "Please input positive numbers not greater than 4 digits")]
         public int QtyInStock { get; set; }
         [Display(Name = "Quantity to alert")]
+        [RegularExpression("^[1-9]{1}[0-9]{0,3}$", ErrorMessage = "Please input positive numbers not greater than 4 digits")]
         public int? QtyToAlert { get; set; }
         [Display(Name = "Last Date Updated")]
         public DateTime LastDateUpdated { get; set; }
@@ -32,4 +34,19 @@ namespace CLIMAX.Models
             }
         }
     }
+
+
+    public class InventoryReportsViewModel
+    {
+        public int MaterialID { get; set; }
+        public string Medicine { get; set; }
+        public int? Control { get; set; }
+        public int Add { get; set; }
+        public int Remove { get; set; }
+        public int Sold { get; set; }
+        public int Balance { get; set; }
+    }
+
+
+
 }

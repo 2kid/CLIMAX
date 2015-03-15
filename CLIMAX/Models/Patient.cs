@@ -10,13 +10,19 @@ namespace CLIMAX.Models
     {
         public int PatientID { get; set; }
         [Display(Name = "First Name")]
+        [MaxLength(20,ErrorMessage="Maximum of 20 characters")]
+        [RegularExpression("^([ \u00c0-\u01ffa-zA-Z'-])+$",ErrorMessage="Numbers and some special characters are not allowed")]
         public string FirstName { get; set; }
         [Display(Name = "Middle Name")]
+        [MaxLength(20, ErrorMessage = "Maximum of 20 characters")]
+        [RegularExpression("^([ \u00c0-\u01ffa-zA-Z'-])+$", ErrorMessage = "Numbers and some special characters are not allowed")]
         public string MiddleName { get; set; }
         [Display(Name = "Last Name")]
+        [MaxLength(20, ErrorMessage = "Maximum of 20 characters")]
+        [RegularExpression("^([ \u00c0-\u01ffa-zA-Z'-])+$", ErrorMessage = "Numbers and some special characters are not allowed")]
         public string LastName { get; set; }
-       // [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)] 
-       // [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
         public DateTime BirthDate { get; set; }
         public bool Gender { get; set; }
         public string CivilStatus { get; set; }
@@ -25,14 +31,17 @@ namespace CLIMAX.Models
    
         //Address
         [Display(Name = "House No")]
+        [RegularExpression("^[1-9]{1}[0-9]{0,3}$", ErrorMessage = "Please input positive numbers not greater than 4 digits")]
         public int HomeNo { get; set; }
+        [Required]
         public string Street { get; set; }
+        [Required]
         public string City { get; set; }
         //Contact Details
         [Display(Name="Landline No")]
-        [Phone]
+        [RegularExpression("^[0-9]{7}$",ErrorMessage="Invalid landline number")]
         public string LandlineNo { get; set; }
-        [Phone]
+        [RegularExpression("^09[0-9]{9}$", ErrorMessage = "Invalid cellphone number")]
         [Display(Name = "Cellphone No")]
         public string CellphoneNo { get; set; }
         [EmailAddress]
@@ -41,17 +50,22 @@ namespace CLIMAX.Models
  
         //Profession Details
         public string Occupation { get; set; }
-        public int? CompanyID { get; set; }
-        public virtual Company company { get; set; }
 
         //Emergency Details
-        [Display(Name = "Emergency Contact No")]
+        [Display(Name = "Emergency Contact Phone No")]
+        [RegularExpression("^09[0-9]{9}$", ErrorMessage = "Invalid cellphone number")]
         public string EmergencyContactNo { get; set; }
         [Display(Name = "Emergency Contact First Name")]
+        [MaxLength(20, ErrorMessage = "Maximum of 20 characters")]
+        [RegularExpression("^([ \u00c0-\u01ffa-zA-Z'-])+$", ErrorMessage = "Numbers and some special characters are not allowed")]
         public string EmergencyContactFName { get; set; }
         [Display(Name = "Emergency Contact Middle Name")]
+        [MaxLength(20, ErrorMessage = "Maximum of 20 characters")]
+        [RegularExpression("^([ \u00c0-\u01ffa-zA-Z'-])+$", ErrorMessage = "Numbers and some special characters are not allowed")]
         public string EmergencyContactMName { get; set; }
         [Display(Name = "Emergency Contact Last Name")]
+        [MaxLength(20, ErrorMessage = "Maximum of 20 characters")]
+        [RegularExpression("^([ \u00c0-\u01ffa-zA-Z'-])+$", ErrorMessage = "Numbers and some special characters are not allowed")]
         public string EmergencyContactLName { get; set; }
        
         public int BranchID { get; set; }
@@ -62,10 +76,4 @@ namespace CLIMAX.Models
             get { return FirstName + " " + MiddleName + " " + LastName; }
         }
     }
-
-    public class PatientViewModel
-    {
-
-    }
-
 }

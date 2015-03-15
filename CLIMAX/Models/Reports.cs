@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -14,8 +15,14 @@ namespace CLIMAX.Models
      
         public int EmployeeID { get; set; }
         public virtual Employee employee { get; set; }
-      
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+        [DataType(DataType.Date)]
+        [Display(Name="Date Start")]
         public DateTime DateStartOfReport { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+        [DataType(DataType.Date)]
+        [Display(Name = "Date End")]
         public DateTime DateEndOfReport { get; set; }
 
     }

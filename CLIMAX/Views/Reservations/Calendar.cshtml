@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = "Reservations - Calendar";
+}
+
+<h2>Calendar</h2>
+
+<div id="calendar"></div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+    $(document).ready(function () {
+        DisplayCalendar();
+    });
+
+    function DisplayCalendar() {
+
+        //Initialise calendar
+        $('#calendar').fullCalendar({
+            theme: true,
+            firstDay: 1,
+            header: {
+                left: 'today prev,next',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            defaultView: 'agendaWeek',
+            minTime: '6:00am',
+            maxTime: '6:00pm',
+            allDaySlot: false,
+            columnFormat: {
+                month: 'ddd',
+                week: 'ddd dd/MM',
+                day: 'dddd M/d'
+            },
+            events:
+            [
+              {
+                  title: 'Bi-weekly Meeting',
+                  start: '2015-03-09',
+                  color: 'red'
+              }
+            ],
+            @*eventSources: [{
+                url: '@Url.Action("GetEvents", "Reservations")',
+                type: 'GET',
+                error: function () {
+                    alert('there was an error while fetching events!');
+                }
+            }],*@
+            @*events:'@Url.Action("GetEvents","Reservations")',*@
+    //        events: function (start, end, timezone, callback) {
+    //            $.ajax({
+    //                url: ,
+    //                dataType: 'application/json',
+    //                //data: {
+    //                //    // our hypothetical feed requires UNIX timestamps
+    //                //    start: start.unix(),
+    //                //    end: end.unix()
+    //                //},
+    //                success: function (doc) {
+    //                    var events = [];
+    //                    $(doc).find('event').each(function () {
+    //                        events.push({
+    //                            title: $(this).attr('title'),
+    //                            start: $(this).attr('start') // will be parsed
+    //                        });
+    //                    });
+    //                    callback(events);
+    //                }
+    //            });
+    //},
+            eventRender: function (event, element) {
+                //start_utc = new Date(start.year(), start.month(), start.date(),  start.hour(), start.minute(), start.second());
+                //var start = calendar.moment(start_utc);
+                //console.log(start);
+                element.attr("categories", event.categoryname),
+                element.qtip({
+                    content: event.title + "<br>" + event.start,
+                    position: { corner: { tooltip: 'bottomLeft', target: 'topRight'} },
+                    style: {
+                        border: {
+                            width: 1,
+                            radius: 3,
+                            color: 'green'
+                        },
+                        padding: 10,
+                        textAlign: 'left',
+                        tip: true
+                    }
+                });
+            },
+            droppable: false,
+            editable: false,
+            eventTextColor: 'Yellow',
+            eventBackgroundColor: 'purple',
+            error: alert('Error. Could not load events.')
+        });
+    }
+    </script>
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/themes/redmond/jquery-ui.css" rel="stylesheet" type="text/css" />
+}

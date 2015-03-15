@@ -87,7 +87,7 @@ namespace CLIMAX.Controllers
                 db.Entry(unitType).State = EntityState.Modified;
                 Audit.CreateAudit(unitType.Type, "Edit", "UnitType", unitType.UnitTypeID, User.Identity.Name);
 
-                //db.SaveChanges();
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(unitType);
@@ -116,8 +116,7 @@ namespace CLIMAX.Controllers
             UnitType unitType = db.UnitTypes.Find(id);
             db.UnitTypes.Remove(unitType);
             Audit.CreateAudit(unitType.Type, "Delete", "UnitType", unitType.UnitTypeID, User.Identity.Name);
-
-            // db.SaveChanges();
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

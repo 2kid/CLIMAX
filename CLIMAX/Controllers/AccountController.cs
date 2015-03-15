@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using CLIMAX.Models;
+using System.Data.Entity;
 
 namespace CLIMAX.Controllers
 {
@@ -52,6 +53,32 @@ namespace CLIMAX.Controllers
             }
         }
 
+
+        public ActionResult AdminIndex()
+        {
+            return View(db.Users.ToList());
+        }
+
+        public ActionResult Disable(string email)
+        {
+            ApplicationUser user = db.Users.Where(r => r.UserName == email).Single();
+            user.isActive = false;
+            db.Entry(user).State = EntityState.Modified;
+            Audit.CreateAudit(user.UserName, "Disable", "Account", 0, User.Identity.Name);
+            db.SaveChanges();
+            return RedirectToAction("AdminIndex");
+        }
+
+        public ActionResult Enable(string email)
+        {
+            ApplicationUser user = db.Users.Where(r => r.UserName == email).Single();
+            user.isActive = true;
+            db.Entry(user).State = EntityState.Modified;
+            Audit.CreateAudit(user.UserName, "Enable", "Account", 0, User.Identity.Name);
+            db.SaveChanges();
+            return RedirectToAction("AdminIndex");
+        }
+
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -72,12 +99,16 @@ namespace CLIMAX.Controllers
             {
                 return View(model);
             }
-
+           
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
+                    if (db.Users.Where(r => r.UserName == model.Email).Select(u=>u.isActive).Single())
                     return RedirectToLocal(returnUrl);
+                    else
+                          ModelState.AddModelError("", "Account has been deactivated.");
+                    return View(model);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -129,7 +160,7 @@ namespace CLIMAX.Controllers
                     BranchID = model.BranchID
                 };
 
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, employee = employee};
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, employee = employee, isActive = true};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -146,7 +177,7 @@ namespace CLIMAX.Controllers
                             break;
                     }
                     Audit.CreateAudit(user.UserName, "Create", "Account", 0, User.Identity.Name);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("AdminIndex", "Account");
                 }
                 AddErrors(result);
             }
@@ -211,7 +242,7 @@ namespace CLIMAX.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Patients");
         }
         #endregion
     }

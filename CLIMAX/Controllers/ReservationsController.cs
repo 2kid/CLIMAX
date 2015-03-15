@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CLIMAX.Models;
+using System.Text.RegularExpressions;
 
 namespace CLIMAX.Controllers
 {
@@ -39,7 +40,7 @@ namespace CLIMAX.Controllers
         // GET: Reservations/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeID = new SelectList(db.Employees.Include(a=>a.roleType).Where(r=>r.roleType.Type == "Therapist"), "EmployeeID", "FullName");
+            ViewBag.EmployeeID = new SelectList(db.Employees.Include(a => a.roleType).Where(r => r.roleType.Type == "Therapist"), "EmployeeID", "FullName");
             ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FullName");
             ViewBag.ReservationType = new SelectList(new List<SelectListItem>()
                         {
@@ -61,6 +62,39 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (!Regex.IsMatch(reservation.DateTimeReserved.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
+                {
+                    ModelState.AddModelError("DateTimeReserved", "The field Date Reserved is invalid");
+                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName", reservation.EmployeeID);
+                    ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FullName", reservation.PatientID);
+
+                    ViewBag.ReservationType = new SelectList(new List<SelectListItem>()
+                        {
+                            new SelectListItem(){
+                                Text = "Treatment", Value = "false"},
+                          new SelectListItem(){
+                                Text = "Surgical", Value = "true"}   
+                        }, "Value", "Text");
+                    ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
+                    return View(reservation);
+                }
+                if (reservation.DateTimeReserved.CompareTo(DateTime.Now) == -1)
+                {
+                    ModelState.AddModelError("", "Date Reserved cannot be before today");
+                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName", reservation.EmployeeID);
+                    ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FullName", reservation.PatientID);
+
+                    ViewBag.ReservationType = new SelectList(new List<SelectListItem>()
+                        {
+                            new SelectListItem(){
+                                Text = "Treatment", Value = "false"},
+                          new SelectListItem(){
+                                Text = "Surgical", Value = "true"}   
+                        }, "Value", "Text");
+                    ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
+                    return View(reservation);
+                }
+
                 if (reservation.ReservationType && reservation.EmployeeID == null)
                 {
                     ModelState.AddModelError("", "Please specify who will perform the surgery.");
@@ -94,7 +128,7 @@ namespace CLIMAX.Controllers
                                 Text = "Treatment", Value = "false"},
                           new SelectListItem(){
                                 Text = "Surgical", Value = "true"}   
-                        }, "Value", "Text"); 
+                        }, "Value", "Text");
             ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
             return View(reservation);
         }
@@ -117,9 +151,9 @@ namespace CLIMAX.Controllers
                         {
                             new SelectListItem(){
                                 Text = "Treatment", Value = "false"},
-                          new SelectListItem(){
+                            new SelectListItem(){
                                 Text = "Surgical", Value = "true"}   
-                        }, "Value", "Text"); 
+                        }, "Value", "Text");
             ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
             return View(reservation);
         }
@@ -133,6 +167,39 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (!Regex.IsMatch(reservation.DateTimeReserved.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
+                {
+                    ModelState.AddModelError("DateTimeReserved", "The field Date Reserved is invalid");
+                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName", reservation.EmployeeID);
+                    ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FullName", reservation.PatientID);
+
+                    ViewBag.ReservationType = new SelectList(new List<SelectListItem>()
+                        {
+                            new SelectListItem(){
+                                Text = "Treatment", Value = "false"},
+                          new SelectListItem(){
+                                Text = "Surgical", Value = "true"}   
+                        }, "Value", "Text");
+                    ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
+                    return View(reservation);
+                }
+                if (reservation.DateTimeReserved.CompareTo(DateTime.Now) == -1)
+                {
+                    ModelState.AddModelError("", "Date Reserved cannot be before today");
+                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName", reservation.EmployeeID);
+                    ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FullName", reservation.PatientID);
+
+                    ViewBag.ReservationType = new SelectList(new List<SelectListItem>()
+                        {
+                            new SelectListItem(){
+                                Text = "Treatment", Value = "false"},
+                          new SelectListItem(){
+                                Text = "Surgical", Value = "true"}   
+                        }, "Value", "Text");
+                    ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
+                    return View(reservation);
+                }
+
                 if (reservation.ReservationType && reservation.EmployeeID == null)
                 {
                     ModelState.AddModelError("", "Please specify who will perform the surgery.");
@@ -153,7 +220,7 @@ namespace CLIMAX.Controllers
                 string patient = db.Patients.Find(reservation.PatientID).FullName;
                 Audit.CreateAudit(patient, "Edit", "Reservation", reservation.ReservationID, User.Identity.Name);
 
-                // db.SaveChanges();
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName", reservation.EmployeeID);
@@ -194,8 +261,43 @@ namespace CLIMAX.Controllers
             string patient = db.Patients.Find(reservation.PatientID).FullName;
             Audit.CreateAudit(patient, "Delete", "Reservation", reservation.ReservationID, User.Identity.Name);
 
-            // db.SaveChanges();
+            db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+
+        public ActionResult Calendar()
+        {
+            return View();
+        }
+
+        public JsonResult GetEvents(double start, double end)
+        {       
+            var fromDate = ConvertFromUnixTimestamp(start);
+            var toDate = ConvertFromUnixTimestamp(end);
+            var events = db.Reservations.Where(r => fromDate.CompareTo(r.DateTimeReserved) == -1 && toDate.CompareTo(r.DateTimeReserved) == 1).ToList();//repository.GetEvents(fromDate, toDate);
+
+            var clientList = new List<object>();
+            foreach (var e in events)
+            {
+                clientList.Add(
+                    new
+                    {
+                        id = e.ReservationID,
+                        title = e.ReservationType.ToString(),
+                        description = "Reserved for: "+ e.patient.FullName + "\n" + e.Notes,
+                        start = e.DateTimeReserved,
+                        end = e.DateTimeReserved.AddHours(1),
+                    });
+            }
+            return Json(clientList.ToArray(), JsonRequestBehavior.AllowGet);
+
+        }
+
+        private static DateTime ConvertFromUnixTimestamp(double timestamp)
+        {
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return origin.AddSeconds(timestamp);
         }
 
         protected override void Dispose(bool disposing)

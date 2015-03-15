@@ -170,5 +170,9 @@ C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.csprojResolveAssem
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.dll
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.pdb
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Rotativa.dll
-C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.Migrations.init.resources
-C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.csproj.GenerateResource.Cache
+C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Net.Http.Formatting.dll
+C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Http.dll
+C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Http.WebHost.dll
+C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Net.Http.Formatting.xml
+C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Http.xml
+C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Http.WebHost.xml

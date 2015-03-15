@@ -23,7 +23,7 @@ namespace CLIMAX.Controllers
             string search = form["searchValue"];
             if(!string.IsNullOrEmpty(search))
             {
-                treatments = treatments.Where(r => r.TreatmentName.Contains(search)).ToList();
+                treatments = treatments.Where(r => r.TreatmentName.ToLower().Contains(search.ToLower())).ToList();
             }
             return View(treatments);
         }
@@ -175,7 +175,7 @@ namespace CLIMAX.Controllers
                 db.Entry(treatments).State = EntityState.Modified;
                 Audit.CreateAudit(treatments.TreatmentName, "Edit", "Treatment", treatments.TreatmentsID, User.Identity.Name);
 
-                // db.SaveChanges();
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(treatments);
@@ -205,7 +205,7 @@ namespace CLIMAX.Controllers
             db.Treatments.Remove(treatments);
             Audit.CreateAudit(treatments.TreatmentName, "Delete", "Treatment", treatments.TreatmentsID, User.Identity.Name);
 
-            // db.SaveChanges();
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

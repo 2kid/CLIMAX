@@ -1,0 +1,79 @@
+﻿@model IEnumerable<CLIMAX.Models.Reservation>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+          Patient
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TreatmentID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReservationType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateTimeReserved)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Notes)
+        </th>
+        <th>
+            Therapist
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.patient.FullName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.treatment.TreatmentName)
+        </td>
+        @if(item.ReservationType)
+        { 
+        <td>
+           Surgical
+        </td>
+        }
+        else
+        {
+            <td>
+                Treatment
+            </td>
+        }
+        <td>
+            @Html.DisplayFor(modelItem => item.DateTimeReserved)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Notes)
+        </td>
+       @if(item.employee!=null)
+       {
+           <td>
+               @Html.DisplayFor(modelItem => item.employee.FullName)
+           </td>
+       }
+       else
+       {
+           <td></td>
+       }
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.ReservationID }, new {  @class="btn btn-default"}) |
+            @Html.ActionLink("Details", "Details", new { id = item.ReservationID }, new { @class = "btn btn-default" })) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.ReservationID }, new { @class = "btn btn-default" }))
+        </td>
+    </tr>
+}
+
+</table>

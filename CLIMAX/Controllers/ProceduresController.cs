@@ -91,7 +91,7 @@ namespace CLIMAX.Controllers
                 db.Entry(procedure).State = EntityState.Modified;
                 Audit.CreateAudit(procedure.ProcedureName, "Edit", "Procedure", procedure.ProcedureID, User.Identity.Name);
 
-                // db.SaveChanges();
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(procedure);
@@ -121,7 +121,7 @@ namespace CLIMAX.Controllers
             db.Procedure.Remove(procedure);
             Audit.CreateAudit(procedure.ProcedureName, "Delete", "Procedure", procedure.ProcedureID, User.Identity.Name);
 
-            //  db.SaveChanges();
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

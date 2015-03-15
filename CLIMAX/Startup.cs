@@ -1,5 +1,6 @@
 ﻿using Microsoft.Owin;
 using Owin;
+using System.Web.Http;
 
 [assembly: OwinStartupAttribute(typeof(CLIMAX.Startup))]
 namespace CLIMAX
@@ -10,5 +11,7 @@ namespace CLIMAX
         {
             ConfigureAuth(app);
         }
+
+       
     }
 }

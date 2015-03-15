@@ -27,6 +27,8 @@ namespace CLIMAX.Models
         public string GiftCertificateNo { get; set; }
         [Display(Name = "Check No")]
         public string CheckNo { get; set; }
+        [Display(Name = "Card Type")]
+        public string CardType { get; set; }
 
         public int PatientID { get; set; }
         public virtual Patient Patient { get; set; }
@@ -49,5 +51,14 @@ namespace CLIMAX.Models
         public double? DiscountAmount { get; set; }
         public double AmountDue { get; set; }
         public string Therapist { get; set; }
+    }
+
+
+    public class SummaryReportViewModel
+    {
+        public string Patient { get; set; }
+        public string CardType { get; set; }
+        public double GrossAmount { get; set; }
+        public double Net { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -13,6 +14,7 @@ namespace CLIMAX.Models
      //What record was changed Username/Name of item
         public string ActionDetail { get; set; }
         public int RecordID { get; set; }
+        [ForeignKey("actionType")]
         public int ActionTypeID { get; set; }
         public virtual ActionTypes actionType { get; set; }
         public DateTime DateTimeOfAction { get; set; }

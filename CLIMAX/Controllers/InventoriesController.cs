@@ -46,7 +46,9 @@ namespace CLIMAX.Controllers
         // GET: Inventories/Create
         public ActionResult Create()
         {
-            ViewBag.Materials = new SelectList(db.Materials, "MaterialID", "MaterialName");
+              Employee currentUser = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee).SingleOrDefault();
+              List<int> materialIDs = db.Inventories.Where(r => r.BranchID == currentUser.BranchID).Select(u => u.MaterialID).ToList();
+            ViewBag.Materials = new SelectList(db.Materials.Where(r=> !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
             return View();
         }
 
@@ -58,11 +60,19 @@ namespace CLIMAX.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "InventoryID,MaterialID,QtyInStock,QtyToAlert")] Inventory inventory, FormCollection form)
         {
+            Employee currentUser = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee).SingleOrDefault();
+            List<int> materialIDs = db.Inventories.Where(r => r.BranchID == currentUser.BranchID).Select(u => u.MaterialID).ToList();
+              
             if (ModelState.IsValid)
             {  
-                Employee currentUser = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee).SingleOrDefault();
                 if (currentUser.BranchID != 0 && currentUser.roleType.Type == "Officer in Charge")
                 {
+                    if(materialIDs.Contains(inventory.MaterialID))
+                    {
+                        ModelState.AddModelError("", "This branch already contains that material.");
+                        ViewBag.Materials = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
+                        return View(inventory);
+                    }
                     inventory.BranchID = currentUser.BranchID;
                     inventory.LastDateUpdated = DateTime.Now;
                     db.Inventories.Add(inventory);
@@ -77,8 +87,7 @@ namespace CLIMAX.Controllers
                     ModelState.AddModelError("", "You need to be the Officer in Charge to add an inventory item.");
                 }
             }
-            ViewBag.Marterials = new SelectList(db.Materials, "MaterialID", "MaterialName");
-           // ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");        
+            ViewBag.Materials = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
             return View(inventory);
         }
 
@@ -117,6 +126,7 @@ namespace CLIMAX.Controllers
                 Employee currentUser = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee).SingleOrDefault();
                 if (currentUser.BranchID != 0 && currentUser.roleType.Type == "Officer in Charge")
                 {
+                    int previousQty = db.Inventories.Find(inventory.InventoryID).QtyInStock;
                     int addQty;
                     int subtractQty;
                     if(int.TryParse(form["addQty"],out addQty))
@@ -131,9 +141,19 @@ namespace CLIMAX.Controllers
                     inventory.LastDateUpdated = DateTime.Now;
                     db.Entry(inventory).State = EntityState.Modified;
                     string material = db.Materials.Find(inventory.MaterialID).MaterialName;
-                    Audit.CreateAudit(material, "Edit", "Inventory", inventory.InventoryID, User.Identity.Name);
-
-                    //db.SaveChanges();
+                    if (previousQty > inventory.QtyInStock)
+                    {
+                        Audit.CreateAudit((addQty-subtractQty)+"-Removed-"+material, "Edit", "Inventory", inventory.InventoryID, User.Identity.Name);
+                    }
+                    else if(previousQty < inventory.QtyInStock)
+                    {
+                        Audit.CreateAudit((addQty - subtractQty) + "-Added-" + material, "Edit", "Inventory", inventory.InventoryID, User.Identity.Name);
+                    }
+                    else
+                    {
+                        Audit.CreateAudit(0+"-Same-"+material, "Edit", "Inventory", inventory.InventoryID, User.Identity.Name);
+                    }
+                    db.SaveChanges();
                     return RedirectToAction("Index");
                 }
                 else
@@ -172,7 +192,7 @@ namespace CLIMAX.Controllers
             string material = db.Materials.Find(inventory.MaterialID).MaterialName;
             Audit.CreateAudit(material, "Delete", "Inventory", inventory.InventoryID, User.Identity.Name);
 
-            // db.SaveChanges();
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

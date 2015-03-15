@@ -17,6 +17,8 @@ namespace CLIMAX.Models
          [Display(Name = "Reservation Type")]
         public bool ReservationType { get; set; }
          [Display(Name = "Date & Time Reserved")]
+         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy HH:mm}", ApplyFormatInEditMode = true)]
+         [DataType(DataType.DateTime)]
         public DateTime DateTimeReserved { get; set; }
         public string  Notes { get; set; }
         [Display(Name="Patient")]

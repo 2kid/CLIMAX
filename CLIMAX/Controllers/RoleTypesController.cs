@@ -87,7 +87,7 @@ namespace CLIMAX.Controllers
                 db.Entry(roleType).State = EntityState.Modified;
                 Audit.CreateAudit(roleType.Type, "Edit", "RoleType", roleType.RoleTypeId, User.Identity.Name);
 
-                //  db.SaveChanges();
+                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(roleType);
@@ -117,7 +117,7 @@ namespace CLIMAX.Controllers
             db.RoleType.Remove(roleType);
             Audit.CreateAudit(roleType.Type, "Delete", "RoleType", roleType.RoleTypeId, User.Identity.Name);
 
-            //db.SaveChanges();
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

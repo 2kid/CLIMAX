@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace CLIMAX.Controllers
 {
+    [Authorize]
     public class ChargeSlipsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -39,7 +40,8 @@ namespace CLIMAX.Controllers
 
         static List<TreatmentsViewModel> treatmentOrders;
         static List<MaterialsViewModel> materialOrders;
-        // GET: ChargeSlips/Create
+
+        [Authorize(Roles="OIC")]
         public ActionResult Create()
         {
             ViewBag.PaymentMethod = new List<SelectListItem>()
@@ -48,6 +50,14 @@ namespace CLIMAX.Controllers
                 new SelectListItem(){Text = "Check", Value = "Check"},
                 new SelectListItem(){Text = "Credit Card", Value = "Credit Card"}
             };
+
+            ViewBag.CardType = new List<SelectListItem>()
+            {
+                new SelectListItem(){Text = "Mastercard", Value = "Mastercard"},
+                new SelectListItem(){Text = "Visa", Value = "Visa"},
+                new SelectListItem(){Text = "", Value = ""}
+            };
+
             ViewBag.Patients = new SelectList(db.Patients, "PatientID", "FullName");
             ViewBag.Therapists = new SelectList(db.Employees.Include(a => a.roleType).Where(r => r.roleType.Type == "Therapist").ToList(), "EmployeeID", "FullName");
             ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
@@ -70,8 +80,14 @@ namespace CLIMAX.Controllers
                 new SelectListItem(){Text = "Check", Value = "Check"},
                 new SelectListItem(){Text = "Credit Card", Value = "Credit Card"}
             };
-            ViewBag.Patients = new SelectList(db.Patients, "PatientID", "FullName");
-            ViewBag.Therapists = new SelectList(db.Employees.Include(a => a.roleType).Where(r => r.roleType.Type == "Therapist").ToList(), "EmployeeID", "FullName");
+            ViewBag.CardType = new List<SelectListItem>()
+            {
+                new SelectListItem(){Text = "Mastercard", Value = "Mastercard"},
+                new SelectListItem(){Text = "Visa", Value = "Visa"},
+                new SelectListItem(){Text = "", Value = ""}
+            };
+            ViewBag.Patients = new SelectList(db.Patients, "PatientID", "FullName", chargeSlip.PatientID);
+            ViewBag.Therapists = new SelectList(db.Employees.Include(a => a.roleType).Where(r => r.roleType.Type == "Therapist").ToList(), "EmployeeID", "FullName", chargeSlip.EmployeeID);
             if (materialOrders == null)
             {
                 materialOrders = new List<MaterialsViewModel>();
@@ -99,7 +115,7 @@ namespace CLIMAX.Controllers
                         return View(chargeSlip);
                     }
 
-                    else if (chargeSlip.ModeOfPayment == "Check" && chargeSlip.AmtPayment != chargeSlip.AmtDue)
+                    else if (chargeSlip.ModeOfPayment != "Cash" && chargeSlip.AmtPayment != chargeSlip.AmtDue)
                     {
                         ModelState.AddModelError("", "Check Payments must be exactly the same as amount due");
                         ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
@@ -179,12 +195,51 @@ namespace CLIMAX.Controllers
                     }
                     else
                     {
-                        TreatmentsViewModel treatment = db.Treatments.Where(r => r.TreatmentsID == TreatmentID).Select(u => new TreatmentsViewModel() { TreatmentName = u.TreatmentName, TreatmentsID = u.TreatmentsID, Qty = TreatmentQty, TotalPrice = TreatmentQty * u.TreatmentPrice }).Single();
-                        treatmentOrders.Add(treatment);
-                        //remove already put treatments from the options
-                        treatmentIDs.Add(TreatmentID);
+                        int branchId = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee.BranchID).SingleOrDefault();
+                        if (branchId != 0)
+                        {
+                            TreatmentsViewModel treatment = db.Treatments.Where(r => r.TreatmentsID == TreatmentID).Select(u => new TreatmentsViewModel() { TreatmentName = u.TreatmentName, TreatmentsID = u.TreatmentsID, Qty = TreatmentQty, TotalPrice = TreatmentQty * u.TreatmentPrice }).Single();
+                        
+                             int qtyRequested = 0;
+                             List<MaterialList> materialList = db.MaterialList.Where(r => r.TreatmentID == treatment.TreatmentsID).ToList();
+                                foreach (MaterialList material_treatment in materialList)
+                                {
+                                    Inventory inventory = db.Inventories.Include(a=>a.material).Where(r => r.MaterialID == material_treatment.MaterialID && r.BranchID == branchId).SingleOrDefault();
+                                    if (inventory != null)
+                                    {
+                                        qtyRequested = treatment.Qty * material_treatment.Qty;
+                                      MaterialsViewModel additionalMaterial = materialOrders.Where(r => r.MaterialID == material_treatment.MaterialID).SingleOrDefault();
+                                      if (additionalMaterial != null)
+                                          qtyRequested += additionalMaterial.Qty;
+   
+                                        if(inventory.QtyInStock < qtyRequested)
+                                        {
+                                            ModelState.AddModelError("", "Cannot add treatment. The branch has insufficient stock of \""+ inventory.material.MaterialName + "\".");
+                                            ViewBag.MaterialOrders = materialOrders;
+                                            ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
+                                            ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID)).ToList(), "TreatmentsID", "TreatmentName");
+                                            ViewBag.TreatmentOrders = treatmentOrders;
+                                            return View(chargeSlip);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ModelState.AddModelError("", "Cannot add item. This treatment requires \"" + inventory.material.MaterialName  +"\" which has not been added in this branch's inventory.");
+                                        ViewBag.MaterialOrders = materialOrders;
+                                        ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
+                                        ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID)).ToList(), "TreatmentsID", "TreatmentName");
+                                        ViewBag.TreatmentOrders = treatmentOrders;
+                                        return View(chargeSlip);
+                                    }
+
+                                    treatmentOrders.Add(treatment);
+                                    //remove already put treatments from the options
+                                    treatmentIDs.Add(TreatmentID);
+                            }
+                        }     
                     }
                 }
+                
                 ViewBag.MaterialOrders = materialOrders;
                 ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
                 ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID)).ToList(), "TreatmentsID", "TreatmentName");
@@ -206,10 +261,49 @@ namespace CLIMAX.Controllers
                     }
                     else
                     {
-                        MaterialsViewModel material = db.Materials.Include(a => a.unitType).Where(r => r.MaterialID == materialID).Select(u => new MaterialsViewModel() { MaterialID = u.MaterialID, MaterialName = u.MaterialName, unitType = u.unitType.Type, Qty = materialQty, TotalPrice = u.Price * materialQty }).SingleOrDefault();
-                        materialOrders.Add(material);
-                        //remove already put materials from the options
-                        materialIDs.Add(materialID);
+
+                        int branchId = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee.BranchID).SingleOrDefault();
+                        if (branchId != 0)
+                        {
+                            MaterialsViewModel material = db.Materials.Include(a => a.unitType).Where(r => r.MaterialID == materialID).Select(u => new MaterialsViewModel() { MaterialID = u.MaterialID, MaterialName = u.MaterialName, unitType = u.unitType.Type, Qty = materialQty, TotalPrice = u.Price * materialQty }).SingleOrDefault();
+
+                            int qtyRequested = 0;
+                            Inventory inventory = db.Inventories.Include(a => a.material).Where(r => r.MaterialID == material.MaterialID && r.BranchID == branchId).SingleOrDefault();
+                            if (inventory != null)
+                            {
+                                qtyRequested = material.Qty;
+
+                                foreach (TreatmentsViewModel treatment in treatmentOrders)
+                                {
+                                    List<MaterialList> materialList = db.MaterialList.Where(r => r.TreatmentID == treatment.TreatmentsID && r.MaterialID == material.MaterialID).ToList();
+                                    foreach (MaterialList material_treatment in materialList)
+                                        qtyRequested += (treatment.Qty * material_treatment.Qty);
+                                }
+
+                                if (inventory.QtyInStock < qtyRequested)
+                                {
+                                    ModelState.AddModelError("", "Cannot add item. The branch has insufficient stock of \"" + inventory.material.MaterialName + "\".");
+                                    ViewBag.MaterialOrders = materialOrders;
+                                    ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
+                                    ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID)).ToList(), "TreatmentsID", "TreatmentName");
+                                    ViewBag.TreatmentOrders = treatmentOrders;
+                                    return View(chargeSlip);
+                                }
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("", "Cannot add item. This item has not been added in this branch's inventory.");
+                                ViewBag.MaterialOrders = materialOrders;
+                                ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
+                                ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID)).ToList(), "TreatmentsID", "TreatmentName");
+                                ViewBag.TreatmentOrders = treatmentOrders;
+                                return View(chargeSlip);
+                            }
+
+                            materialOrders.Add(material);
+                            //remove already put materials from the options
+                            materialIDs.Add(materialID);
+                        }
                     }
                 }
                 ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID)).ToList(), "TreatmentsID", "TreatmentName");

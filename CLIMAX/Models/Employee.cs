@@ -9,12 +9,19 @@ namespace CLIMAX.Models
 {
     public class Employee
     {
+        [Key]
         public int EmployeeID { get; set; }
         [Display(Name="Last Name")]
+        [MaxLength(20)]
+        [RegularExpression("^([ \u00c0-\u01ffa-zA-Z'-])+$", ErrorMessage = "Numbers and some special characters are not allowed")]
         public string LastName { get; set; }
          [Display(Name = "First Name")]
+         [MaxLength(20)]
+         [RegularExpression("^([ \u00c0-\u01ffa-zA-Z'-])+$", ErrorMessage = "Numbers and some special characters are not allowed")]    
         public string FirstName { get; set; }
          [Display(Name = "Middle Name")]
+         [MaxLength(20)]
+         [RegularExpression("^([ \u00c0-\u01ffa-zA-Z'-])+$", ErrorMessage = "Numbers and some special characters are not allowed")]
         public string MiddleName { get; set; }
         public int RoleTypeID { get; set; }
         public virtual RoleType roleType { get; set; }
