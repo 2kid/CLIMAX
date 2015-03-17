@@ -13,6 +13,7 @@ namespace CLIMAX.Controllers
 {
     public class ReservationsController : Controller
     {
+
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Reservations

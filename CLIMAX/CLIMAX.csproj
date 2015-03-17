@@ -198,6 +198,7 @@
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\ReservationsController.cs" />
     <Compile Include="Controllers\RoleTypesController.cs" />
+    <Compile Include="Controllers\SMSController.cs" />
     <Compile Include="Controllers\SurveysController.cs" />
     <Compile Include="Controllers\TreatmentsController.cs" />
     <Compile Include="Controllers\UnitTypesController.cs" />
@@ -424,6 +425,7 @@
     <Content Include="Views\Surveys\Index.cshtml" />
     <Content Include="Views\AuditTrails\Index.cshtml" />
     <Content Include="Views\Reservations\Calendar.cshtml" />
+    <Content Include="Views\SMS\SMS.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

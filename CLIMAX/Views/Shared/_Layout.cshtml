@@ -28,7 +28,8 @@
                     <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
                     <li>@Html.ActionLink("Inventory", "Index", "Inventories")</li>
                     <li>@Html.ActionLink("Reports", "Create", "Reports")</li>
-                    <li>@Html.ActionLink("Audit Trail", "Index", "Inventories")</li>
+                    <li>@Html.ActionLink("SMS", "SMS", "SMS")</li>
+                    <li>@Html.ActionLink("Audit Trail", "Index", "AuditTrails")</li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
