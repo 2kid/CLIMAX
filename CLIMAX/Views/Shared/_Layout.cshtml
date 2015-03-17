@@ -9,39 +9,42 @@
 
 </head>
 <body>
-    
-    <nav class="nav navbar-default">
-  
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">CLIMAX</a>
-            </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav layout">
-                    <li>@Html.ActionLink("Patients", "Index", "Patients") </li>
-                    <li>@Html.ActionLink("Charge Slip", "Index", "ChargeSlips")</li>
-                    <li>@Html.ActionLink("Reservations", "Index", "Reservations")</li>
-                    <li>@Html.ActionLink("Treatment Module", "Index", "Treatments")</li>
-                    <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
-                    <li>@Html.ActionLink("Inventory", "Index", "Inventories")</li>
-                    <li>@Html.ActionLink("Reports", "Index", "Reports")</li>
-                    <li>@Html.ActionLink("Audit Trail", "Index", "Inventories")</li>
-                </ul>
-                <ul class="nav navbar-default layout">
-                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-                    {
-                    @Html.AntiForgeryToken()
-                    <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-                    }
-                    @*<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>*@
-                </ul>
-            </div>
+        
+            <nav class="nav navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle-edit" data-toggle="collapse" data-target="#myNavbar">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">CLIMAX</a>
+                    </div>
 
-    </nav>
+                    <div class="collapse navbar-collapse" id="myNavbar">
+                        <ul class="nav navbar-nav layout">
+                            <li>@Html.ActionLink("Patients", "Index", "Patients") </li>
+                            <li>@Html.ActionLink("Charge Slip", "Index", "ChargeSlips")</li>
+                            <li>@Html.ActionLink("Reservations", "Index", "Reservations")</li>
+                            <li>@Html.ActionLink("Treatment Module", "Index", "Treatments")</li>
+                            <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
+                            <li>@Html.ActionLink("Inventory", "Index", "Inventories")</li>
+                            <li>@Html.ActionLink("Reports", "Index", "Reports")</li>
+                            <li>@Html.ActionLink("Audit Trail", "Index", "Inventories")</li>
+                        </ul>
+                        <ul class="nav navbar-default layout">
+                            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                            }
+                            @*<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>*@
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+      
+
     <!--
     <nav class="navbar navbar-default" role="navigation">
         <div class="navbar-header">

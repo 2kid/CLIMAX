@@ -4189,6 +4189,30 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border: 1px solid transparent;
   border-radius: 4px;
 }
+.navbar-toggle-edit {
+  position: relative;
+  padding: 9px 10px;
+  margin-top: 8px;
+  margin-right: 15px;
+  margin-bottom: 8px;
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.navbar-toggle-edit:focus {
+  outline: 0;
+}
+.navbar-toggle-edit .icon-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 1px;
+}
+.navbar-toggle-edit .icon-bar + .icon-bar {
+  margin-top: 4px;
+}
+
 .navbar-toggle:focus {
   outline: 0;
 }
@@ -4203,6 +4227,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 @media (min-width: 768px) {
   .navbar-toggle {
+    display: none;
+  }
+    .navbar-toggle-edit {
     display: none;
   }
 }
@@ -4416,8 +4443,13 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-default .navbar-toggle {
   border-color: #ddd;
 }
+.navbar-default .navbar-toggle-edit {
+  border-color: #ddd;
+}
 .navbar-default .navbar-toggle:hover,
-.navbar-default .navbar-toggle:focus {
+.navbar-default .navbar-toggle:focus,
+.navbar-default .navbar-toggle-edit:hover,
+.navbar-default .navbar-toggle-edit:focus  {
   background-color: #ddd;
 }
 .navbar-default .navbar-toggle .icon-bar {

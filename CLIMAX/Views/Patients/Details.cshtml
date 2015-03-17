@@ -4,191 +4,224 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
 
-<div>
-    <h4>Patient</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.branch.BranchName)
-        </dt>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Patient Records</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @Html.ActionLink("Patients", "Index") > Patient Details
+                </div>
+                
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="dataTable_wrapper">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.branch.BranchName)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.branch.BranchName)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.branch.BranchName)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.company.CompanyName)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.company.CompanyName)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.company.CompanyName)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.company.CompanyName)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.FirstName)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.FirstName)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MiddleName)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.MiddleName)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.MiddleName)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.MiddleName)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.LastName)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.LastName)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.BirthDate)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.BirthDate)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.BirthDate)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.BirthDate)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Gender)
+                            </dt>
 
-        @if(Model.Gender)
-        { 
-        <dd>
-           Male
-        </dd>
-        }
-        else
-        {
-            <dd>
-                Female
-            </dd>
-        }
-        <dt>
-            @Html.DisplayNameFor(model => model.CivilStatus)
-        </dt>
+                            @if (Model.Gender)
+                            {
+                                <dd>
+                                    Male
+                                </dd>
+                            }
+                            else
+                            {
+                                <dd>
+                                    Female
+                                </dd>
+                            }
+                            <dt>
+                                @Html.DisplayNameFor(model => model.CivilStatus)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CivilStatus)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.CivilStatus)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Height)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Height)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Height)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.Height)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Weight)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Weight)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Weight)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.Weight)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.HomeNo)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.HomeNo)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.HomeNo)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.HomeNo)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Street)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Street)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Street)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.Street)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.City)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.City)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.City)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.City)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LandlineNo)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.LandlineNo)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.LandlineNo)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.LandlineNo)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CellphoneNo)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.CellphoneNo)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CellphoneNo)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.CellphoneNo)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EmailAddress)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.EmailAddress)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.EmailAddress)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.EmailAddress)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Occupation)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Occupation)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Occupation)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.Occupation)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EmergencyContactNo)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.EmergencyContactNo)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.EmergencyContactNo)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.EmergencyContactNo)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EmergencyContactFName)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.EmergencyContactFName)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.EmergencyContactFName)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.EmergencyContactFName)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EmergencyContactMName)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.EmergencyContactMName)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.EmergencyContactMName)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.EmergencyContactMName)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EmergencyContactLName)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.EmergencyContactLName)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.EmergencyContactLName)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.EmergencyContactLName)
+                            </dd>
+                            <dd></dd>
+                            <dd>
+                                <button type="button" class="btn btn-default" aria-label="Left Align">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true">@Html.ActionLink("Edit", "Edit", new { id = Model.PatientID })</span>
+                                </button>
+                            </dd>
 
-    </dl>
+                        </dl>
+                    </div>
+                   
+                   
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.PatientID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+<!-- /#page-wrapper -->
+
+
+
+

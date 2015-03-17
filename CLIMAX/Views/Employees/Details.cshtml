@@ -4,47 +4,78 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Employee Records</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <p>@Html.ActionLink("Employees", "Index") >
+                </div>
 
-<div>
-    <h4>Employee</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="dataTable_wrapper">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.LastName)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.LastName)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.FirstName)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.FirstName)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MiddleName)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.MiddleName)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.MiddleName)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.MiddleName)
+                            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.roleType.Type)
-        </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.roleType.Type)
+                            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.roleType.Type)
-        </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.roleType.Type)
+                            </dd>
 
-    </dl>
+                        </dl>
+                    </div>
+                    <p>
+                        <button type="button" class="btn btn-default" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true">@Html.ActionLink("Edit", "Edit", new { id = Model.EmployeeID })</span>
+                        </button>
+                         
+                    </p>
+
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.EmployeeID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+<!-- /#page-wrapper -->
+
+
+
+   
