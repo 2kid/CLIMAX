@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using CLIMAX.Models;
+using System.Data.Entity;
 
 namespace CLIMAX.Controllers
 {
@@ -52,6 +53,64 @@ namespace CLIMAX.Controllers
             }
         }
 
+
+        public ActionResult AdminIndex()
+        {
+            return View(db.Users.ToList());
+        }
+
+        public ActionResult Disable(string email)
+        {
+            ApplicationUser user = db.Users.Where(r => r.UserName == email).Single();
+            user.isActive = false;
+            db.Entry(user).State = EntityState.Modified;
+            int auditId = Audit.CreateAudit(user.UserName, "Disable", "Account", User.Identity.Name);
+            db.SaveChanges();
+            return RedirectToAction("AdminIndex");
+        }
+
+        public ActionResult Enable(string email)
+        {
+            ApplicationUser user = db.Users.Where(r => r.UserName == email).Single();
+            user.isActive = true;
+            db.Entry(user).State = EntityState.Modified;
+            int auditId = Audit.CreateAudit(user.UserName, "Enable", "Account", User.Identity.Name);
+            db.SaveChanges();
+            return RedirectToAction("AdminIndex");
+        }
+
+        public ActionResult EditAccount(string email)
+        {
+            return View(new SetPasswordViewModel() { Email = email});
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditAccount(SetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.Email == "admin@yahoo.com")
+                {
+                    ModelState.AddModelError("", "You cannot change the password of this account.");
+                    return View(model);
+                }
+
+                string userId = db.Users.Where(r=>r.UserName == model.Email).Select(u=>u.Id).Single();
+                var result = UserManager.RemovePassword(userId);
+                result = UserManager.AddPassword(userId, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("AdminIndex");
+                }
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -72,12 +131,16 @@ namespace CLIMAX.Controllers
             {
                 return View(model);
             }
-
+           
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
+                    if (db.Users.Where(r => r.UserName == model.Email).Select(u=>u.isActive).Single())
                     return RedirectToLocal(returnUrl);
+                    else
+                          ModelState.AddModelError("", "Account has been deactivated.");
+                    return View(model);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -129,7 +192,7 @@ namespace CLIMAX.Controllers
                     BranchID = model.BranchID
                 };
 
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, employee = employee};
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, employee = employee, isActive = true};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -145,8 +208,8 @@ namespace CLIMAX.Controllers
                             result = UserManager.AddToRole(user.Id, "Admin");
                             break;
                     }
-                    Audit.CreateAudit(user.UserName, "Create", "Account", 0, User.Identity.Name);
-                    return RedirectToAction("Index", "Home");
+                    int auditId = Audit.CreateAudit(user.UserName, "Create", "Account", User.Identity.Name);
+                    return RedirectToAction("AdminIndex", "Account");
                 }
                 AddErrors(result);
             }
@@ -211,7 +274,7 @@ namespace CLIMAX.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Patients");
         }
         #endregion
     }

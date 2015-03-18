@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<CLIMAX.Models.RoleType>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Role Type - Index";
 }
 
-<h2>Index</h2>
+
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -24,7 +24,6 @@
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.RoleTypeId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.RoleTypeId }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.RoleTypeId })
         </td>
     </tr>

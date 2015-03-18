@@ -51,9 +51,9 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.RoleType.Add(roleType);
+               int auditId =  Audit.CreateAudit(roleType.Type, "Create", "RoleType", User.Identity.Name);
                 db.SaveChanges();
-                Audit.CreateAudit(roleType.Type, "Create", "RoleType", roleType.RoleTypeId, User.Identity.Name);
-
+                Audit.CompleteAudit(auditId, roleType.RoleTypeId);
                 return RedirectToAction("Index");
             }
 
@@ -85,9 +85,9 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(roleType).State = EntityState.Modified;
-                Audit.CreateAudit(roleType.Type, "Edit", "RoleType", roleType.RoleTypeId, User.Identity.Name);
-
-                //  db.SaveChanges();
+                int auditId =  Audit.CreateAudit(roleType.Type, "Edit", "RoleType", User.Identity.Name);
+                Audit.CompleteAudit(auditId, roleType.RoleTypeId);
+                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(roleType);
@@ -115,9 +115,9 @@ namespace CLIMAX.Controllers
         {
             RoleType roleType = db.RoleType.Find(id);
             db.RoleType.Remove(roleType);
-            Audit.CreateAudit(roleType.Type, "Delete", "RoleType", roleType.RoleTypeId, User.Identity.Name);
-
-            //db.SaveChanges();
+            int auditId =  Audit.CreateAudit(roleType.Type, "Delete", "RoleType", User.Identity.Name);
+            Audit.CompleteAudit(auditId, roleType.RoleTypeId);
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

@@ -31,15 +31,13 @@ namespace CLIMAX
                       "~/Scripts/nivo-lightbox.min.js",
                       "~/Scripts/custom.js",
                       "~/Scripts/css3-animate-it.js",
-                      "~/Scripts/jQuery-2.1.3.min.js",
-                      "~/Scripts/app.min.js",
-                      "~/Scripts/npm.js"));
+                      "~/Scripts/jQuery-2.1.3.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                        "~/Content/bootstrap-3.3.2-dist/*.css",
                        "~/Content/bootstrap-3.3.2-dist/*.map",
+                       "~/Content/font-awesome.min.css",
                        "~/Content/nivo-lightbox.css",
-                       "~/Content/default.css",
                        "~/Content/animations.css",
                        "~/Content/style.css",
                       "~/Content/Site.css",

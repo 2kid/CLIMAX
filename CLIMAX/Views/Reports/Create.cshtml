@@ -1,15 +1,15 @@
 ﻿@model CLIMAX.Models.Reports
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Reports - Create";
 }
 
-<h2>Create</h2>
 
-@using (Html.BeginForm()) 
+
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Reports</h4>
         <hr />
@@ -22,21 +22,37 @@
                 @Html.ValidationMessageFor(model => model.ReportTypeID)
             </div>
         </div>
-             <div class="form-group">
+        <div class="form-group">
             @Html.Label("start", new { @class = "control-label col-md-2" })
             <div class="col-9-md-10">
-                @Html.TextBox("start","", new { type = "Date" })
+                @Html.TextBox("start", "", new { type = "Date" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.Label("end", new { @class = "control-label col-md-2" })
             <div class="col-9-md-10">
-                @Html.TextBox("end","", new { type = "Date" })
+                @Html.TextBox("end", "", new { type = "Date" })
             </div>
         </div>
-        
-       
+        @if (User.IsInRole("OIC"))
+        {
+            <div class="form-group">
+                @Html.Label("BranchID", "Branch", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @ViewBag.Branch
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                @Html.Label("BranchID", "Branch", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("BranchID")
+                </div>
+            </div>
+        }
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Request" class="btn btn-default" />

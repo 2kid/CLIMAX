@@ -23,7 +23,7 @@ namespace CLIMAX.Controllers
             string search = form["searchValue"];
             if(!string.IsNullOrEmpty(search))
             {
-                treatments = treatments.Where(r => r.TreatmentName.Contains(search)).ToList();
+                treatments = treatments.Where(r => r.TreatmentName.ToLower().Contains(search.ToLower())).ToList();
             }
             return View(treatments);
         }
@@ -69,8 +69,9 @@ namespace CLIMAX.Controllers
                 if (ModelState.IsValid)
                 {             
                     db.Treatments.Add(treatments);
+                    int auditId =  Audit.CreateAudit(treatments.TreatmentName, "Create", "Treatment", User.Identity.Name);
                     db.SaveChanges();
-                    Audit.CreateAudit(treatments.TreatmentName, "Create", "Treatment", treatments.TreatmentsID, User.Identity.Name);
+                    Audit.CompleteAudit(auditId, treatments.TreatmentsID);
 
                     foreach (MaterialsViewModel item in materialList)
                     {
@@ -173,9 +174,9 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(treatments).State = EntityState.Modified;
-                Audit.CreateAudit(treatments.TreatmentName, "Edit", "Treatment", treatments.TreatmentsID, User.Identity.Name);
-
-                // db.SaveChanges();
+                int auditId = Audit.CreateAudit(treatments.TreatmentName, "Edit", "Treatment", User.Identity.Name);
+                Audit.CompleteAudit(auditId, treatments.TreatmentsID);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(treatments);
@@ -203,9 +204,9 @@ namespace CLIMAX.Controllers
         {
             Treatments treatments = db.Treatments.Find(id);
             db.Treatments.Remove(treatments);
-            Audit.CreateAudit(treatments.TreatmentName, "Delete", "Treatment", treatments.TreatmentsID, User.Identity.Name);
-
-            // db.SaveChanges();
+            int auditId = Audit.CreateAudit(treatments.TreatmentName, "Delete", "Treatment", User.Identity.Name);
+            Audit.CompleteAudit(auditId, treatments.TreatmentsID);
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

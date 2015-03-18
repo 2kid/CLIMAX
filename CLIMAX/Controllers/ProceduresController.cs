@@ -10,6 +10,7 @@ using CLIMAX.Models;
 
 namespace CLIMAX.Controllers
 {
+    [Authorize]
     public class ProceduresController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -55,9 +56,9 @@ namespace CLIMAX.Controllers
             {
                 procedure.TreatmentID = TreatmentID;
                 db.Procedure.Add(procedure);
+                int auditId =  Audit.CreateAudit(procedure.ProcedureName, "Create", "Procedure", User.Identity.Name);
                 db.SaveChanges();
-                Audit.CreateAudit(procedure.ProcedureName, "Create", "Procedure", procedure.ProcedureID, User.Identity.Name);
-
+                Audit.CompleteAudit(auditId, procedure.ProcedureID);
                 return RedirectToAction("Index", new { id = TreatmentID });
             }
 
@@ -89,9 +90,9 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(procedure).State = EntityState.Modified;
-                Audit.CreateAudit(procedure.ProcedureName, "Edit", "Procedure", procedure.ProcedureID, User.Identity.Name);
-
-                // db.SaveChanges();
+                int auditId =  Audit.CreateAudit(procedure.ProcedureName, "Edit", "Procedure", User.Identity.Name);
+                Audit.CompleteAudit(auditId, procedure.ProcedureID);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(procedure);
@@ -119,9 +120,9 @@ namespace CLIMAX.Controllers
         {
             Procedure procedure = db.Procedure.Find(id);
             db.Procedure.Remove(procedure);
-            Audit.CreateAudit(procedure.ProcedureName, "Delete", "Procedure", procedure.ProcedureID, User.Identity.Name);
-
-            //  db.SaveChanges();
+            int auditId =  Audit.CreateAudit(procedure.ProcedureName, "Delete", "Procedure", User.Identity.Name);
+            Audit.CompleteAudit(auditId, procedure.ProcedureID);
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

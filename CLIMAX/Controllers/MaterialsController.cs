@@ -10,6 +10,7 @@ using CLIMAX.Models;
 
 namespace CLIMAX.Controllers
 {
+    [Authorize]
     public class MaterialsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -54,9 +55,9 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Materials.Add(materials);
+                int auditId = Audit.CreateAudit(materials.MaterialName, "Create", "Material", User.Identity.Name);
                 db.SaveChanges();
-                Audit.CreateAudit(materials.MaterialName, "Create", "Material", materials.MaterialID, User.Identity.Name);
-
+                Audit.CompleteAudit(auditId, materials.MaterialID);
                 return RedirectToAction("Index");
             }
 
@@ -90,9 +91,9 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(materials).State = EntityState.Modified;
-                Audit.CreateAudit(materials.MaterialName, "Edit", "Material", materials.MaterialID, User.Identity.Name);
-
-                // db.SaveChanges();
+                int auditId = Audit.CreateAudit(materials.MaterialName, "Edit", "Material", User.Identity.Name);
+                Audit.CompleteAudit(auditId, materials.MaterialID);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.UnitTypeID = new SelectList(db.UnitTypes, "UnitTypeID", "Type", materials.UnitTypeID);
@@ -121,9 +122,9 @@ namespace CLIMAX.Controllers
         {
             Materials materials = db.Materials.Find(id);
             db.Materials.Remove(materials);
-            Audit.CreateAudit(materials.MaterialName, "Delete", "Material", materials.MaterialID, User.Identity.Name);
-
-            //db.SaveChanges();
+            int auditId = Audit.CreateAudit(materials.MaterialName, "Delete", "Material", User.Identity.Name);
+            Audit.CompleteAudit(auditId, materials.MaterialID);
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

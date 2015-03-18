@@ -13,5 +13,10 @@ namespace CLIMAX.Models
         [Required]
         [Display(Name = "Unit Type")]
         public string Type { get; set; }
+
+        public string getCoulmns()
+        {
+            return "UnitTypeID,Type";
+        }
     }
 }

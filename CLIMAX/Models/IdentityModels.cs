@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Collections.Generic;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace CLIMAX.Models
 {
@@ -12,6 +13,8 @@ namespace CLIMAX.Models
     {
         public int EmployeeID { get; set; }
         public virtual Employee employee { get; set; }
+
+        public bool isActive { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -38,7 +41,6 @@ namespace CLIMAX.Models
        public DbSet<ActionTypes> ActionTypes { get; set; }
        public DbSet<Branch> Branches { get; set; }
        public DbSet<ChargeSlip> ChargeSlips { get; set; }
-       public DbSet<Company> Companies { get; set; }
        public DbSet<Employee> Employees { get; set; }
        public DbSet<History> History { get; set; }
        public DbSet<Inventory> Inventories { get; set; }
@@ -54,7 +56,39 @@ namespace CLIMAX.Models
        public DbSet<Session_ChargeSlip> Session_ChargeSlip { get; set; }
        public DbSet<Treatments> Treatments { get; set; }
        public DbSet<UnitType> UnitTypes { get; set; }
+       public DbSet<Survey> Surveys { get; set; }
 
+       protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
+       {
+           base.OnModelCreating(modelBuilder);
+
+           modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
+           modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+
+         //  modelBuilder.Entity<ChargeSlip>()
+         //   .HasRequired(r => r.Patient)
+         //   .WithOptional()
+         //   .WillCascadeOnDelete(false);
+
+         //  modelBuilder.Entity<ChargeSlip>()
+         //  .HasRequired(r => r.Employee)
+         //  .WithOptional()
+         //  .WillCascadeOnDelete(false);
+
+         //  modelBuilder.Entity<History>()
+         //   .HasRequired(r => r.patient)
+         //   .WithOptional()
+         //   .WillCascadeOnDelete(false);
+
+         //  modelBuilder.Entity<History>()
+         //.HasRequired(r => r.employee)
+         //.WithOptional()
+         //.WillCascadeOnDelete(false);
+  
+
+       }
+
+      
 
        public class IdentityManager
        {
@@ -93,5 +127,5 @@ namespace CLIMAX.Models
 
            }
        }
-   }
+    }
 }

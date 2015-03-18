@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<CLIMAX.Models.History>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "History - Index";
 }
 
-<h2>Index</h2>
+
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", new { id = ViewBag.PatientID})
 </p>
 <table class="table">
     <tr>

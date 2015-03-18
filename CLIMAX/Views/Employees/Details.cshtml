@@ -1,9 +1,7 @@
 ﻿@model CLIMAX.Models.Employee
-
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Employee - Details";
 }
-
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
@@ -18,7 +16,6 @@
                 <div class="panel-heading">
                     <p>@Html.ActionLink("Employees", "Index") > Details
                 </div>
-
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <div class="dataTable_wrapper">
@@ -26,38 +23,31 @@
                             <dt>
                                 @Html.DisplayNameFor(model => model.LastName)
                             </dt>
-
                             <dd>
                                 @Html.DisplayFor(model => model.LastName)
                             </dd>
-
                             <dt>
                                 @Html.DisplayNameFor(model => model.FirstName)
                             </dt>
-
                             <dd>
                                 @Html.DisplayFor(model => model.FirstName)
                             </dd>
-
                             <dt>
                                 @Html.DisplayNameFor(model => model.MiddleName)
                             </dt>
-
                             <dd>
                                 @Html.DisplayFor(model => model.MiddleName)
                             </dd>
-
                             <dt>
                                 @Html.DisplayNameFor(model => model.roleType.Type)
                             </dt>
-
                             <dd>
                                 @Html.DisplayFor(model => model.roleType.Type)
                             </dd>
 
                         </dl>
                     </div>
-                    
+
 
                     <!-- /.table-responsive -->
                 </div>
@@ -69,8 +59,3 @@
     </div>
     <!-- /.row -->
 </div>
-<!-- /#page-wrapper -->
-
-
-
-   
