@@ -117,7 +117,17 @@ namespace CLIMAX.Controllers
 
                     else if (chargeSlip.ModeOfPayment != "Cash" && chargeSlip.AmtPayment != chargeSlip.AmtDue)
                     {
-                        ModelState.AddModelError("", "Check Payments must be exactly the same as amount due");
+                        ModelState.AddModelError("", "Check & Credit Payments must be exactly the same as amount due");
+                        ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
+                        ViewBag.Medicines = new SelectList(db.Materials, "MaterialID", "MaterialName");
+                        ViewBag.TreatmentOrders = treatmentOrders;
+                        ViewBag.MaterialOrders = materialOrders;
+                        return View(chargeSlip);
+                    }
+
+                    else if (chargeSlip.ModeOfPayment == "Check" && chargeSlip.CheckNo == null)
+                    {
+                        ModelState.AddModelError("", "Check Payments must have Check No");
                         ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
                         ViewBag.Medicines = new SelectList(db.Materials, "MaterialID", "MaterialName");
                         ViewBag.TreatmentOrders = treatmentOrders;
@@ -127,9 +137,11 @@ namespace CLIMAX.Controllers
 
                     chargeSlip.DateTimePurchased = DateTime.Now;
                     db.ChargeSlips.Add(chargeSlip);
-                    db.SaveChanges();
                     string patient = db.Patients.Find(chargeSlip.PatientID).FullName;
-                    Audit.CreateAudit(patient, "Create", "ChargeSlip", chargeSlip.ChargeSlipID, User.Identity.Name);
+                    int auditId = Audit.CreateAudit(patient, "Create", "ChargeSlip", User.Identity.Name);
+                    db.SaveChanges();
+                    Audit.CompleteAudit(auditId, chargeSlip.ChargeSlipID);
+
                     int branchId = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee.BranchID).SingleOrDefault();
                     if (branchId != 0)
                     {
@@ -231,11 +243,10 @@ namespace CLIMAX.Controllers
                                         ViewBag.TreatmentOrders = treatmentOrders;
                                         return View(chargeSlip);
                                     }
-
-                                    treatmentOrders.Add(treatment);
-                                    //remove already put treatments from the options
-                                    treatmentIDs.Add(TreatmentID);
                             }
+                                treatmentOrders.Add(treatment);
+                                //remove already put treatments from the options
+                                treatmentIDs.Add(TreatmentID);
                         }     
                     }
                 }

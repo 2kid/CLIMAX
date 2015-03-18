@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 
 namespace CLIMAX.Controllers
 {
+    [Authorize]
     public class HistoriesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -71,9 +72,10 @@ namespace CLIMAX.Controllers
                     return View(history);
                 }
                 db.History.Add(history);
-                db.SaveChanges();
                 String patient = db.Patients.Find(history.PatientID).FullName;
-                Audit.CreateAudit(patient, "Create", "History", history.HistoryID, User.Identity.Name);
+                int auditId = Audit.CreateAudit(patient, "Create", "History", User.Identity.Name);
+                db.SaveChanges();
+                Audit.CompleteAudit(auditId, history.HistoryID);
                 return RedirectToAction("Index");
             }
 
@@ -125,7 +127,8 @@ namespace CLIMAX.Controllers
                 }
                 db.Entry(history).State = EntityState.Modified;
                 String patient = db.Patients.Find(history.PatientID).FullName;
-                Audit.CreateAudit(patient, "Edit", "History", history.HistoryID, User.Identity.Name);
+                int auditId = Audit.CreateAudit(patient, "Edit", "History", User.Identity.Name);
+                Audit.CompleteAudit(auditId, history.HistoryID);
                  db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -157,8 +160,8 @@ namespace CLIMAX.Controllers
             History history = db.History.Find(id);
             db.History.Remove(history);
             String patient = db.Patients.Find(history.PatientID).FullName;
-            Audit.CreateAudit(patient, "Delete", "History", history.HistoryID, User.Identity.Name);
-
+            int auditId = Audit.CreateAudit(patient, "Delete", "History", User.Identity.Name);
+            Audit.CompleteAudit(auditId, history.HistoryID);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

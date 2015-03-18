@@ -64,7 +64,7 @@ namespace CLIMAX.Controllers
             ApplicationUser user = db.Users.Where(r => r.UserName == email).Single();
             user.isActive = false;
             db.Entry(user).State = EntityState.Modified;
-            Audit.CreateAudit(user.UserName, "Disable", "Account", 0, User.Identity.Name);
+            int auditId = Audit.CreateAudit(user.UserName, "Disable", "Account", User.Identity.Name);
             db.SaveChanges();
             return RedirectToAction("AdminIndex");
         }
@@ -74,7 +74,7 @@ namespace CLIMAX.Controllers
             ApplicationUser user = db.Users.Where(r => r.UserName == email).Single();
             user.isActive = true;
             db.Entry(user).State = EntityState.Modified;
-            Audit.CreateAudit(user.UserName, "Enable", "Account", 0, User.Identity.Name);
+            int auditId = Audit.CreateAudit(user.UserName, "Enable", "Account", User.Identity.Name);
             db.SaveChanges();
             return RedirectToAction("AdminIndex");
         }
@@ -208,7 +208,7 @@ namespace CLIMAX.Controllers
                             result = UserManager.AddToRole(user.Id, "Admin");
                             break;
                     }
-                    Audit.CreateAudit(user.UserName, "Create", "Account", 0, User.Identity.Name);
+                    int auditId = Audit.CreateAudit(user.UserName, "Create", "Account", User.Identity.Name);
                     return RedirectToAction("AdminIndex", "Account");
                 }
                 AddErrors(result);

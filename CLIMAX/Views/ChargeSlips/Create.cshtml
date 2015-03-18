@@ -232,24 +232,6 @@
     @Scripts.Render("~/bundles/jqueryval")
 
    <script>
-    //function filterNumeric(e) {
-    //    // Allow only backspace and delete
-    //    if ( $.inArray(e.keyCode, [46, 8, 9]) !== -1 ||
-    //        // Allow: Ctrl+A
-    //        (e.keyCode == 65 && e.ctrlKey === true) ||
-    //        // Allow: home, end, left, right, down, up
-    //        (e.keyCode >= 35 && e.keyCode <= 40)) {
-    //        // let it happen, don't do anything
-    //        return;
-    //    }
-    //    else {
-    //        // Ensure that it is a number and stop the keypress
-    //        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-    //            e.preventDefault();
-    //        }
-    //    }
-       //}
-
        //variables
        var discountAmount = 0,
         GFAmount = 0,
@@ -299,6 +281,7 @@
         {
             $("#Change").html(0);
         }
+        setPaymentMethod();
     }
 
     $(document).ready(function(){  
@@ -483,23 +466,6 @@
         $("#certificate").click(function(){
             $("#certificate-panel").toggle();
         });
-
-        //Non LINQ expressions
-      //  $("#MedicineQty").keydown(filterNumeric);
-        //$("#MedicineQty").change(function(){
-        //    if($.isNumeric($(this).val())==false)
-        //    {
-        //        $(this).val(0);
-        //    }
-        //});
-
-        ////$("#TreatmentQty").keydown(filterNumeric);
-        //$("#TreatmentQty").change(function(){
-        //    if($.isNumeric($(this).val())==false)
-        //    {
-        //        $(this).val(0);
-        //    }
-        //});
     });
 </script>
 }

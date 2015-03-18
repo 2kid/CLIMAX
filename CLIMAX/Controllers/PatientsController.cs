@@ -137,8 +137,9 @@ namespace CLIMAX.Controllers
                     patient.BranchID = branchId.Value;
 
                 db.Patients.Add(patient);
+                int auditId =  Audit.CreateAudit(patient.FullName, "Create", "Patient", User.Identity.Name);
                 db.SaveChanges();
-                Audit.CreateAudit(patient.FullName, "Create", "Patient", patient.PatientID, User.Identity.Name);
+                Audit.CompleteAudit(auditId, patient.PatientID);
                 return RedirectToAction("Index");
             }
 
@@ -242,7 +243,8 @@ namespace CLIMAX.Controllers
                     patient.BranchID = branchId.Value;
 
                 db.Entry(patient).State = EntityState.Modified;
-                Audit.CreateAudit(patient.FullName, "Edit", "Patient", patient.PatientID, User.Identity.Name);
+               int auditId =  Audit.CreateAudit(patient.FullName, "Edit", "Patient", User.Identity.Name);
+               Audit.CompleteAudit(auditId, patient.PatientID);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -282,7 +284,8 @@ namespace CLIMAX.Controllers
         {
             Patient patient = db.Patients.Find(id);
             db.Patients.Remove(patient);
-            Audit.CreateAudit(patient.FullName, "Delete", "Patient", patient.PatientID, User.Identity.Name);
+            int auditId =  Audit.CreateAudit(patient.FullName, "Delete", "Patient", User.Identity.Name);
+            Audit.CompleteAudit(auditId, patient.PatientID);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

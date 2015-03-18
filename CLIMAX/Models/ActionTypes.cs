@@ -11,6 +11,11 @@ namespace CLIMAX.Models
         public string AffectedRecord { get; set; }
         public string Action { get; set; }
         //Description to Display
-        public string Description { get; set; }  
+        public string Description { get; set; }
+
+        public string getCoulmns()
+        {
+            return "ActionTypesID,AffectedRecord,Action,Description";
+        }
     }
 }

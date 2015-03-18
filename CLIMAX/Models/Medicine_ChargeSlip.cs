@@ -16,5 +16,9 @@ namespace CLIMAX.Models
         public int ChargeSlipID { get; set; }
         public virtual ChargeSlip chargeSlip { get; set; }
 
+        public string getCoulmns()
+        {
+            return "Medicine_ChargeSlipID,MaterialID,Qty,ChargeSlipID";
+        }
     }
 }

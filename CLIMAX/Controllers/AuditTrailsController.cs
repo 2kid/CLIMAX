@@ -10,6 +10,7 @@ using CLIMAX.Models;
 
 namespace CLIMAX.Controllers
 {
+    [Authorize]
     public class AuditTrailsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

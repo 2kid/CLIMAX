@@ -27,5 +27,10 @@ namespace CLIMAX.Models
         [ForeignKey("Treatments")]
         public int TreatmentID { get; set; }
         public virtual Treatments Treatments { get; set; }
+
+        public string getCoulmns()
+        {
+            return "SurveyID,FirstName,MiddleName,LastName,StarRating,Comment,TreatmentID";
+        }
     }
 }

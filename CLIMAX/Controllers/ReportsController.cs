@@ -17,31 +17,35 @@ namespace CLIMAX.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         private static int employeeID;
+        private static string employeeName;
         private static bool isPDF = false;
         public ActionResult GeneratePDFPatients(string reportString, int BranchID)//Reports report)
         {
             isPDF = true;
+            employeeName = db.Employees.Find(employeeID).FullName;
             return new Rotativa.ActionAsPdf("Index", new { reportString = reportString, BranchID = BranchID });
         }
 
         [AllowAnonymous]
         public ActionResult Index(string reportString, int BranchID, FormCollection form)
         {
-            //if (!User.Identity.IsAuthenticated)
-            //{
-            //    return View();
-            //}
+           
             Reports report = JsonConvert.DeserializeObject<Reports>(reportString);
+            int auditId;
+            string reportType = db.ReportTypes.Find(report.ReportTypeID).Type;
             if (isPDF)
             {
                 report.EmployeeID = employeeID;
                 //add audit
+                auditId = Audit.CreateAudit("Generated For " + employeeName, "PDF", "Reports", User.Identity.Name);
             }
             else
             {
                 report.EmployeeID = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.EmployeeID).SingleOrDefault();
                 employeeID = report.EmployeeID;
                 isPDF = false;
+                auditId = Audit.CreateAudit(reportType, "Create", "Reports", User.Identity.Name);
+       
             }
             db.Reports.Add(report);
             db.SaveChanges();
@@ -49,17 +53,18 @@ namespace CLIMAX.Controllers
             {
                 BranchID = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee.BranchID).Single();
             }
-            string reportType = db.ReportTypes.Find(report.ReportTypeID).Type;
             if (isPDF)
             {
+                Audit.CompleteAudit(auditId,report.ReportsID);
                 employeeID = 0;
+                employeeName = null;
                 ViewBag.isPDF = isPDF;
                 isPDF = false;
             }
             else
             {
-                ViewBag.isPDF = isPDF;
-                Audit.CreateAudit(reportType, "Create", "Reports", report.ReportsID, User.Identity.Name);
+                Audit.CompleteAudit(auditId, report.ReportsID);
+                ViewBag.isPDF = isPDF;             
             }
             ViewBag.Type = reportType;
             ViewBag.Branch = db.Branches.Find(BranchID).BranchName;
@@ -235,21 +240,6 @@ namespace CLIMAX.Controllers
         }
 
 
-
-        // GET: Reports/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Reports reports = db.Reports.Find(id);
-            if (reports == null)
-            {
-                return HttpNotFound();
-            }
-            return View(reports);
-        }
         static int BranchID;
         // GET: Reports/Create
         public ActionResult Create()

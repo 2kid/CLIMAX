@@ -83,11 +83,12 @@ namespace CLIMAX.Migrations
                 new ActionTypes() { ActionTypesID = 35, AffectedRecord = "Reservation", Action = "Delete", Description = "A reservation record was deleted. - " },
                 new ActionTypes() { ActionTypesID = 36, AffectedRecord = "Reservation", Action = "Edit", Description = "A reservation record was updated. - " },
                 new ActionTypes() { ActionTypesID = 37, AffectedRecord = "Reports", Action = "Create", Description = "A new report record was created. - " },
-                new ActionTypes() { ActionTypesID = 38, AffectedRecord = "ChargeSlip", Action = "Create", Description = "A new chargeslip transaction record was created. - " },
-                new ActionTypes() { ActionTypesID = 39, AffectedRecord = "Account", Action = "Create", Description = "A new account was created. - " },
-                new ActionTypes() { ActionTypesID = 40, AffectedRecord = "Account", Action = "Disable", Description = "An account has been deactivated. - " },
-                new ActionTypes() { ActionTypesID = 41, AffectedRecord = "Account", Action = "Enable", Description = "An account has been reactivated. - " },
-                new ActionTypes() { ActionTypesID = 42, AffectedRecord = "None", Action = "Send", Description = "A sms message was sent. - " }
+                new ActionTypes() { ActionTypesID = 38, AffectedRecord = "Reports", Action = "PDF", Description = "A report was converted to PDF. - " },
+                new ActionTypes() { ActionTypesID = 39, AffectedRecord = "ChargeSlip", Action = "Create", Description = "A new chargeslip transaction record was created. - " },
+                new ActionTypes() { ActionTypesID = 40, AffectedRecord = "Account", Action = "Create", Description = "A new account was created. - " },
+                new ActionTypes() { ActionTypesID = 41, AffectedRecord = "Account", Action = "Disable", Description = "An account has been deactivated. - " },
+                new ActionTypes() { ActionTypesID = 42, AffectedRecord = "Account", Action = "Enable", Description = "An account has been reactivated. - " },
+                new ActionTypes() { ActionTypesID = 43, AffectedRecord = "None", Action = "Send", Description = "A sms message was sent. - " }
                 );
             }
             context.SaveChanges();

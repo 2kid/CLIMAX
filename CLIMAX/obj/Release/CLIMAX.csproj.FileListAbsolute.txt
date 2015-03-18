@@ -20,7 +20,10 @@ C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Microsoft.Web.Infrastructure.dl
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Newtonsoft.Json.dll
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Owin.dll
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Rotativa.dll
+C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Net.Http.Formatting.dll
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Helpers.dll
+C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Http.dll
+C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Http.WebHost.dll
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Mvc.dll
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Optimization.dll
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Razor.dll
@@ -33,7 +36,10 @@ C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\EntityFramework.SqlServer.xml
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Microsoft.AspNet.Identity.Core.xml
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Microsoft.AspNet.Identity.EntityFramework.xml
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Newtonsoft.Json.xml
+C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Net.Http.Formatting.xml
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Helpers.xml
+C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Http.xml
+C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Http.WebHost.xml
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Mvc.xml
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Razor.xml
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.WebPages.xml
@@ -51,12 +57,5 @@ C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Microsoft.Owin.Security.OAuth.x
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Microsoft.Owin.Security.Google.xml
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Microsoft.Owin.Security.Twitter.xml
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
-C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Release\CLIMAX.csprojResolveAssemblyReference.cache
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Release\CLIMAX.dll
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Release\CLIMAX.pdb
-C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Net.Http.Formatting.dll
-C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Http.dll
-C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Http.WebHost.dll
-C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Net.Http.Formatting.xml
-C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Http.xml
-C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\System.Web.Http.WebHost.xml

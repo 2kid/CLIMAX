@@ -17,5 +17,10 @@ namespace CLIMAX.Models
         public virtual Materials material { get; set; }
         [RegularExpression("^[1-9]{1}[0-9]{0,3}$", ErrorMessage = "Please input positive numbers not greater than 4 digits")]
         public int Qty { get; set; }
+
+        public string getColumns()
+        {
+            return "MaterialListID,TreatmentID,MaterialID,Qty";
+        }
     }
 }

@@ -17,5 +17,11 @@ namespace CLIMAX.Models
         public int Qty { get; set; }
         public int ChargeSlipID { get; set; }
         public virtual ChargeSlip chargeSlip { get; set; }
+
+
+        public string getCoulmns()
+        {
+            return "Session_ChargeSlipID,TreatmentID,Qty,ChargeSlipID";
+        }
     }
 }

@@ -40,15 +40,36 @@
         <td>
             @Html.DisplayFor(modelItem => item.AmtPayment)
         </td>
+        @if(item.GiftCertificateAmt != null)
+        { 
         <td>
             @Html.DisplayFor(modelItem => item.GiftCertificateAmt)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GiftCertificateNo)
-        </td>
+        }
+        else
+        {
+           <td>0</td>
+        }
+        @if(item.GiftCertificateNo != null)
+        {
+                <td>
+                    @Html.DisplayFor(modelItem => item.GiftCertificateNo)
+                </td>
+        }
+        else
+        {
+            <td>N/A</td>
+        }
+        @if(item.CheckNo != null)
+        { 
         <td>
             @Html.DisplayFor(modelItem => item.CheckNo)
         </td>
+        }
+        else
+        {
+            <td>N/A</td>
+        }
     </tr>
 }
 

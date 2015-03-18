@@ -28,7 +28,10 @@ namespace CLIMAX.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         public DateTime DateTimeEnd { get; set; }
-    
-    }
 
+        public string getCoulmns()
+        {
+            return "HistoryID,SessionNo,PatientID,TreatmentID,EmployeeID,DateTimeStart,DateTimeEnd";
+        }
+    }
 }

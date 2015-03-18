@@ -78,8 +78,8 @@ namespace CLIMAX.Controllers
                     db.Inventories.Add(inventory);
                     db.SaveChanges();
                     string material = db.Materials.Find(inventory.MaterialID).MaterialName;
-                    Audit.CreateAudit(material, "Create", "Inventory", inventory.InventoryID, User.Identity.Name);
-
+                    int auditId = Audit.CreateAudit(material, "Create", "Inventory", User.Identity.Name);
+                    Audit.CompleteAudit(auditId, inventory.InventoryID);
                     return RedirectToAction("Index");
                 }
                 else
@@ -141,18 +141,20 @@ namespace CLIMAX.Controllers
                     inventory.LastDateUpdated = DateTime.Now;
                     db.Entry(inventory).State = EntityState.Modified;
                     string material = db.Materials.Find(inventory.MaterialID).MaterialName;
+                    int auditId;
                     if (previousQty > inventory.QtyInStock)
                     {
-                        Audit.CreateAudit((addQty-subtractQty)+"-Removed-"+material, "Edit", "Inventory", inventory.InventoryID, User.Identity.Name);
+                       auditId = Audit.CreateAudit((addQty-subtractQty)+"-Removed-"+material, "Edit", "Inventory", User.Identity.Name);
                     }
                     else if(previousQty < inventory.QtyInStock)
                     {
-                        Audit.CreateAudit((addQty - subtractQty) + "-Added-" + material, "Edit", "Inventory", inventory.InventoryID, User.Identity.Name);
+                       auditId = Audit.CreateAudit((addQty - subtractQty) + "-Added-" + material, "Edit", "Inventory", User.Identity.Name);
                     }
                     else
                     {
-                        Audit.CreateAudit(0+"-Same-"+material, "Edit", "Inventory", inventory.InventoryID, User.Identity.Name);
+                       auditId = Audit.CreateAudit(0+"-Same-"+material, "Edit", "Inventory", User.Identity.Name);
                     }
+                    Audit.CompleteAudit(auditId, inventory.InventoryID);
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -190,8 +192,8 @@ namespace CLIMAX.Controllers
             Inventory inventory = db.Inventories.Find(id);
             db.Inventories.Remove(inventory);
             string material = db.Materials.Find(inventory.MaterialID).MaterialName;
-            Audit.CreateAudit(material, "Delete", "Inventory", inventory.InventoryID, User.Identity.Name);
-
+            int auditId = Audit.CreateAudit(material, "Delete", "Inventory", User.Identity.Name);
+            Audit.CompleteAudit(auditId, inventory.InventoryID);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -13,11 +13,15 @@ namespace CLIMAX.Models
         public virtual Employee employee { get; set; }
      //What record was changed Username/Name of item
         public string ActionDetail { get; set; }
-        public int RecordID { get; set; }
+        public int? RecordID { get; set; }
         [ForeignKey("actionType")]
         public int ActionTypeID { get; set; }
         public virtual ActionTypes actionType { get; set; }
         public DateTime DateTimeOfAction { get; set; }
-    
+
+        public string getCoulmns()
+        {
+            return "AuditTrailID,EmployeeID,ActionDetail,RecordID,ActionTypeID,DateTimeOfAction";
+        }
     }
 }

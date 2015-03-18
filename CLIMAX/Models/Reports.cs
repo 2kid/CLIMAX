@@ -25,5 +25,9 @@ namespace CLIMAX.Models
         [Display(Name = "Date End")]
         public DateTime DateEndOfReport { get; set; }
 
+        public string getCoulmns()
+        {
+            return "ReportsID,ReportTypeID,EmployeeID,DateStartOfReport,DateEndOfReport";
+        }
     }
 }

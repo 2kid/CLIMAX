@@ -33,5 +33,10 @@ namespace CLIMAX.Models
         {
             get { return FirstName + " " + MiddleName + " " + LastName; }
         }
+
+        public string getColumns()
+        {
+            return "EmployeeID,LastName,FirstName,MiddleName,RoleTypeID,BranchID";
+        }
     }
 }

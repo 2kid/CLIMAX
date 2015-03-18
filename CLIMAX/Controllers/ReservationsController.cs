@@ -114,10 +114,10 @@ namespace CLIMAX.Controllers
                     return View(reservation);
                 }
                 db.Reservations.Add(reservation);
-                db.SaveChanges();
                 string patient = db.Patients.Find(reservation.PatientID).FullName;
-                Audit.CreateAudit(patient, "Create", "Reservation", reservation.ReservationID, User.Identity.Name);
-
+                int auditId = Audit.CreateAudit(patient, "Create", "Reservation", User.Identity.Name);
+                db.SaveChanges();
+                Audit.CompleteAudit(auditId, reservation.ReservationID);
                 return RedirectToAction("Index");
             }
 
@@ -220,9 +220,9 @@ namespace CLIMAX.Controllers
                 }
                 db.Entry(reservation).State = EntityState.Modified;
                 string patient = db.Patients.Find(reservation.PatientID).FullName;
-                Audit.CreateAudit(patient, "Edit", "Reservation", reservation.ReservationID, User.Identity.Name);
-
+                int auditId = Audit.CreateAudit(patient, "Edit", "Reservation", User.Identity.Name);
                 db.SaveChanges();
+                Audit.CompleteAudit(auditId, reservation.ReservationID);
                 return RedirectToAction("Index");
             }
             ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FullName", reservation.EmployeeID);
@@ -261,9 +261,9 @@ namespace CLIMAX.Controllers
             Reservation reservation = db.Reservations.Find(id);
             db.Reservations.Remove(reservation);
             string patient = db.Patients.Find(reservation.PatientID).FullName;
-            Audit.CreateAudit(patient, "Delete", "Reservation", reservation.ReservationID, User.Identity.Name);
-
+            int auditId = Audit.CreateAudit(patient, "Delete", "Reservation", User.Identity.Name);
             db.SaveChanges();
+            Audit.CompleteAudit(auditId, reservation.ReservationID);
             return RedirectToAction("Index");
         }
 

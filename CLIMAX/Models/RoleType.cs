@@ -12,5 +12,10 @@ namespace CLIMAX.Models
         [Required]
         [Display(Name="Role Type")]
         public string Type { get; set; }
+
+        public string getCoulmns()
+        {
+            return "RoleTypeId,Type";
+        }
     }
 }

@@ -33,6 +33,12 @@ namespace CLIMAX.Models
                     return false;
             }
         }
+
+        public string getCoulmns()
+        {
+            return "InventoryID,MaterialID,QtyInStock,QtyToAlert,LastDateUpdated,BranchID";
+        }
+
     }
 
 

@@ -34,6 +34,12 @@ namespace CLIMAX.Models
         public virtual Patient Patient { get; set; }
         public int EmployeeID { get; set; }
         public virtual Employee Employee { get; set; }
+
+
+        public string getColumns()
+        {
+            return "ChargeSlipID,DateTimePurchased,DiscountRate,AmtDiscount,AmtDue,ModeOfPayment,AmtPayment,GiftCertificateAmt,GiftCertificateNo,CheckNo,CardType,PatientID,EmployeeID";
+        }
     }
 
     public class ChargeSlipViewModel
@@ -51,6 +57,7 @@ namespace CLIMAX.Models
         public double? DiscountAmount { get; set; }
         public double AmountDue { get; set; }
         public string Therapist { get; set; }
+
     }
 
 

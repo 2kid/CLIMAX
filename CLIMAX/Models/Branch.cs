@@ -18,5 +18,10 @@ namespace CLIMAX.Models
         [Phone]
         public string ContactNo { get; set; }
         public virtual List<Patient> Patients { get; set; }
+
+        public string getCoulmns()
+        {
+            return "BranchID,BranchName,Location,ContactNo";
+        }
     }
 }
