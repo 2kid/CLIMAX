@@ -1,438 +1,468 @@
 ﻿@model CLIMAX.Models.ChargeSlip
-
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "ChargeSlip - Create";
     double grossPrice = 0;
 }
-
-
-<div class="form-horizontal">
-    <h4>ChargeSlip</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div id="page-wrapper">
     <div class="row">
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
-           @Html.Hidden("AmtDue")
-            <div class="col-md-6">
-                <div class="form-group">
-                    @Html.LabelFor(model => model.PatientID, "Patient", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.PatientID, (IEnumerable<SelectListItem>)ViewBag.Patients)
-                        @Html.ValidationMessageFor(model => model.PatientID, "", new { @class = "text-danger" })
-                    </div>
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <p>
+                        @Html.ActionLink("Charge Slips", "Index") > Create
+                    </p>
                 </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.EmployeeID, "Employee", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.EmployeeID, (IEnumerable<SelectListItem>)ViewBag.Therapists)
-                        @Html.ValidationMessageFor(model => model.EmployeeID, "", new { @class = "text-danger" })
-                    </div>
-                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="dataTable_wrapper">
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="row">
+                                @using (Html.BeginForm())
+                                {
+                                    Html.EnableClientValidation(false);
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("AmtDue")
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.PatientID, "Patient", htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.DropDownListFor(model => model.PatientID, (IEnumerable<SelectListItem>)ViewBag.Patients)
+                                                @Html.ValidationMessageFor(model => model.PatientID, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.EmployeeID, "Employee", htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.DropDownListFor(model => model.EmployeeID, (IEnumerable<SelectListItem>)ViewBag.Therapists)
+                                                @Html.ValidationMessageFor(model => model.EmployeeID, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="form-group">
+                                            @Html.Label("Gross", "Gross Amount", htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <span class="col-md-1">PHP</span>
+                                            <div class="col-md-4">
+                                                <span id="grossPrice"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.DiscountRate, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <span class="col-md-1"></span>
+                                            <div class="col-md-3">
+                                                @Html.TextBoxFor(model => model.DiscountRate, new { @class = "form-control", type = "number", min = "0", max = "100" })
+                                            </div>
+                                            <h4 class="left col-md-1">%</h4>
+                                            @Html.ValidationMessageFor(model => model.DiscountRate, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.AmtDiscount, new { @class = "control-label col-md-2" })
+                                            <span class="col-md-1">PHP</span>
+                                            <div class="col-md-4">
+                                                @Html.TextBoxFor(model => model.AmtDiscount, null, new { @class = "form-control", type = "number", min = "0", max = "99999" })
+                                                @Html.ValidationMessageFor(model => model.AmtDiscount, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <button type="button" id="certificate">Gift Certificate</button>
+                                        <div id="certificate-panel" class="additional-item">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.GiftCertificateNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.EditorFor(model => model.GiftCertificateNo, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.GiftCertificateNo, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.GiftCertificateAmt, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.EditorFor(model => model.GiftCertificateAmt, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.GiftCertificateAmt, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <hr />
+                                        </div>
+                                        <div id="check-panel" class="additional-item">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.CheckNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.EditorFor(model => model.CheckNo, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.CheckNo, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <hr />
+                                        </div>
+                                        <div id="credit-panel" class="additional-item">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.CardType, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.DropDownListFor(model => model.CardType, (IEnumerable<SelectListItem>)ViewBag.CardType)
+                                                    @Html.ValidationMessageFor(model => model.CardType, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <hr />
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.Label("Total", new { @class = "control-label col-md-2" })
+                                            <span class="col-md-1">PHP</span>
+                                            <div class="col-md-4">
+                                                <b id="Total"></b>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ModeOfPayment, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.DropDownListFor(model => model.ModeOfPayment, (IEnumerable<SelectListItem>)ViewBag.PaymentMethod)
+                                                @Html.ValidationMessageFor(model => model.ModeOfPayment, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.AmtPayment, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.AmtPayment, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.AmtPayment, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.Label("Change", new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                <b id="Change"></b>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-2 col-md-10">
+                                                <input name="submit" type="submit" value="Create" class="btn btn-default" />
+                                            </div>
+                                        </div>
+                                    </div>
 
-                <hr />
-                <div class="form-group">
-                    @Html.Label("Gross", "Gross Amount", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <span class="col-md-1">PHP</span>
-                    <div class="col-md-4">
-                        <span id="grossPrice"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.DiscountRate, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <span class="col-md-1"></span>
-                     <div class="col-md-3">
-                        @Html.TextBoxFor(model => model.DiscountRate,new { @class = "form-control", type = "number", min = "0", max = "100" })
-                    </div>
-                    <h4 class="left col-md-1">%</h4>
-                    @Html.ValidationMessageFor(model => model.DiscountRate, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.AmtDiscount, new { @class = "control-label col-md-2" })
-                   <span class="col-md-1">PHP</span>
-                     <div class="col-md-4">
-                       @Html.TextBoxFor(model => model.AmtDiscount, null, new { @class = "form-control", type = "number", min = "0", max = "99999" })
-                         @Html.ValidationMessageFor(model => model.AmtDiscount, "", new { @class = "text-danger" })
-                     </div>
-                </div>
+                                    <div class="outer-div col-md-6">
+                                        <table>
+                                            <tr>
+                                                <th class="col-md-3">
+                                                    Treatment / Item
+                                                </th>
+                                                <th class="col-md-3">
+                                                    Qty
+                                                </th>
+                                                <th class="col-md-3">
+                                                    Price
+                                                </th>
+                                                <th class="col-md-3"></th>
+                                            </tr>
+                                            @{
+                                    List<CLIMAX.Models.TreatmentsViewModel> treatmentList = ViewBag.TreatmentOrders;
+                                    for (int i = 0; i < treatmentList.Count; i++)
+                                    {
+                                        grossPrice += treatmentList[i].TotalPrice;
+                                        <tr>
+                                            <td class="col-md-3">@treatmentList[i].TreatmentName</td>
+                                            <td class="col-md-3">@treatmentList[i].Qty</td>
+                                            <td class="col-md-3">@treatmentList[i].TotalPrice</td>
+                                            <td class="col-md-3"><button name="submit" type="submit" value="RemoveT-@i">Remove</button></td>
+                                        </tr>
+                                    }
+                                    List<CLIMAX.Models.MaterialsViewModel> materialList = ViewBag.MaterialOrders;
+                                    for (int i = 0; i < materialList.Count; i++)
+                                    {
+                                        grossPrice += materialList[i].TotalPrice;
+                                        <tr>
+                                            <td class="col-md-3">@materialList[i].MaterialName</td>
+                                            <td class="col-md-3">@materialList[i].units</td>
+                                            <td class="col-md-3">@materialList[i].TotalPrice</td>
+                                            <td class="col-md-3"><button name="submit" type="submit" value="RemoveM-@i">Remove</button></td>
+                                        </tr>
+                                    }
+                                            }
+                                            <tr>
+                                                <td class="col-md-3">Total</td>
+                                                <td class="col-md-3"></td>
+                                                <th class="col-md-3">@grossPrice</th>
+                                                <td class="col-md-3"></td>
+                                            </tr>
+                                        </table>
 
-                <hr />
-                <button type="button" id="certificate">Gift Certificate</button>
-                <div id="certificate-panel" class="additional-item">
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.GiftCertificateNo, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.GiftCertificateNo, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.GiftCertificateNo, "", new { @class = "text-danger" })
+                                        <div class="row">
+                                            <div class="form-group">
+                                                @Html.Label("Treatments", htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-6">
+                                                    @Html.DropDownList("Treatments", null, new { @class = "col-md-12" })
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    @Html.TextBox("TreatmentQty", null, new { type = "number", min = "1", max = "99", @class = "col-md-12" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-offset-2 col-md-10">
+                                                    <input name="submit" type="submit" value="Add Treatment" class="btn btn-default" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group">
+                                                @Html.Label("Medicines", htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-6">
+                                                    @Html.DropDownList("Medicines", null, new { @class = "col-md-12" })
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    @Html.TextBox("MedicineQty", null, new { type = "number", min = "1", max = "999", @class = "col-md-12" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-offset-2 col-md-10">
+                                                    <input name="submit" type="submit" value="Add Medicine" class="btn btn-default" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.GiftCertificateAmt, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.GiftCertificateAmt, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.GiftCertificateAmt, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <hr />
-                </div>
-                <div id="check-panel" class="additional-item">
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.CheckNo, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.CheckNo, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.CheckNo, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <hr />
-                </div>
-                <div class="form-group">
-                    @Html.Label("Total", new { @class = "control-label col-md-2" })
-                    <span class="col-md-1">PHP</span>
-                    <div class="col-md-4">
-                        <b id="Total"></b>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ModeOfPayment, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.ModeOfPayment, (IEnumerable<SelectListItem>)ViewBag.PaymentMethod)
-                        @Html.ValidationMessageFor(model => model.ModeOfPayment, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.AmtPayment, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.AmtPayment, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.AmtPayment, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.Label("Change", new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                       <b id="Change"></b>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input name="submit" type="submit" value="Create" class="btn btn-default" />
                     </div>
                 </div>
             </div>
-        }
-
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
-            <div class="outer-div col-md-6">
-                <table>
-                    <tr>
-                        <th class="col-md-3">
-                            Treatment / Item
-                        </th>
-                        <th class="col-md-3">
-                            Qty
-                        </th>
-                        <th class="col-md-3">
-                            Price
-                        </th>
-                        <th class="col-md-3"></th>
-                    </tr>
-                    @{
-            List<CLIMAX.Models.TreatmentsViewModel> treatmentList = ViewBag.TreatmentOrders;
-            for (int i = 0; i < treatmentList.Count; i++)
-            {
-                grossPrice += treatmentList[i].TotalPrice;
-                <tr>
-                    <td class="col-md-3">@treatmentList[i].TreatmentName</td>
-                    <td class="col-md-3">@treatmentList[i].Qty</td>
-                    <td class="col-md-3">@treatmentList[i].TotalPrice</td>
-                    <td class="col-md-3"><button name="submit" type="submit" value="RemoveT-@i">Remove</button></td>
-                </tr>
-            }
-            List<CLIMAX.Models.MaterialsViewModel> materialList = ViewBag.MaterialOrders;
-            for (int i = 0; i < materialList.Count; i++)
-            {
-                grossPrice += materialList[i].TotalPrice;
-                <tr>
-                    <td class="col-md-3">@materialList[i].MaterialName</td>
-                    <td class="col-md-3">@materialList[i].units</td>
-                    <td class="col-md-3">@materialList[i].TotalPrice</td>
-                    <td class="col-md-3"><button name="submit" type="submit" value="RemoveM-@i">Remove</button></td>
-                </tr>
-            }
-                    }
-                    <tr>
-                        <td class="col-md-3">Total</td>
-                        <td class="col-md-3"></td>
-                        <th class="col-md-3">@grossPrice</th>
-                        <td class="col-md-3"></td>
-                    </tr>
-                </table>
-           
-                <div class="row">
-                    <div class="form-group">
-                        @Html.Label("Treatments", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-6">
-                            @Html.DropDownList("Treatments", null, new { @class = "col-md-12" })
-                        </div>
-                        <div class="col-sm-2">
-                            @Html.TextBox("TreatmentQty", null, new { type = "number", min = "1", max = "99", @class = "col-md-12" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input name="submit" type="submit" value="Add Treatment" class="btn btn-default" />
-                        </div>
-                    </div>
-                </div>
-              
-                <div class="row">
-                    <div class="form-group">
-                        @Html.Label("Medicines", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-6">
-                            @Html.DropDownList("Medicines", null, new { @class = "col-md-12" })
-                        </div>
-                        <div class="col-sm-2">
-                            @Html.TextBox("MedicineQty", null, new { type = "number", min = "1", max = "999", @class = "col-md-12" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input name="submit" type="submit" value="Add Medicine" class="btn btn-default" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
+        </div>
     </div>
-</div>
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
-   <script>
-    function filterNumeric(e) {
-        // Allow only backspace and delete
-        if ( $.inArray(e.keyCode, [46, 8, 9]) !== -1 ||
-            // Allow: Ctrl+A
-            (e.keyCode == 65 && e.ctrlKey === true) ||
-            // Allow: home, end, left, right, down, up
-            (e.keyCode >= 35 && e.keyCode <= 40)) {
-            // let it happen, don't do anything
-            return;
-        }
-        else {
-            // Ensure that it is a number and stop the keypress
-            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                e.preventDefault();
-            }
-        }
-    }
-
-    $(document).ready(function(){
+    <script>
         //variables
         var discountAmount = 0,
          GFAmount = 0,
          Change = 0,
          DiscountRate = 0,
          AmtPayment = 0,
-         price = @grossPrice,  
+         price = @grossPrice,
          TotalPrice = price;
 
-        //computations
-        $("#grossPrice").html(price);
-        $("#AmtDiscount").val(0);
-        $("#Total").html(price);
-        $("#DiscountRate").keydown(filterNumeric);
-      
-        $("#DiscountRate").keyup(function() {
-            DiscountRate = $(this).val();
-            GFAmount = $("#GiftCertificateAmt").val();
-            if(DiscountRate.length > 2)
-            {
-                $(this).val(100);
-            }
-            discountAmount = price * (DiscountRate/100);
-            $("#AmtDiscount").val(discountAmount);
-            TotalPrice = price - discountAmount - GFAmount;
-            $("#Total").html(TotalPrice);
-            $("#AmtDue").val(TotalPrice);
-            if(AmtPayment > TotalPrice){
-                $("#Change").html(AmtPayment - TotalPrice);
-            }
-            else
-            {
-                $("#Change").html(0);
-            }
-        });
-
-        $("#DiscountRate").change(function(){
-            DiscountRate = $(this).val();
-            GFAmount = $("#GiftCertificateAmt").val();
-            if(DiscountRate.length > 2)
-            {
-                $(this).val(100);
-            }
-
-            discountAmount = price * (DiscountRate/100);
-            $("#AmtDiscount").val(discountAmount);
-            TotalPrice = price - discountAmount -  GFAmount;
-            $("#Total").html(TotalPrice);
-            $("#AmtDue").val(TotalPrice);
-            if(AmtPayment > TotalPrice){
-                $("#Change").html(AmtPayment - TotalPrice);
-            }
-            else
-            {
-                $("#Change").html(0);
-            }
-        });
-
-        $("#AmtDiscount").keydown(filterNumeric);
-
-        $("#AmtDiscount").keyup(function() {
-            discountAmount = $(this).val()
-            GFAmount =  $("#GiftCertificateAmt").val();
-            if(discountAmount.length > price.length)
-            {
-                $(this).val(price);
-            }
-            TotalPrice = price - discountAmount -GFAmount;
-            $("#Total").html(TotalPrice);
-            $("#AmtDue").val(TotalPrice);
-            if(AmtPayment > TotalPrice){
-                $("#Change").html(AmtPayment - TotalPrice);
-            }
-            else
-            {
-                $("#Change").html(0);
-            }
-        });
-
-        $("#AmtDiscount").change(function(){
-            discountAmount = $(this).val();
-            GFAmount = $("#GiftCertificateAmt").val();
-            if($.isNumeric(discountAmount)==false)
-            {
-                $(this).val(0);
-            }
-            else if(discountAmount.length > price.length)
-            {
-                $(this).val(price);
-            }
-
-            TotalPrice = price - discountAmount - GFAmount;
-            $("#Total").html(TotalPrice);
-            $("#AmtDue").val(TotalPrice);
-            if(AmtPayment > TotalPrice){
-                $("#Change").html(AmtPayment - TotalPrice);
-            }
-            else
-            {
-                $("#Change").html(0);
-            }
-        });
-
-
-        $("#GiftCertificateNo").keydown(filterNumeric);
-
-        $("#GiftCertificateAmt").keydown(filterNumeric);
-        $("#GiftCertificateAmt").keyup(function() {
-            GFAmount = $(this).val();
-            discountAmount = $("#AmtDiscount").val();
-            if(GFAmount.length > price.length)
-            {
-                $(this).val(price);
-            }
-            TotalPrice = price - discountAmount -  GFAmount;
-            $("#Total").html(TotalPrice);
-            $("#AmtDue").val(TotalPrice);
-            if(AmtPayment > TotalPrice)
-            {
-                $("#Change").html(AmtPayment - TotalPrice);
-            }
-            else
-            {
-                $("#Change").html(0);
-            }
-        });
-
-        $("#CheckNo").keydown(filterNumeric);
-        $("#AmtPayment").keydown(filterNumeric);
-        $("#AmtPayment").keyup(function(){
-            AmtPayment = $(this).val();
-            if(AmtPayment > TotalPrice)
-            {
-                $("#Change").html(AmtPayment - TotalPrice);
-            }
-            else
-            {
-                $("#Change").html(0);
-            }
-        });
-
-        $("#AmtPayment").change(function(){
-            AmtPayment = $(this).val();
-            if($.isNumeric(AmtPayment)==false)
-            {
-                $(this).val(0);
-            }
-
-            if(AmtPayment > TotalPrice)
-            {
-                $("#Change").html(AmtPayment - TotalPrice);
-            }
-            else
-            {
-                $("#Change").html(0);
-            }
-        });
-
-        //additional-items
-        $("#ModeOfPayment").change(function(){
-            if($("#ModeOfPayment option:selected").text()== "Check")
+        function setPaymentMethod(){
+            if($("#ModeOfPayment option:selected").text() == "Check")
             {
                 $("#check-panel").show();
+                $("#credit-panel").hide();
+                $("#AmtPayment").val(TotalPrice);
+                $("#AmtPayment").attr("readonly","");
+            }
+            else if($("#ModeOfPayment option:selected").text() == "Credit Card")
+            {
+                $("#credit-panel").show();
+                $("#check-panel").hide();
                 $("#AmtPayment").val(TotalPrice);
                 $("#AmtPayment").attr("readonly","");
             }
             else
             {
                 $("#check-panel").hide();
+                $("#credit-panel").hide();
                 $("#AmtPayment").removeAttr("readonly");
             }
-        });
+        }
 
-        $("#certificate").click(function(){
-            $("#certificate-panel").toggle();
-        });
-
-        //Non LINQ expressions
-        $("#MedicineQty").keydown(filterNumeric);
-        $("#MedicineQty").change(function(){
-            if($.isNumeric($(this).val())==false)
-            {
-                $(this).val(0);
+        function setPage(){
+            //computations
+            $("#grossPrice").html(price);
+            DiscountRate = $("#DiscountRate").val();
+            discountAmount = price * (DiscountRate/100);
+            $("#AmtDiscount").val(discountAmount);
+            GFAmount =  $("#GiftCertificateAmt").val();
+            TotalPrice = price - discountAmount - GFAmount;
+            $("#Total").html(TotalPrice);
+            $("#AmtDue").val(TotalPrice);
+            if(AmtPayment > TotalPrice){
+                $("#Change").html(AmtPayment - TotalPrice);
             }
-        });
-
-        $("#TreatmentQty").keydown(filterNumeric);
-        $("#TreatmentQty").change(function(){
-            if($.isNumeric($(this).val())==false)
+            else
             {
-                $(this).val(0);
+                $("#Change").html(0);
             }
+            setPaymentMethod();
+        }
+
+        $(document).ready(function(){
+            setPage();
+
+            $("#DiscountRate").keyup(function() {
+                DiscountRate = $(this).val();
+                GFAmount = $("#GiftCertificateAmt").val();
+                if(DiscountRate.length > 2)
+                {
+                    $(this).val(100);
+                }
+                discountAmount = price * (DiscountRate/100);
+                $("#AmtDiscount").val(discountAmount);
+                TotalPrice = price - discountAmount - GFAmount;
+                $("#Total").html(TotalPrice);
+                $("#AmtDue").val(TotalPrice);
+                if(AmtPayment > TotalPrice){
+                    $("#Change").html(AmtPayment - TotalPrice);
+                }
+                else
+                {
+                    $("#Change").html(0);
+                }
+            });
+
+            $("#DiscountRate").change(function(){
+                DiscountRate = $(this).val();
+                GFAmount = $("#GiftCertificateAmt").val();
+                if(DiscountRate.length > 2)
+                {
+                    $(this).val(100);
+                }
+
+                discountAmount = price * (DiscountRate/100);
+                $("#AmtDiscount").val(discountAmount);
+                TotalPrice = price - discountAmount -  GFAmount;
+                $("#Total").html(TotalPrice);
+                $("#AmtDue").val(TotalPrice);
+                if(AmtPayment > TotalPrice){
+                    $("#Change").html(AmtPayment - TotalPrice);
+                }
+                else
+                {
+                    $("#Change").html(0);
+                }
+                setPaymentMethod();
+            });
+
+
+            $("#AmtDiscount").keyup(function() {
+                discountAmount = $(this).val()
+                GFAmount =  $("#GiftCertificateAmt").val();
+                if(discountAmount.length > price.length)
+                {
+                    $(this).val(price);
+                }
+                TotalPrice = price - discountAmount -GFAmount;
+                $("#Total").html(TotalPrice);
+                $("#AmtDue").val(TotalPrice);
+                if(AmtPayment > TotalPrice){
+                    $("#Change").html(AmtPayment - TotalPrice);
+                }
+                else
+                {
+                    $("#Change").html(0);
+                }
+            });
+
+            $("#AmtDiscount").change(function(){
+                discountAmount = $(this).val();
+                GFAmount = $("#GiftCertificateAmt").val();
+                if($.isNumeric(discountAmount)==false)
+                {
+                    $(this).val(0);
+                }
+                else if(discountAmount.length > price.length)
+                {
+                    $(this).val(price);
+                }
+
+                TotalPrice = price - discountAmount - GFAmount;
+                $("#Total").html(TotalPrice);
+                $("#AmtDue").val(TotalPrice);
+                if(AmtPayment > TotalPrice){
+                    $("#Change").html(AmtPayment - TotalPrice);
+                }
+                else
+                {
+                    $("#Change").html(0);
+                }
+                setPaymentMethod();
+            });
+
+
+            $("#GiftCertificateNo").keydown(filterNumeric);
+
+            $("#GiftCertificateAmt").keydown(filterNumeric);
+            $("#GiftCertificateAmt").keyup(function() {
+                GFAmount = $(this).val();
+                discountAmount = $("#AmtDiscount").val();
+                if(GFAmount.length > price.length)
+                {
+                    $(this).val(price);
+                }
+                TotalPrice = price - discountAmount -  GFAmount;
+                $("#Total").html(TotalPrice);
+                $("#AmtDue").val(TotalPrice);
+                if(AmtPayment > TotalPrice)
+                {
+                    $("#Change").html(AmtPayment - TotalPrice);
+                }
+                else
+                {
+                    $("#Change").html(0);
+                }
+            });
+
+            $("#GiftCertificateAmt").change(function(){
+                GFAmount = $(this).val();
+                $("#AmtDiscount").val(discountAmount);
+                if(GFAmount.length > price.length)
+                {
+                    $(this).val(price);
+                }
+                TotalPrice = price - discountAmount -  GFAmount;
+                $("#Total").html(TotalPrice);
+                $("#AmtDue").val(TotalPrice);
+                if(AmtPayment > TotalPrice){
+                    $("#Change").html(AmtPayment - TotalPrice);
+                }
+                else
+                {
+                    $("#Change").html(0);
+                }
+                setPaymentMethod();
+            });
+
+            $("#CheckNo").keydown(filterNumeric);
+            $("#AmtPayment").keydown(filterNumeric);
+            $("#AmtPayment").keyup(function(){
+                AmtPayment = $(this).val();
+                TotalPrice = price - discountAmount -  GFAmount;
+                $("#Total").html(TotalPrice);
+                $("#AmtDue").val(TotalPrice);
+                if(AmtPayment > TotalPrice)
+                {
+                    $("#Change").html(AmtPayment - TotalPrice);
+                }
+                else
+                {
+                    $("#Change").html(0);
+                }
+            });
+
+            $("#AmtPayment").change(function(){
+                AmtPayment = $(this).val();
+                TotalPrice = price - discountAmount -  GFAmount;
+                $("#Total").html(TotalPrice);
+                $("#AmtDue").val(TotalPrice);
+                if($.isNumeric(AmtPayment)==false)
+                {
+                    $(this).val(0);
+                }
+
+                if(AmtPayment > TotalPrice)
+                {
+                    $("#Change").html(AmtPayment - TotalPrice);
+                }
+                else
+                {
+                    $("#Change").html(0);
+                }
+
+            });
+
+            //additional-items
+            $("#ModeOfPayment").change(function(){
+                setPaymentMethod();
+            });
+
+            $("#certificate").click(function(){
+                $("#certificate-panel").toggle();
+            });
         });
-    });
-</script>
+    </script>
 }

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<CLIMAX.Models.Employee>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Employee - Index";
 }
 
 <div id="page-wrapper">
@@ -21,6 +21,10 @@
                         @Html.ActionLink("Create a new Employee Record", "Create")
                     </p>
                 </div>
+                @using (Html.BeginForm())
+                {
+                    @Html.TextBox("searchValue") <button type="submit" class="btn btn-default glyphicon glyphicon-search"></button>
+                }
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <div class="dataTable_wrapper">
@@ -39,7 +43,10 @@
                                     <th>
                                         @Html.DisplayNameFor(model => model.roleType.Type)
                                     </th>
-                                    <th>Settings</th>
+                                    @if (User.IsInRole("OIC"))
+                                    {
+                                        <th>Settings</th>
+                                    }
                                 </tr>
                             </thead>
                             <tbody>
@@ -58,17 +65,14 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.roleType.Type)
                                         </td>
-                                        <td>
-                                            <button type="button" class="btn btn-default" aria-label="Left Align">
-                                                <span class="glyphicon glyphicon-edit" aria-hidden="true">@Html.ActionLink("Edit", "Edit", new { id = item.EmployeeID })</span>
-                                            </button>
-                                            <button type="button" class="btn btn-default" aria-label="Left Align">
-                                                <span class="glyphicon glyphicon-user" aria-hidden="true">@Html.ActionLink("Details", "Details", new { id = item.EmployeeID })</span>
-                                            </button>
-                                            <button type="button" class="btn btn-default" aria-label="Left Align">
-                                                <span class="glyphicon glyphicon-trash" aria-hidden="true">@Html.ActionLink("Delete", "Delete", new { id = item.EmployeeID })</span>
-                                            </button>
-                                        </td>
+                                        @if (User.IsInRole("OIC"))
+                                        {
+                                            <td>
+                                                    @Html.ActionLink("Edit", "Edit", new { id = item.EmployeeID }, new { @class = "btn btn-primary"})
+                                                    @Html.ActionLink("Details", "Details", new { id = item.EmployeeID }, new { @class = "btn btn-primary" })
+                                                    @Html.ActionLink("Delete", "Delete", new { id = item.EmployeeID }, new { @class = "btn btn-primary" })
+                                            </td>
+                                        }
                                     </tr>
                                 }
                             </tbody>

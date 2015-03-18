@@ -1,98 +1,157 @@
 ﻿@model CLIMAX.Models.Reports
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Reports - Index";
 }
 <h2 class="text-center">@ViewBag.Type</h2>
 
 <div class="row">
-    <h5 class="col-md-4">@Model.DateStartOfReport - @Model.DateEndOfReport</h5>
+    <div class="col-md-4"><h5>@Model.DateStartOfReport - @Model.DateEndOfReport</h5>
+    @if(!ViewBag.isPDF)
+    { 
+        using (Html.BeginForm("GeneratePDFPatients", "Reports", new { reportString = Request.QueryString["reportString"], BranchID = Request.QueryString["BranchID"]}))
+        { 
+        <input type="submit" class="btn-primary" value="Convert to PDF"/>
+        }
+    }
+    </div>
+    <div class="col-md-offset-4 col-md-4"><h5>@ViewBag.Branch</h5><span>Generated for: <b>@ViewBag.Employee</b></span></div>
 </div>
 @*filter by branch*@
 
 @if (ViewBag.Type == "Sales Report")
 { 
-<table class="table">
-    <tr>
-        <th>
-            Charge Slip No.
-        </th>
-        <th>
-           Patient Name
-        </th>
-        <th>
-          Treatment
-        </th>
-        <th>
-            Treatment Qty
-        </th>
-        <th>
-          Treatment Amount
-        </th>
-        <th>
-            Medicine
-        </th>
-        <th>
-            Medicine Qty
-        </th>
-        <th>
-            Medicine Amount
-        </th>
-        <th>
-            Total
-        </th>
-        <th>
-            Discount
-        </th>
-        <th>
-            Revenue
-        </th>
-        <th>
-            Therapist
-        </th>
-    </tr>
+    <table class="table">
+        <tr>
+            <th>
+                Charge Slip No.
+            </th>
+            <th>
+               Patient Name
+            </th>
+            <th>
+              Treatment
+            </th>
+            <th>
+                Treatment Qty
+            </th>
+            <th>
+              Treatment Amount
+            </th>
+            <th>
+                Medicine
+            </th>
+            <th>
+                Medicine Qty
+            </th>
+            <th>
+                Medicine Amount
+            </th>
+            <th>
+                Total
+            </th>
+            <th>
+                Discount
+            </th>
+            <th>
+                Revenue
+            </th>
+            <th>
+                Therapist
+            </th>
+        </tr>
 
-@foreach (CLIMAX.Models.ChargeSlipViewModel item in ViewBag.Transactions) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ChargeSlipID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Patient)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Treatment)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TreatmentQty)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TreatmentAmount)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Medicine)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MedicineQty)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MedicineAmount)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Total)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DiscountAmount)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AmountDue)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Therapist)
-        </td>
-    </tr>
-}
+    @foreach (CLIMAX.Models.ChargeSlipViewModel item in ViewBag.Transactions) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChargeSlipID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Patient)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Treatment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TreatmentQty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TreatmentAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Medicine)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MedicineQty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MedicineAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiscountAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountDue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Therapist)
+            </td>
+        </tr>
+    }
 
 </table>
+}
+
+@if (ViewBag.Type == "Inventory Report")
+{
+    <table class="table">
+        <tr>
+            <th>
+                Medicine
+            </th>
+            <th>
+                Control
+            </th>
+            <th>
+               Add
+            </th>
+            <th>
+                Remove
+            </th>
+            <th>
+               Sold
+            </th>
+            <th>
+                Balance
+            </th>
+        </tr>
+
+        @foreach (CLIMAX.Models.InventoryReportsViewModel item in ViewBag.Inventories)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Medicine)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Control)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Add)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Remove)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Sold)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Balance)
+                </td>
+            </tr>
+        }
+    </table>
 }
 

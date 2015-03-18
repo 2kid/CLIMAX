@@ -18,14 +18,30 @@ namespace CLIMAX.Controllers
         // GET: Employees
         public ActionResult Index(FormCollection form)
         {
-            var employees = db.Employees.Include(a => a.roleType).ToList();
-
-            string search = form["searchValue"];
-            if (!string.IsNullOrEmpty(search))
+            if (User.IsInRole("OIC"))
             {
-                employees = employees.Where(r => r.FullName.ToLower().Contains(search.ToLower())).ToList();
+                int branchId = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee).Select(u => u.BranchID).SingleOrDefault();
+                var employees = db.Employees.Include(a => a.roleType).Where(r => r.roleType.Type != "Administrator" && r.roleType.Type != "Auditor" && r.BranchID == branchId).ToList();
+
+                string search = form["searchValue"];
+                if (!string.IsNullOrEmpty(search))
+                {
+                    employees = employees.Where(r => r.FullName.ToLower().Contains(search.ToLower())).ToList();
+                }
+                return View(employees);
+
             }
-            return View(employees);
+            else
+            {
+                var employees = db.Employees.Include(a => a.roleType).ToList();
+
+                string search = form["searchValue"];
+                if (!string.IsNullOrEmpty(search))
+                {
+                    employees = employees.Where(r => r.FullName.ToLower().Contains(search.ToLower())).ToList();
+                }
+                return View(employees);
+            }
         }
 
         // GET: Employees/Details/5
@@ -66,8 +82,9 @@ namespace CLIMAX.Controllers
                 {
                     employee.BranchID = currentUser.BranchID;
                     db.Employees.Add(employee);
+                    int auditId =  Audit.CreateAudit(employee.FullName, "Create", "Employee",  User.Identity.Name);
                     db.SaveChanges();
-                    Audit.CreateAudit(employee.FullName, "Create", "Employee", employee.EmployeeID, User.Identity.Name);
+                    Audit.CompleteAudit(auditId, employee.EmployeeID);
                     return RedirectToAction("Index");
                 }
                 else
@@ -113,8 +130,9 @@ namespace CLIMAX.Controllers
                 {
                     employee.BranchID = currentUser.BranchID;
                     db.Entry(employee).State = EntityState.Modified;
-                    Audit.CreateAudit(employee.FullName, "Edit", "Employee", employee.EmployeeID, User.Identity.Name);
-                    //db.SaveChanges();
+                    int auditId = Audit.CreateAudit(employee.FullName, "Edit", "Employee", User.Identity.Name);
+                    Audit.CompleteAudit(auditId, employee.EmployeeID);
+                    db.SaveChanges();
                     return RedirectToAction("Index");
                 }
             }
@@ -144,8 +162,9 @@ namespace CLIMAX.Controllers
         {
             Employee employee = db.Employees.Find(id);
             db.Employees.Remove(employee);
-            Audit.CreateAudit(employee.FullName, "Delete", "Employee", employee.EmployeeID, User.Identity.Name);
-            //db.SaveChanges();
+            int auditId = Audit.CreateAudit(employee.FullName, "Delete", "Employee", User.Identity.Name);
+            Audit.CompleteAudit(auditId, employee.EmployeeID);
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

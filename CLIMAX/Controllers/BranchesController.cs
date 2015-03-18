@@ -10,10 +10,11 @@ using CLIMAX.Models;
 
 namespace CLIMAX.Controllers
 {
+     [Authorize]
     public class BranchesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
+        
         // GET: Branches
         public ActionResult Index()
         {
@@ -52,8 +53,9 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Branches.Add(branch);
+                int auditId = Audit.CreateAudit(branch.BranchName, "Create", "Branch", User.Identity.Name);
                 db.SaveChanges();
-                Audit.CreateAudit(branch.BranchName, "Create", "Branch", branch.BranchID, User.Identity.Name);
+                Audit.CompleteAudit(auditId, branch.BranchID);
                 return RedirectToAction("Index");
             }
 
@@ -85,8 +87,9 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(branch).State = EntityState.Modified;
-                //db.SaveChanges();
-                Audit.CreateAudit(branch.BranchName, "Edit", "Branch", branch.BranchID, User.Identity.Name); 
+                int auditId = Audit.CreateAudit(branch.BranchName, "Edit", "Branch", User.Identity.Name);
+                Audit.CompleteAudit(auditId, branch.BranchID);
+                db.SaveChanges();               
                 return RedirectToAction("Index");
             }
             return View(branch);
@@ -114,8 +117,9 @@ namespace CLIMAX.Controllers
         {
             Branch branch = db.Branches.Find(id);
             db.Branches.Remove(branch);
-            Audit.CreateAudit(branch.BranchName, "Delete", "Branch", branch.BranchID, User.Identity.Name);
-            //db.SaveChanges();
+            int auditId = Audit.CreateAudit(branch.BranchName, "Delete", "Branch",User.Identity.Name);
+            Audit.CompleteAudit(auditId, branch.BranchID);
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

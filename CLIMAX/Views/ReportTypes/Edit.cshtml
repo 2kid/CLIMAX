@@ -1,11 +1,8 @@
 ﻿@model CLIMAX.Models.ReportType
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Report Type - Edit";
 }
-
-<h2>Edit</h2>
-
 
 @using (Html.BeginForm())
 {
@@ -18,18 +15,10 @@
         @Html.HiddenFor(model => model.ReportTypeID)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.reportType, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.reportType, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.reportType, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.reportDescription, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.reportDescription, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.reportDescription, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
             </div>
         </div>
 

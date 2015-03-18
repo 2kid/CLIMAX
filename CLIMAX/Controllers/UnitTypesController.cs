@@ -51,9 +51,9 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.UnitTypes.Add(unitType);
+                int auditId =  Audit.CreateAudit(unitType.Type, "Create", "UnitType",User.Identity.Name);
                 db.SaveChanges();
-                Audit.CreateAudit(unitType.Type, "Create", "UnitType", unitType.UnitTypeID, User.Identity.Name);
-
+                Audit.CompleteAudit(auditId, unitType.UnitTypeID);
                 return RedirectToAction("Index");
             }
 
@@ -85,9 +85,9 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(unitType).State = EntityState.Modified;
-                Audit.CreateAudit(unitType.Type, "Edit", "UnitType", unitType.UnitTypeID, User.Identity.Name);
-
-                //db.SaveChanges();
+                int auditId =  Audit.CreateAudit(unitType.Type, "Edit", "UnitType",User.Identity.Name);
+                Audit.CompleteAudit(auditId, unitType.UnitTypeID);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(unitType);
@@ -115,9 +115,9 @@ namespace CLIMAX.Controllers
         {
             UnitType unitType = db.UnitTypes.Find(id);
             db.UnitTypes.Remove(unitType);
-            Audit.CreateAudit(unitType.Type, "Delete", "UnitType", unitType.UnitTypeID, User.Identity.Name);
-
-            // db.SaveChanges();
+            int auditId =  Audit.CreateAudit(unitType.Type, "Delete", "UnitType",  User.Identity.Name);
+            Audit.CompleteAudit(auditId, unitType.UnitTypeID);
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

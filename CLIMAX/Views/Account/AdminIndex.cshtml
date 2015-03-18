@@ -1,13 +1,10 @@
 ﻿@model IEnumerable<CLIMAX.Models.ApplicationUser>
 
 @{
-    ViewBag.Title = "View";
+    ViewBag.Title = "Admin Page";
 }
-
-<h2>View</h2>
-
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Register")
 </p>
 <table class="table">
     <tr>
@@ -23,29 +20,39 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.employee.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @if (ViewBag.isEnabled)
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.employee.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            @if (item.UserName != "admin@yahoo.com")
             {
-                @Html.ActionLink("Disable", "Disable", new { id = item.Id })
+                <td>
+                    @Html.ActionLink("Edit", "EditAccount", new { email = item.UserName }) |
+
+                    @if (item.isActive)
+                    {
+                        @Html.ActionLink("Disable", "Disable", new { id = item.Id })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Enable", "Enable", new { id = item.Id })
+                    }
+
+                </td>
             }
             else
             {
-                @Html.ActionLink("Enable", "Enable", new { id = item.Id })
-            }      
-        </td>
-    </tr>
-}
+                <td></td>
+            }
+        </tr>
+    }
 
 </table>
