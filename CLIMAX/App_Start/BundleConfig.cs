@@ -44,7 +44,8 @@ namespace CLIMAX
                        "~/Content/animations.css",
                        "~/Content/style.css",
                       "~/Content/Site.css",
-                      "~/Content/Moses_custom.css"));
+                      "~/Content/Moses_custom.css",
+                      "~/Content/Logstyle.css"));
         }
     }
 }

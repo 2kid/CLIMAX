@@ -58,7 +58,6 @@ C:\Users\2kid\documents\visual studio 2013\Projects\CLIMAX\obj\Debug\CLIMAX.cspr
 C:\Users\2kid\Documents\Visual Studio 2013\Projects\CLIMAX\obj\Debug\CLIMAX.Migrations.init1.resources
 C:\Users\MZ\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.csprojResolveAssemblyReference.cache
 C:\Users\MZ\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.Migrations.init.resources
-C:\Users\MZ\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.Migrations.init1.resources
 C:\Users\MZ\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.csproj.GenerateResource.Cache
 C:\Users\MZ\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.dll
 C:\Users\MZ\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.pdb
@@ -172,3 +171,4 @@ C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.pdb
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Rotativa.dll
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.Migrations.init.resources
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.csproj.GenerateResource.Cache
+C:\Users\MZ\Documents\GitHub\CLIMAX\CLIMAX\bin\Rotativa.dll

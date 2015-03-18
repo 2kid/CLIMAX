@@ -231,6 +231,11 @@
     <Content Include="Content\default.css" />
     <Content Include="Content\demo.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\images\bg.png" />
+    <Content Include="Content\images\gradient.png" />
+    <Content Include="Content\images\pass-icon.png" />
+    <Content Include="Content\images\user-icon.png" />
+    <Content Include="Content\Logstyle.css" />
     <Content Include="Content\MainBG.jpg" />
     <Content Include="Content\map.jpg" />
     <Content Include="Content\Moses_custom.css" />
