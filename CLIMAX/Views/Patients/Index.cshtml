@@ -20,19 +20,21 @@
                         Brief information of all Dermstrata Patients<br /><br />
                         <p>
                             @Html.ActionLink("Create New", "Create")
+                            </p>
+                        @using (Html.BeginForm())
+                        {
+
+                            @Html.TextBox("searchValue") <button type="submit" class="btn btn-default glyphicon glyphicon-search"></button>
+
+
+
+                        }
                     </div>
                    
                     <!-- /.panel-heading -->
                     <div class="panel-body">
                         <div class="dataTable_wrapper">
-                            @using (Html.BeginForm())
-                            {
-                                
-                                   @Html.TextBox("searchValue") <button type="submit" class="btn btn-default glyphicon glyphicon-search"></button>
-                                
-                                
-
-                            }
+                            
                              <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                 
                                 
