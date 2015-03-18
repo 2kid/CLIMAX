@@ -31,7 +31,7 @@ namespace CLIMAX
                       "~/Scripts/nivo-lightbox.min.js",
                       "~/Scripts/custom.js",
                       "~/Scripts/css3-animate-it.js",
-                      "~/Scripts/jQuery-2.1.3.js"));
+                      "~/Scripts/jquery-2.1.3.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                        "~/Content/bootstrap-3.3.2-dist/*.css",
@@ -41,7 +41,8 @@ namespace CLIMAX
                        "~/Content/animations.css",
                        "~/Content/style.css",
                       "~/Content/Site.css",
-                      "~/Content/Moses_custom.css"));
+                      "~/Content/Moses_custom.css",
+                      "~/Content/Logstyle.css"));
         }
     }
 }
