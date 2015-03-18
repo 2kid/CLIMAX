@@ -1,14 +1,12 @@
 ﻿@using CLIMAX.Models
 @model LoginViewModel
 @{
-    ViewBag.Title = "Log in";
     Layout = null;
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 }
-<div class="row text-center">
-    <h2>@ViewBag.Title</h2>
-</div>
+
+
 <div id="wrapper">
     @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form" }))
     {
@@ -41,14 +39,6 @@
             <div class="checkbox">
                 @Html.CheckBoxFor(m => m.RememberMe)
                 <p>Remember Me</p>
-                <div class="form-group">
-                    <div class="col-md-offset-5 col-md-7">
-                        <div class="checkbox">
-                            @Html.CheckBoxFor(m => m.RememberMe)
-                            @Html.LabelFor(m => m.RememberMe)
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
             <!--END FOOTER-->
