@@ -39,17 +39,22 @@ namespace CLIMAX.Controllers
             return View(history);
         }
 
+        static int patientID;
         // GET: Histories/Create
+        [Authorize(Roles="OIC,Auditor")]
         public ActionResult Create(int id)
         {
             ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName");
+            ViewBag.TreatmentID = new SelectList(db.Treatments, "TreatmentID", "TreatmentName");
             ViewBag.Patient = db.Patients.Find(id).FullName;
+            patientID = id;
             return View();
         }
 
         // POST: Histories/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "OIC,Auditor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "HistoryID,SessionNo,PatientID,TreatmentID,EmployeeID,DateTimeStart,DateTimeEnd")] History history)
@@ -59,16 +64,18 @@ namespace CLIMAX.Controllers
                 if (!Regex.IsMatch(history.DateTimeStart.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
                 {
                     ModelState.AddModelError("DateTimeStart", "The field Date & Time Start is invalid");
-                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", history.EmployeeID);
-                    ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName", history.PatientID);
+                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName");
+                    ViewBag.TreatmentID = new SelectList(db.Treatments, "TreatmentID", "TreatmentName");
+                    ViewBag.Patient = db.Patients.Find(patientID).FullName; 
                     return View(history);
                 }
 
                 if (!Regex.IsMatch(history.DateTimeEnd.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
                 {
                     ModelState.AddModelError("DateTimeEnd", "The field Date & Time End is invalid");
-                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", history.EmployeeID);
-                    ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName", history.PatientID);
+                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName");
+                    ViewBag.TreatmentID = new SelectList(db.Treatments, "TreatmentID", "TreatmentName");
+                    ViewBag.Patient = db.Patients.Find(patientID).FullName;
                     return View(history);
                 }
                 db.History.Add(history);
@@ -79,12 +86,15 @@ namespace CLIMAX.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", history.EmployeeID);
-            ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName", history.PatientID);
+            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName");
+            ViewBag.TreatmentID = new SelectList(db.Treatments, "TreatmentID", "TreatmentName");
+            ViewBag.Patient = db.Patients.Find(patientID).FullName;
             return View(history);
         }
 
+      
         // GET: Histories/Edit/5
+        [Authorize(Roles = "OIC,Auditor")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -104,6 +114,7 @@ namespace CLIMAX.Controllers
         // POST: Histories/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "OIC,Auditor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "HistoryID,SessionNo,PatientID,TreatmentID,EmployeeID,DateTimeStart,DateTimeEnd")] History history)
@@ -138,6 +149,7 @@ namespace CLIMAX.Controllers
         }
 
         // GET: Histories/Delete/5
+        [Authorize(Roles = "OIC,Auditor")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -153,6 +165,7 @@ namespace CLIMAX.Controllers
         }
 
         // POST: Histories/Delete/5
+        [Authorize(Roles = "OIC,Auditor")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

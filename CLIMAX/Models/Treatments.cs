@@ -20,7 +20,7 @@ namespace CLIMAX.Models
         [DisplayFormat(DataFormatString = "{0:F2}", ApplyFormatInEditMode = true)]
         public double TreatmentPrice { get; set; }
 
-        public string getCoulmns()
+        public string getColumns()
         {
             return "TreatmentsID,TreatmentName,TreatmentPrice";
         }

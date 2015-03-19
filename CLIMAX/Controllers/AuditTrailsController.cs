@@ -19,7 +19,9 @@ namespace CLIMAX.Controllers
         public ActionResult Index()
         {
             var auditTrail = db.AuditTrail.Include(a => a.actionType).Include(a => a.employee);
-            return View(auditTrail.ToList());
+            return View(auditTrail.ToList()); 
+            
+            
         }
 
         protected override void Dispose(bool disposing)

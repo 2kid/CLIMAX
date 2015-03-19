@@ -10,13 +10,12 @@
     <link href='@Url.Content("~/Content/Logstyle.css")' rel="stylesheet" />
 </head>
 <body>
-    <div id="wrapper" class="container col-md-12">
+    <div id="wrapper" class="container col-md-12 margintop-50">
         @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form" }))
         {
           <!--HEADER-->
             <div class="header">
-                <!--TITLE--><h1>Login Form</h1><!--END TITLE-->
-                <!--DESCRIPTION--><span>Fill out the form below to login to my super awesome imaginary control panel.</span><!--END DESCRIPTION-->
+                <!--TITLE--><h1>Login</h1><!--END TITLE-->
             </div>
          <!--END HEADER-->
             <!--CONTENT-->

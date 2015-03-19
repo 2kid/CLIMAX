@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
+    @RenderSection("Styles", false)
 </head>
 <body>
 
@@ -28,19 +28,32 @@
                     <li>@Html.ActionLink("Reservations", "Index", "Reservations")</li>
                     <li>@Html.ActionLink("Treatment Module", "Index", "Treatments")</li>
                     <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
+
                     <li>@Html.ActionLink("Inventory", "Index", "Inventories")</li>
                     <li>@Html.ActionLink("Reports", "Create", "Reports")</li>
-                    <li>@Html.ActionLink("Audit Trail", "Index", "Inventories")</li>
-                </ul>
-                <ul class="nav navbar-default layout">
-                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-                    }
-                    @*<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>*@
-                </ul>
-            </div>
+                    <li>@Html.ActionLink("Audit Trail", "Index", "AuditTrails")</li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Others <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+                            <li>@Html.ActionLink("Unit Type", "Index", "UnitTypes")</li>
+                            <li>@Html.ActionLink("Surveys", "Index", "Surveys")</li>
+                            <li>@Html.ActionLink("Role Type", "Index", "RoleTypes")</li>
+                            <li>@Html.ActionLink("Materials", "Index", "Materials")</li>
+                            <li>@Html.ActionLink("Branches", "Index", "Branches")</li>
+                            <li>@Html.ActionLink("Admin", "AdminIndex", "Account")</li>
+                            <li>@Html.ActionLink("Backup", "UploadDatabase", "Home")</li>
+                        </ul>
+                        </li>
+                    </ul>
+                        <ul class="nav navbar-default layout">
+                            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                            }
+                        </ul>
+</div>
         </div>
     </nav>
     <div class="container body-content">

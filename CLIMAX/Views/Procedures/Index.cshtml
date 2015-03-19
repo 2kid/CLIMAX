@@ -19,12 +19,12 @@
                                       <div class="panel-heading">
                                           
                                           <p>
-                                              @Html.ActionLink("Create New", "Create")
+                                              @Html.ActionLink("Create New", "Create", new { id = ViewBag.TreatmentID })
                                           </p>
                                           @using (Html.BeginForm())
                                           {
 
-                                              @Html.TextBox("searchValue") <button type="submit" class="btn btn-default">SEARCH</button>
+                                              @Html.TextBox("searchValue") <button type="submit" class="btn btn-default glyphicon glyphicon-search"></button>
 
 
 
@@ -63,13 +63,13 @@
                                                               </td>
                                                               <td>
                                                                   <button type="button" class="btn btn-default" aria-label="Left Align">
-                                                                      <span class="glyphicon glyphicon-edit" aria-hidden="true">@Html.ActionLink("Edit", "Edit", new { id = item.ProcedureID })</span>
+                                                                      <span class="glyphicon glyphicon-edit" aria-hidden="true">@Html.ActionLink("Edit", "Edit", new { id = item.ProcedureID },null)</span>
                                                                   </button>
                                                                   <button type="button" class="btn btn-default" aria-label="Left Align">
-                                                                      <span class="glyphicon glyphicon-user" aria-hidden="true">@Html.ActionLink("Details", "Details", new { id = item.ProcedureID })</span>
+                                                                      <span class="glyphicon glyphicon-user" aria-hidden="true">@Html.ActionLink("Details", "Details", new { id = item.ProcedureID },null)</span>
                                                                   </button>
                                                                   <button type="button" class="btn btn-default" aria-label="Left Align">
-                                                                      <span class="glyphicon glyphicon-trash" aria-hidden="true">@Html.ActionLink("Delete", "Delete", new { id = item.ProcedureID })</span>
+                                                                      <span class="glyphicon glyphicon-trash" aria-hidden="true">@Html.ActionLink("Delete", "Delete", new { id = item.ProcedureID },null)</span>
                                                                   </button>
                                                               </td>
 

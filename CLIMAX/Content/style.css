@@ -18,7 +18,7 @@ body {
     line-height: 1.6em;
 	font-weight: 400;
 	overflow-x: hidden;
-    background:#fff;
+    background-image:url('bg1.JPG');
 }
 
 html {
@@ -588,7 +588,6 @@ hr.bold {
 	width: 60%;
 	border-radius: 25px;
 	border: 2px dashed rgba(61, 201, 179, 1);
-	overflow: scroll;
 
 }
 #modal-body{

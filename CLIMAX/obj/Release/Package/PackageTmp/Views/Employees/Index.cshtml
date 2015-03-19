@@ -68,9 +68,9 @@
                                         @if (User.IsInRole("OIC"))
                                         {
                                             <td>
-                                                    @Html.ActionLink("Edit", "Edit", new { id = item.EmployeeID }, new { @class = "btn btn-primary"})
-                                                    @Html.ActionLink("Details", "Details", new { id = item.EmployeeID }, new { @class = "btn btn-primary" })
-                                                    @Html.ActionLink("Delete", "Delete", new { id = item.EmployeeID }, new { @class = "btn btn-primary" })
+                                                    @Html.ActionLink("Edit", "Edit", new { id = item.EmployeeID }, new { @class = "btn btn-default"})
+                                                    @Html.ActionLink("Details", "Details", new { id = item.EmployeeID }, new { @class = "btn btn-default" })
+                                                    @Html.ActionLink("Delete", "Delete", new { id = item.EmployeeID }, new { @class = "btn btn-default" })
                                             </td>
                                         }
                                     </tr>

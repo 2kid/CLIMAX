@@ -4,7 +4,7 @@
     ViewBag.Title = "Admin Page";
 }
 <p>
-    @Html.ActionLink("Create New", "Register")
+    @Html.ActionLink("Create New", "AddAccount")
 </p>
 <table class="table">
     <tr>
@@ -35,15 +35,15 @@
             @if (item.UserName != "admin@yahoo.com")
             {
                 <td>
-                    @Html.ActionLink("Edit", "EditAccount", new { email = item.UserName }) |
+                    @Html.ActionLink("Change Password", "EditAccount", new { email = item.UserName }) |
 
                     @if (item.isActive)
                     {
-                        @Html.ActionLink("Disable", "Disable", new { id = item.Id })
+                        @Html.ActionLink("Disable", "Disable", new { email = item.UserName })
                     }
                     else
                     {
-                        @Html.ActionLink("Enable", "Enable", new { id = item.Id })
+                        @Html.ActionLink("Enable", "Enable", new { email = item.UserName })
                     }
 
                 </td>

@@ -19,7 +19,7 @@ namespace CLIMAX.Models
         public virtual ChargeSlip chargeSlip { get; set; }
 
 
-        public string getCoulmns()
+        public string getColumns()
         {
             return "Session_ChargeSlipID,TreatmentID,Qty,ChargeSlipID";
         }

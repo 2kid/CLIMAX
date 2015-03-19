@@ -72,7 +72,7 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ChargeSlipID,PatientID,EmployeeID,DiscountRate,AmtDiscount,AmtDue,ModeOfPayment,AmtPayment,GiftCertificateAmt,GiftCertificateNo,CheckNo")] ChargeSlip chargeSlip, FormCollection form)
+        public async Task<ActionResult> Create([Bind(Include = "ChargeSlipID,PatientID,EmployeeID,DiscountRate,AmtDiscount,AmtDue,ModeOfPayment,AmtPayment,GiftCertificateAmt,GiftCertificateNo,CheckNo,CardType")] ChargeSlip chargeSlip, FormCollection form)
         {
             ViewBag.PaymentMethod = new List<SelectListItem>()
             {
@@ -125,7 +125,7 @@ namespace CLIMAX.Controllers
                         return View(chargeSlip);
                     }
 
-                    else if (chargeSlip.ModeOfPayment == "Check" && chargeSlip.CheckNo == null)
+                    else if (chargeSlip.ModeOfPayment == "Check" && chargeSlip.CheckNo.Trim() == null)
                     {
                         ModelState.AddModelError("", "Check Payments must have Check No");
                         ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");

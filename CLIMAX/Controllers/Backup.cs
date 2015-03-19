@@ -65,7 +65,7 @@ namespace CLIMAX.Controllers
                 fields.Add(item.EmergencyContactMName);
                 fields.Add(item.EmergencyContactLName);
                 fields.Add(item.BranchID.ToString());
-
+                  string.Concat("\"", fields.ToString().Replace("\"", "\"\""), "\"");
                 sb.AppendLine(string.Join(",", fields));
             }
 

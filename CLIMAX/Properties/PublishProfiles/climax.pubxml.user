@@ -5,6 +5,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <_PublishTargetUrl>http://localhost:55697/</_PublishTargetUrl>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAhWmmNJTBOUCh7sSn8TaRKgAAAAACAAAAAAAQZgAAAAEAACAAAACKo/PDMTKcmfzhuwvD5MHENGNKIczA3LSsIn9KxZTxQwAAAAAOgAAAAAIAACAAAABYWvaylGdRl4Bt3LVoEUb8NYtgQ+miW5pW+Z+RqWp/aYAAAACGT9vpvU1wYV02fox0SzT0nWDhua1JD4yCqrwRa2NVymP5OvCTOR2kWWWjK79AJ3mSDwjib7PliB9Vpqzp2gY3VDFtxcLEaI/M7AIXt33WRQavJaOJ126QU9TxLd5wijsfsDdOnK+F43rdc4RxoINJkIQnwnIu6I516Z7EkH0vo0AAAAArtMmPfmaVbSufpRgOzKXx076FquvUOeYS65+ov8JaFCeh4es5p84Yu4I6ixye6qVkctmoEMz7BCfScq2Whdsd</EncryptedPassword>
   </PropertyGroup>
 </Project>

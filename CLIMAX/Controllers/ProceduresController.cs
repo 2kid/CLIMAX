@@ -39,6 +39,7 @@ namespace CLIMAX.Controllers
 
         private static int TreatmentID;
         // GET: Procedures/Create
+        [Authorize(Roles = "Admin,Auditor")]
         public ActionResult Create(int id)
         {
             TreatmentID = id;
@@ -48,6 +49,7 @@ namespace CLIMAX.Controllers
         // POST: Procedures/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin,Auditor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ProcedureID,ProcedureName,StepNo")] Procedure procedure)
@@ -66,6 +68,7 @@ namespace CLIMAX.Controllers
         }
 
         // GET: Procedures/Edit/5
+        [Authorize(Roles = "Admin,Auditor")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -83,6 +86,7 @@ namespace CLIMAX.Controllers
         // POST: Procedures/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin,Auditor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ProcedureID,ProcedureName,TreatmentID,StepNo")] Procedure procedure)
@@ -99,6 +103,7 @@ namespace CLIMAX.Controllers
         }
 
         // GET: Procedures/Delete/5
+        [Authorize(Roles = "Admin,Auditor")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -114,6 +119,7 @@ namespace CLIMAX.Controllers
         }
 
         // POST: Procedures/Delete/5
+        [Authorize(Roles = "Admin,Auditor")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

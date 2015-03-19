@@ -100,9 +100,12 @@ namespace CLIMAX.Migrations
                 new Materials() { MaterialName = "Cream", Price = 30.00, UnitTypeID = 1, Description = "Desc" });
             }
 
-            context.Employees.AddOrUpdate(
-               new Employee() { BranchID = 1, FirstName = "sa" , RoleTypeID = 5 }
-               );
+            if (context.Employees.Count() == 0)
+            {
+                context.Employees.AddOrUpdate(
+                   new Employee() { BranchID = 1, FirstName = "sa", RoleTypeID = 5 }
+                   );
+            }
 
             context.SaveChanges();
 
