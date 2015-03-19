@@ -77,7 +77,7 @@ namespace CLIMAX.Models
         }
 
 
-        public string getColumns()
+        public string getCoulmns()
         {
             return "PatientID,FirstName,MiddleName,LastName,BirthDate,Gender,CivilStatus,Height,Weight,HomeNo,Street,City,LandlineNo,CellphoneNo,EmailAddress,Occupation,EmergencyContactNo,EmergencyContactFName,EmergencyContactMName,EmergencyContactLName,BranchID";
         }

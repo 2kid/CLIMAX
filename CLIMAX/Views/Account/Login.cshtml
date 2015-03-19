@@ -1,55 +1,60 @@
 ﻿@using CLIMAX.Models
 @model LoginViewModel
 @{
+    ViewBag.Title = "Log in";
     Layout = null;
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
 }
-<head>
-    <title>Login</title>
-    <link href='@Url.Content("~/Content/bootstrap-3.3.2-dist/bootstrap-theme.css")' rel="stylesheet" />
-    <link href='@Url.Content("~/Content/bootstrap.min.css")' rel="stylesheet" />
-    <link href='@Url.Content("~/Content/Logstyle.css")' rel="stylesheet" />
-</head>
-<body>
-    <div id="wrapper" class="container col-md-12">
-        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form" }))
+<div class="row text-center">
+    <h2>@ViewBag.Title</h2>
+</div>
+<section id="loginForm">
+    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
-          <!--HEADER-->
-            <div class="header">
-                <!--TITLE--><h1>Login Form</h1><!--END TITLE-->
-                <!--DESCRIPTION--><span>Fill out the form below to login to my super awesome imaginary control panel.</span><!--END DESCRIPTION-->
-            </div>
-         <!--END HEADER-->
-            <!--CONTENT-->
-            @Html.AntiForgeryToken()
-            <div class="content">
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <!--Username-->
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control input username", placeholder = "E-Mail", name = "username" })
-                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })<br />
-
-                <!--PASSWORD-->
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control input password", placeholder = "Password" })
-                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-            </div>
-          <!--END CONTENT-->
-            <!--FOOTER-->
-            <div class="footer">
-                <!--LOGIN BUTTON-->
-
-                <input type="submit" name="submit" value="Log-in" class="button btn" btn-primary />
-
-                <!--END LOGIN BUTTON-->
-                <div class="checkbox">
-                    @Html.CheckBoxFor(m => m.RememberMe)
-                    <p>Remember Me</p>
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="container">
+            <div class="row ">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-md-offset-3 control-label" })
+                    <div class="col-md-7">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
                 </div>
             </div>
-            <!--END FOOTER-->
-        }
-        <!--END LOGIN FORM-->
-        <!--GRADIENT--><div class="gradient"></div><!--END GRADIENT-->
-    </div>
-    <script src='@Url.Content("~/Scripts/jquery-2.1.3.js")'></script>
-    <script src='@Url.Content("~/Scripts/jquery.min.js")'></script>
-    <script src='@Url.Content("~/Scripts/bootstrap.min.js")'></script>
-</body>
+            <div class="row">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 col-md-offset-3 control-label" })
+                    <div class="col-md-7">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-5 col-md-7">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                            @Html.LabelFor(m => m.RememberMe)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-5 col-md-7">
+                    <input type="submit" value="Log in" class="btn btn-primary" />
+                </div>
+            </div>       
+        </div>
+    }
+    </section>
+
+
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+    }

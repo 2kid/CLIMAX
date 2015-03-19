@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace CLIMAX.Controllers
 {
-    [Authorize(Roles="OIC,Auditor")]
+    [Authorize]
     public class ReservationsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

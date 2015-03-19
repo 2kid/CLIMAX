@@ -143,17 +143,7 @@ namespace CLIMAX.Controllers
                 return RedirectToAction("Index");
             }
 
-            branchId = null;
-            if (User.IsInRole("OIC"))
-            {
-                branchId = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee.BranchID).Single();
-                patient.BranchID = branchId.Value;
-            }
-            else
-            {
-                ViewBag.BranchID = new SelectList(db.Branches.Where(r => r.BranchName != "*").ToList(), "BranchID", "BranchName");
-            }
-
+            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName", patient.BranchID);
             ViewBag.Gender = new List<SelectListItem>()
             {
                 new SelectListItem(){
@@ -178,7 +168,7 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
-          
+            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName", patient.BranchID);
 
             ViewBag.Gender = new List<SelectListItem>()
             {
@@ -204,7 +194,7 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PatientID,FirstName,MiddleName,LastName,BirthDate,Gender,CivilStatus,Height,Weight,HomeNo,Street,City,LandlineNo,CellphoneNo,EmailAddress,Occupation,EmergencyContactNo,EmergencyContactFName,EmergencyContactMName,EmergencyContactLName")] Patient patient)
+        public ActionResult Edit([Bind(Include = "PatientID,FirstName,MiddleName,LastName,BirthDate,Gender,CivilStatus,Height,Weight,HomeNo,Street,City,LandlineNo,CellphoneNo,EmailAddress,Occupation,EmergencyContactNo,EmergencyContactFName,EmergencyContactMName,EmergencyContactLName,BranchID")] Patient patient)
         {
             IEnumerable<SelectListItem> civilStatus = new List<SelectListItem>()
                         {
@@ -239,7 +229,7 @@ namespace CLIMAX.Controllers
                     ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName", patient.BranchID);
                     ViewBag.Gender = new List<SelectListItem>()
                         {
-                          new SelectListItem(){
+                            new SelectListItem(){
                                 Text = "Female", Value = "false"},
                           new SelectListItem(){
                                 Text = "Male", Value = "true"}   
@@ -249,7 +239,8 @@ namespace CLIMAX.Controllers
                     return View(patient);
                 }
 
-                patient.BranchID = db.Patients.Find(patient.PatientID).BranchID;
+                if (User.IsInRole("OIC"))
+                    patient.BranchID = branchId.Value;
 
                 db.Entry(patient).State = EntityState.Modified;
                int auditId =  Audit.CreateAudit(patient.FullName, "Edit", "Patient", User.Identity.Name);
@@ -257,7 +248,7 @@ namespace CLIMAX.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-           
+            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName", patient.BranchID);
             IEnumerable<SelectListItem> item = new List<SelectListItem>()
             {
                 new SelectListItem(){

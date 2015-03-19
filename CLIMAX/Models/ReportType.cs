@@ -12,7 +12,7 @@ namespace CLIMAX.Models
         [Required]
         public string Type { get; set; }
 
-        public string getColumns()
+        public string getCoulmns()
         {
             return "ReportTypeID,Type";
         }

@@ -10,7 +10,6 @@ using CLIMAX.Models;
 
 namespace CLIMAX.Controllers
 {
-    [Authorize]
     public class UnitTypesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -37,7 +36,6 @@ namespace CLIMAX.Controllers
         }
 
         // GET: UnitTypes/Create
-        [Authorize(Roles = "Auditor,Admin")]
         public ActionResult Create()
         {
             return View();
@@ -46,7 +44,6 @@ namespace CLIMAX.Controllers
         // POST: UnitTypes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Auditor,Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "UnitTypeID,Type")] UnitType unitType)
@@ -64,7 +61,6 @@ namespace CLIMAX.Controllers
         }
 
         // GET: UnitTypes/Edit/5
-        [Authorize(Roles = "Auditor,Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -82,7 +78,6 @@ namespace CLIMAX.Controllers
         // POST: UnitTypes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Auditor,Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "UnitTypeID,Type")] UnitType unitType)
@@ -99,7 +94,6 @@ namespace CLIMAX.Controllers
         }
 
         // GET: UnitTypes/Delete/5
-        [Authorize(Roles = "Auditor,Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -115,7 +109,6 @@ namespace CLIMAX.Controllers
         }
 
         // POST: UnitTypes/Delete/5
-        [Authorize(Roles = "Auditor,Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

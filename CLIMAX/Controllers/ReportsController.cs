@@ -36,9 +36,8 @@ namespace CLIMAX.Controllers
             if (isPDF)
             {
                 report.EmployeeID = employeeID;
-                string user = db.Users.Where(r => r.EmployeeID == employeeID).Select(u => u.UserName).Single();
                 //add audit
-                auditId = Audit.CreateAudit("Generated For " + employeeName, "PDF", "Reports", user);
+                auditId = Audit.CreateAudit("Generated For " + employeeName, "PDF", "Reports", User.Identity.Name);
             }
             else
             {
@@ -48,16 +47,8 @@ namespace CLIMAX.Controllers
                 auditId = Audit.CreateAudit(reportType, "Create", "Reports", User.Identity.Name);
        
             }
-            try
-            {
-                db.Reports.Add(report);
-                db.SaveChanges();
-            }
-            catch
-            {
-                //error
-                RedirectToAction("Create");
-            }
+            db.Reports.Add(report);
+            db.SaveChanges();
             if (User.IsInRole("OIC"))
             {
                 BranchID = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee.BranchID).Single();
@@ -279,7 +270,6 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
-                isPDF = false;
                 string startDate = form["start"];
                 string endDate = form["end"];
                 if (!string.IsNullOrEmpty(startDate))

@@ -28,7 +28,7 @@ namespace CLIMAX.Models
         public int? EmployeeID { get; set; }
         public virtual Employee employee { get; set; }
 
-        public string getColumns()
+        public string getCoulmns()
         {
             return "ReservationID,TreatmentID,ReservationType,DateTimeReserved,Notes,PatientID,EmployeeID";
         }

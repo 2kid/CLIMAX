@@ -1,11 +1,9 @@
-﻿@{
-    ViewBag.Title = "Sync Database Page";
-}
+﻿
 
 <h2>CSV Bulk Upload</h2>
-@using (Html.BeginForm("UploadDatabase","Home",FormMethod.Post, new {enctype="multipart/form-data"})){
+@using (Html.BeginForm("upload","",FormMethod.Post, new {enctype="multipart/form-data"})){
 
-<input type="submit" name="Submit" id="Submit" value="Sync" />
+<input type="file" name="FileUpload" /><input type="submit" name="Submit" id="Submit" value="Upload" />
 
 }  
 

@@ -19,7 +19,7 @@ namespace CLIMAX.Models
         public virtual ActionTypes actionType { get; set; }
         public DateTime DateTimeOfAction { get; set; }
 
-        public string getColumns()
+        public string getCoulmns()
         {
             return "AuditTrailID,EmployeeID,ActionDetail,RecordID,ActionTypeID,DateTimeOfAction";
         }

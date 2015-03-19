@@ -51,9 +51,18 @@
                                 @Html.DisplayNameFor(model => model.ReservationType)
                             </dt>
 
-                            <dd>
-                                @Html.DisplayFor(model => model.ReservationType)
-                            </dd>
+                            @if (Model.ReservationType)
+                                {
+                                    <dd>
+                                        Surgical
+                                    </dd>
+                                }
+                                else
+                                {
+                                    <dd>
+                                        Treatment
+                                    </dd>
+                                }
 
                             <dt>
                                 @Html.DisplayNameFor(model => model.DateTimeReserved)

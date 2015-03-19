@@ -60,7 +60,7 @@ namespace CLIMAX.Controllers
         }
 
         // GET: Employees/Create
-        [Authorize(Roles = "OIC,Auditor")]
+        [Authorize(Roles = "OIC")]
         public ActionResult Create()
         {
             ViewBag.Roles = new SelectList(db.RoleType.Where(r => r.Type == "Beauty Consultant" || r.Type == "Therapist").ToList(), "RoleTypeId", "Type");
@@ -70,7 +70,7 @@ namespace CLIMAX.Controllers
         // POST: Employees/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles="OIC,Auditor")]
+        [Authorize(Roles="OIC")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "EmployeeID,LastName,FirstName,MiddleName,RoleTypeID")] Employee employee)
@@ -99,7 +99,7 @@ namespace CLIMAX.Controllers
 
 
         // GET: Employees/Edit/5
-        [Authorize(Roles = "OIC,Auditor")]
+        [Authorize(Roles = "OIC")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -118,7 +118,7 @@ namespace CLIMAX.Controllers
         // POST: Employees/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "OIC,Auditor")]
+        [Authorize(Roles = "OIC")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "EmployeeID,LastName,FirstName,MiddleName,RoleTypeID")] Employee employee)
@@ -141,7 +141,6 @@ namespace CLIMAX.Controllers
         }
 
         // GET: Employees/Delete/5
-        [Authorize(Roles = "OIC,Auditor")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -157,7 +156,6 @@ namespace CLIMAX.Controllers
         }
 
         // POST: Employees/Delete/5
-        [Authorize(Roles = "OIC,Auditor")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

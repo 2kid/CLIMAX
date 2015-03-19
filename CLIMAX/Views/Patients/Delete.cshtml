@@ -60,9 +60,9 @@
                                     @Html.DisplayFor(model => model.LastName)
                                 </dd>
                                 <dd>
-                                    <button type="button" class="btn btn-default" aria-label="Left Align">
-                                        <span class="glyphicon glyphicon-trash" aria-hidden="true">@Html.ActionLink("Delete", "Delete", new { id = Model.PatientID })</span>
-                                    </button>
+                                    
+                                        @Html.ActionLink("Delete", "Delete", new { id = Model.PatientID }, new { @class = "btn btn-default" })
+                                   
                                 </dd>
                             }
                         </dl>

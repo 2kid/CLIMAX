@@ -17,7 +17,8 @@
     </div>
     <div class="col-md-offset-4 col-md-4"><h5>@ViewBag.Branch</h5><span>Generated for: <b>@ViewBag.Employee</b></span></div>
 </div>
-@Html.ValidationSummary("", new { @class = "text-danger" })
+@*filter by branch*@
+
 @if (ViewBag.Type == "Sales Report")
 { 
     <table class="table">
@@ -102,9 +103,9 @@
     }
 
 </table>
-} 
+}
 
-else if (ViewBag.Type == "Inventory Report")
+@if (ViewBag.Type == "Inventory Report")
 {
     <table class="table">
         <tr>
@@ -148,50 +149,6 @@ else if (ViewBag.Type == "Inventory Report")
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Balance)
-                </td>
-            </tr>
-        }
-    </table>
-}
-else if (ViewBag.Type == "Summary Report")
-{
-    <table class="table">
-        <tr>
-            <th>
-                Patient
-            </th>
-            <th>
-                CardType
-            </th>
-            <th>
-                Gross Amount
-            </th>
-            <th>
-                Net
-            </th>
-        </tr>
-
-        @foreach (CLIMAX.Models.SummaryReportViewModel item in ViewBag.Summary)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Patient)
-                </td>
-                @if(item.CardType != "")
-                { 
-                <td>
-                    @Html.DisplayFor(modelItem => item.CardType)
-                </td>
-                }
-                else
-                {
-                    <td>N/A</td>
-                }
-                <td>
-                    @Html.DisplayFor(modelItem => item.GrossAmount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Net)
                 </td>
             </tr>
         }

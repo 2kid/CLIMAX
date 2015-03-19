@@ -32,5 +32,26 @@ namespace CLIMAX.Controllers
             db.Entry(newAudit).State = EntityState.Modified;
             db.SaveChanges();
         }
+
+        public string DownloadAuditTrails()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine(new AuditTrail().getCoulmns());
+
+            foreach (var item in db.AuditTrail.ToList())
+            {
+                List<string> fields = new List<string>();
+                fields.Add(item.AuditTrailID.ToString());
+                fields.Add(item.EmployeeID.ToString());
+                fields.Add(item.ActionDetail);
+                fields.Add(item.RecordID.ToString());
+                fields.Add(item.ActionTypeID.ToString());
+                fields.Add(item.DateTimeOfAction.ToString());
+
+                sb.AppendLine(string.Join(",", fields));
+            }
+            return sb.ToString();       
+        }
     }
 }

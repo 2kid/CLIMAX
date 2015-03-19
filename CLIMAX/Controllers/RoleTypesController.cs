@@ -10,7 +10,6 @@ using CLIMAX.Models;
 
 namespace CLIMAX.Controllers
 {
-    [Authorize(Roles="Admin,Auditor")]
     public class RoleTypesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

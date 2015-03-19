@@ -21,7 +21,7 @@ namespace CLIMAX.Models
         [RegularExpression("^[0-9]{1,3}$")]
         public int StepNo { get; set; }
 
-        public string getColumns()
+        public string getCoulmns()
         {
             return "ProcedureID,ProcedureName,TreatmentID,StepNo";
         }

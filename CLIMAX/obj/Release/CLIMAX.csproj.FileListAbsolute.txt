@@ -59,4 +59,3 @@ C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Microsoft.Owin.Security.Twitter
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Release\CLIMAX.dll
 C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Release\CLIMAX.pdb
-C:\Users\2kid\Documents\GitHub\CLIMAX\CLIMAX\obj\Release\CLIMAX.csprojResolveAssemblyReference.cache

@@ -13,7 +13,7 @@ using System.Data.Entity;
 
 namespace CLIMAX.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -155,8 +155,8 @@ namespace CLIMAX.Controllers
 
         //
         // GET: /Account/Register
-        
-        public ActionResult AddAccount()
+        [Authorize(Roles="Admin")]
+        public ActionResult Register()
         {
             ViewBag.RoleType = new SelectList(db.RoleType.Where(r => r.Type == "Officer in Charge" || r.Type == "Administrator" || r.Type == "Auditor").ToList(), "RoleTypeId", "Type");
             ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");
@@ -165,10 +165,11 @@ namespace CLIMAX.Controllers
 
         //
         // POST: /Account/Register
-        
+        [Authorize(Roles = "Admin")]
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddAccount(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {

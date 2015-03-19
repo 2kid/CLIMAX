@@ -28,7 +28,7 @@ namespace CLIMAX.Models
         public int TreatmentID { get; set; }
         public virtual Treatments Treatments { get; set; }
 
-        public string getColumns()
+        public string getCoulmns()
         {
             return "SurveyID,FirstName,MiddleName,LastName,StarRating,Comment,TreatmentID";
         }

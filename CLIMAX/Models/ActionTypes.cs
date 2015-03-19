@@ -13,9 +13,9 @@ namespace CLIMAX.Models
         //Description to Display
         public string Description { get; set; }
 
-        //public string getColumns()
-        //{
-        //    return "ActionTypesID,AffectedRecord,Action,Description";
-        //}
+        public string getCoulmns()
+        {
+            return "ActionTypesID,AffectedRecord,Action,Description";
+        }
     }
 }

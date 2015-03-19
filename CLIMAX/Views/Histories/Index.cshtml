@@ -53,9 +53,9 @@
             @Html.DisplayFor(modelItem => item.DateTimeEnd)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.HistoryID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.HistoryID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.HistoryID })
+            @Html.ActionLink("Edit", "Edit", new { id = item.HistoryID }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Details", "Details", new { id = item.HistoryID }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Delete", "Delete", new { id = item.HistoryID }, new { @class = "btn btn-default" })
         </td>
     </tr>
 }
