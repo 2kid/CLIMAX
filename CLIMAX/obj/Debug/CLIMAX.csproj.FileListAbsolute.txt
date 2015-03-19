@@ -121,3 +121,4 @@ C:\Users\ChristiaSanz\Documents\GitHub\CLIMAX\CLIMAX\bin\Microsoft.Owin.Security
 C:\Users\ChristiaSanz\Documents\GitHub\CLIMAX\CLIMAX\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\Users\ChristiaSanz\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.dll
 C:\Users\ChristiaSanz\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.pdb
+C:\Users\ChristiaSanz\Documents\GitHub\CLIMAX\CLIMAX\obj\Debug\CLIMAX.csprojResolveAssemblyReference.cache
