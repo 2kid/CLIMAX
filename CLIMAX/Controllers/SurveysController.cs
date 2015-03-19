@@ -15,6 +15,7 @@ namespace CLIMAX.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Surveys
+        [Authorize]
         public ActionResult Index()
         {
             var surveys = db.Surveys.Include(s => s.Treatments);
@@ -22,6 +23,7 @@ namespace CLIMAX.Controllers
         }
 
         // GET: Surveys/Details/5
+        [Authorize]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -37,6 +39,7 @@ namespace CLIMAX.Controllers
         }
 
         // GET: Surveys/Create
+        [AllowAnonymous]
         public ActionResult Create()
         {
             ViewBag.TreatmentID = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");

@@ -16,12 +16,27 @@ namespace CLIMAX.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Inventories
-        public ActionResult Index()
+        public ActionResult Index(FormCollection form)
         {
             Employee currentUser = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee).SingleOrDefault();
             if (currentUser != null && currentUser.BranchID != 0)
             {
-                 return View(db.Inventories.Where(r => r.BranchID == currentUser.BranchID).ToList());
+                List<Inventory> inventory = new List<Inventory>();
+                   inventory = db.Inventories.Include(a=>a.material).Where(r => r.BranchID == currentUser.BranchID).ToList();
+
+                   if (currentUser.BranchID == 1 && !string.IsNullOrEmpty(form["branchValue"]))
+                   {
+                       string branch = form["branchValue"];
+                       inventory = db.Inventories.Include(a => a.material).Include(b=>b.branch).Where(r => r.branch.BranchName.ToLower().Contains(branch.ToLower())).ToList();
+                   }
+           
+                string search = form["searchValue"];
+                if (!string.IsNullOrEmpty(search))
+                {
+                    inventory = inventory.Where(r => r.material.MaterialName.ToLower().Contains(search.ToLower())).ToList();
+                }
+
+                 return View(inventory);
             }
             else
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -119,7 +134,7 @@ namespace CLIMAX.Controllers
         [Authorize(Roles = "OIC")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "InventoryID,MaterialID,BranchID,QtyToAlert")] Inventory inventory, FormCollection form)
+        public ActionResult Edit([Bind(Include = "InventoryID,MaterialID,QtyToAlert")] Inventory inventory, FormCollection form)
         {
             if (ModelState.IsValid)
             {
@@ -169,6 +184,7 @@ namespace CLIMAX.Controllers
             return View(inventory);
         }
 
+        [Authorize(Roles="OIC")]
         // GET: Inventories/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -185,6 +201,7 @@ namespace CLIMAX.Controllers
         }
 
         // POST: Inventories/Delete/5
+        [Authorize(Roles = "OIC")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

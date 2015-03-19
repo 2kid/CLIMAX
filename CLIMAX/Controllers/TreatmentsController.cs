@@ -12,11 +12,13 @@ using System.Threading.Tasks;
 
 namespace CLIMAX.Controllers
 {
+
     public class TreatmentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Treatments
+        [Authorize]
         public ActionResult Index(FormCollection form)
         {
             var treatments = db.Treatments.ToList();
@@ -29,6 +31,7 @@ namespace CLIMAX.Controllers
         }
 
         // GET: Treatments/Details/5
+        [Authorize]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -46,6 +49,7 @@ namespace CLIMAX.Controllers
 
         static List<MaterialsViewModel> materialList;
         // GET: Treatments/Create
+        [Authorize(Roles = "Auditor,Admin")]
         public ActionResult Create()
         {
             ViewBag.MaterialsList = materialList = new List<MaterialsViewModel>();
@@ -56,6 +60,7 @@ namespace CLIMAX.Controllers
         // POST: Treatments/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Auditor,Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "TreatmentsID,TreatmentName,TreatmentPrice")] Treatments treatments, FormCollection form)
@@ -106,6 +111,13 @@ namespace CLIMAX.Controllers
                     }
                     else
                     {
+                        if(materialQty < 1)
+                        {
+                            ModelState.AddModelError("", "That material quantity is invalid");
+                            ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
+                            ViewBag.MaterialList = materialList;
+                            return View(treatments);
+                        }
                         MaterialsViewModel material = db.Materials.Include(a => a.unitType).Where(r => r.MaterialID == materialID).Select(u => new MaterialsViewModel() { MaterialID = u.MaterialID, MaterialName = u.MaterialName, unitType = u.unitType.Type, Qty = materialQty, TotalPrice = u.Price * materialQty }).SingleOrDefault();
                         materialList.Add(material);
                         //remove already put materials from the options
@@ -145,6 +157,7 @@ namespace CLIMAX.Controllers
         }
 
         // GET: Treatments/Edit/5
+        [Authorize(Roles = "Auditor,Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -165,6 +178,7 @@ namespace CLIMAX.Controllers
         // POST: Treatments/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Auditor,Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "TreatmentsID,TreatmentName,TreatmentPrice")] Treatments treatments)
@@ -183,6 +197,7 @@ namespace CLIMAX.Controllers
         }
 
         // GET: Treatments/Delete/5
+        [Authorize(Roles = "Auditor,Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -198,6 +213,7 @@ namespace CLIMAX.Controllers
         }
 
         // POST: Treatments/Delete/5
+        [Authorize(Roles = "Auditor,Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

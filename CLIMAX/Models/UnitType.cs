@@ -14,7 +14,7 @@ namespace CLIMAX.Models
         [Display(Name = "Unit Type")]
         public string Type { get; set; }
 
-        public string getCoulmns()
+        public string getColumns()
         {
             return "UnitTypeID,Type";
         }

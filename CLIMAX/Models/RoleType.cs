@@ -13,7 +13,7 @@ namespace CLIMAX.Models
         [Display(Name="Role Type")]
         public string Type { get; set; }
 
-        public string getCoulmns()
+        public string getColumns()
         {
             return "RoleTypeId,Type";
         }

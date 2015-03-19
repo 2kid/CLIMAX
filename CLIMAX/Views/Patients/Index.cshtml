@@ -88,6 +88,9 @@
                                            
                                             <td>
                                                 <button type="button" class="btn btn-default" aria-label="Left Align">
+                                                    <span class="glyphicon glyphicon-edit" aria-hidden="true">@Html.ActionLink("View History", "Index","Histories", new { id = item.PatientID })</span>
+                                                </button>
+                                                <button type="button" class="btn btn-default" aria-label="Left Align">
                                                     <span class="glyphicon glyphicon-edit" aria-hidden="true">@Html.ActionLink("Edit", "Edit", new { id = item.PatientID })</span>
                                                 </button>
                                                 <button type="button" class="btn btn-default" aria-label="Left Align">

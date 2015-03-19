@@ -2,55 +2,54 @@
 @model LoginViewModel
 @{
     Layout = null;
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
 }
-
-
-<div id="wrapper">
-    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form" }))
-    {
+<head>
+    <title>Login</title>
+    <link href='@Url.Content("~/Content/bootstrap-3.3.2-dist/bootstrap-theme.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/Content/bootstrap.min.css")' rel="stylesheet" />
+    <link href='@Url.Content("~/Content/Logstyle.css")' rel="stylesheet" />
+</head>
+<body>
+    <div id="wrapper" class="container col-md-12">
+        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form" }))
+        {
           <!--HEADER-->
-        <div class="header">
-            <!--TITLE--><h1>Login Form</h1><!--END TITLE-->
-            <!--DESCRIPTION--><span>Fill out the form below to login to my super awesome imaginary control panel.</span><!--END DESCRIPTION-->
-        </div>
+            <div class="header">
+                <!--TITLE--><h1>Login Form</h1><!--END TITLE-->
+                <!--DESCRIPTION--><span>Fill out the form below to login to my super awesome imaginary control panel.</span><!--END DESCRIPTION-->
+            </div>
          <!--END HEADER-->
             <!--CONTENT-->
-        @Html.AntiForgeryToken()
-        <div class="content">
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <!--Username-->
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control input username", placeholder = "E-Mail", name = "username" })
-            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })<br />
+            @Html.AntiForgeryToken()
+            <div class="content">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <!--Username-->
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control input username", placeholder = "E-Mail", name = "username" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })<br />
 
-            <!--PASSWORD-->
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control input password", placeholder = "Password" })
-            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-        </div>
+                <!--PASSWORD-->
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control input password", placeholder = "Password" })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+            </div>
           <!--END CONTENT-->
             <!--FOOTER-->
-        <div class="footer">
-            <!--LOGIN BUTTON-->
+            <div class="footer">
+                <!--LOGIN BUTTON-->
 
-            <input type="submit" name="submit" value="Log-in" class="button btn" btn-primary />
+                <input type="submit" name="submit" value="Log-in" class="button btn" btn-primary />
 
-            <!--END LOGIN BUTTON-->
-            <div class="checkbox">
-                @Html.CheckBoxFor(m => m.RememberMe)
-                <p>Remember Me</p>
+                <!--END LOGIN BUTTON-->
+                <div class="checkbox">
+                    @Html.CheckBoxFor(m => m.RememberMe)
+                    <p>Remember Me</p>
+                </div>
             </div>
-        </div>
             <!--END FOOTER-->
-    }
-    <!--END LOGIN FORM-->
-    <!--GRADIENT--><div class="gradient"></div><!--END GRADIENT-->
-</div>
-
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-}
+        }
+        <!--END LOGIN FORM-->
+        <!--GRADIENT--><div class="gradient"></div><!--END GRADIENT-->
+    </div>
+    <script src='@Url.Content("~/Scripts/jquery-2.1.3.js")'></script>
+    <script src='@Url.Content("~/Scripts/jquery.min.js")'></script>
+    <script src='@Url.Content("~/Scripts/bootstrap.min.js")'></script>
+</body>

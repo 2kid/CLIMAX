@@ -24,7 +24,7 @@ namespace CLIMAX.Models
         public int UnitTypeID { get; set; }
         public virtual UnitType unitType { get; set; }
 
-        public string getCoulmns()
+        public string getColumns()
         {
             return "MaterialID,MaterialName,Description,Price,UnitTypeID";
         }

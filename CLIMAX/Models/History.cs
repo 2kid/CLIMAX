@@ -29,7 +29,7 @@ namespace CLIMAX.Models
         [DataType(DataType.Date)]
         public DateTime DateTimeEnd { get; set; }
 
-        public string getCoulmns()
+        public string getColumns()
         {
             return "HistoryID,SessionNo,PatientID,TreatmentID,EmployeeID,DateTimeStart,DateTimeEnd";
         }
