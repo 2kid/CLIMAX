@@ -1,0 +1,2 @@
+PatientID,FirstName,MiddleName,LastName,BirthDate,Gender,CivilStatus,Height,Weight,HomeNo,Street,City,LandlineNo,CellphoneNo,EmailAddress,Occupation,EmergencyContactNo,EmergencyContactFName,EmergencyContactMName,EmergencyContactLName,BranchID
+1,Allen,B,Marzan,1994-09-17,True,Single,5'10",141,4,Byte Street,Circuit City,9999999,09229999999,allenmosesmarzan@yahoo.com.ph,Student,,,,,2

@@ -1,0 +1,66 @@
+﻿@model CLIMAX.Models.Inventory
+
+@{
+    ViewBag.Title = "Inventory - Edit";
+}
+
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Inventory</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.InventoryID)
+         @Html.HiddenFor(model => model.QtyInStock)
+        <div class="form-group">
+            @Html.LabelFor(model => model.MaterialID, "Material", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.MaterialID, (IEnumerable<SelectListItem>)ViewBag.Materials)
+                @Html.ValidationMessageFor(model => model.MaterialID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        Add to Stock:
+        <div class="form-group">
+            @Html.Label("addQty","Quantity to add", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("addQty", 0,new { @class = "form-control", type = "number", min = "0" })
+            </div>
+        </div>
+
+        Subtract from Stock:
+        <div class="form-group">
+            @Html.Label("subtractQty", "Quantity to subtract", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("subtractQty", 0, new { @class = "form-control", type = "number", min = "0" })
+            </div>
+        </div>
+
+        At what quantity should we remind you to restock?
+        <div class="form-group">
+            @Html.LabelFor(model => model.QtyToAlert, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.QtyToAlert, new { @class = "form-control", type = "number", min = "0" })
+                @Html.ValidationMessageFor(model => model.QtyToAlert, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

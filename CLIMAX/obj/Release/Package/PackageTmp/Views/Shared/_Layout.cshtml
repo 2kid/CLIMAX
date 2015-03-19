@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+
+    <nav class="nav navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle-edit" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">CLIMAX</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav layout">
+                    <li>@Html.ActionLink("Patients", "Index", "Patients") </li>
+                    <li>@Html.ActionLink("Charge Slip", "Index", "ChargeSlips")</li>
+                    <li>@Html.ActionLink("Reservations", "Index", "Reservations")</li>
+                    <li>@Html.ActionLink("Treatment Module", "Index", "Treatments")</li>
+                    <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
+                    <li>@Html.ActionLink("Inventory", "Index", "Inventories")</li>
+                    <li>@Html.ActionLink("Reports", "Create", "Reports")</li>
+                    <li>@Html.ActionLink("Audit Trail", "Index", "Inventories")</li>
+                </ul>
+                <ul class="nav navbar-default layout">
+                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                    }
+                    @*<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>*@
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script>
+    function filterNumeric(e) {
+        // Allow only backspace and delete
+        if ($.inArray(e.keyCode, [46, 8, 9]) !== -1 ||
+            // Allow: Ctrl+A
+        (e.keyCode == 65 && e.ctrlKey === true) ||
+            // Allow: home, end, left, right, down, up
+        (e.keyCode >= 35 && e.keyCode <= 40)) {
+            // let it happen, don't do anything
+            return;
+        }
+        else {
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        }
+    }
+
+    $(document).ready(function () {
+        $("input[type='number']").keydown(filterNumeric);
+        $("input[type='number']").change(function(){
+            if($.isNumeric($(this).val())==false)
+            {
+                $(this).val(0);
+            }
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+﻿@model CLIMAX.Models.ChargeSlip
+
+@{
+    ViewBag.Title = "ChargeSlip - Details";
+}
+
+<div>
+    <h4>ChargeSlip</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DateTimePurchased)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateTimePurchased)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModeOfPayment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModeOfPayment)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AmtPayment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AmtPayment)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GiftCertificateAmt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GiftCertificateAmt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GiftCertificateNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GiftCertificateNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CheckNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CheckNo)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ChargeSlipID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

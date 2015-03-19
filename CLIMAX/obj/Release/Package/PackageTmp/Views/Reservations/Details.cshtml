@@ -1,0 +1,118 @@
+﻿@model CLIMAX.Models.Reservation
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Reservations</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @Html.ActionLink("Reservations", "Index") > Reservation Details
+                </div>
+
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="dataTable_wrapper">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.employee.LastName)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.employee.LastName)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.patient.FirstName)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.patient.FirstName)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.treatment.TreatmentName)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.treatment.TreatmentName)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.ReservationType)
+                            </dt>
+                            @if (Model.ReservationType)
+                            {
+                                <dd>
+                                    Surgical
+                                </dd>
+                            }
+                            else
+                            {
+                                <dd>
+                                    Treatment
+                                </dd>
+
+                            }
+                            <dt>
+                                @Html.DisplayNameFor(model => model.DateTimeReserved)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.DateTimeReserved)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Notes)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Notes)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.patient.FullName)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.patient.FullName)
+                            </dd>
+                            @if (Model.employee != null)
+                            {
+                                <dt>
+                                    Therapist
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.employee.FullName)
+                                </dd>
+                            }
+                        </dl>
+                    </div>
+                   
+
+
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+
+
+
+

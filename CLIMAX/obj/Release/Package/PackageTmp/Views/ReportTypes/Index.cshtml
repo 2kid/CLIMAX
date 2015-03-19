@@ -1,0 +1,30 @@
+﻿@model IEnumerable<CLIMAX.Models.ReportType>
+
+@{
+    ViewBag.Title = "Report Type - Index";
+}
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Type)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Type)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ReportTypeID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ReportTypeID })
+        </td>
+    </tr>
+}
+
+</table>

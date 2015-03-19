@@ -1,0 +1,58 @@
+﻿@model IEnumerable<CLIMAX.Models.ApplicationUser>
+
+@{
+    ViewBag.Title = "Admin Page";
+}
+<p>
+    @Html.ActionLink("Create New", "AddAccount")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.employee.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.employee.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            @if (item.UserName != "admin@yahoo.com")
+            {
+                <td>
+                    @Html.ActionLink("Edit", "EditAccount", new { email = item.UserName }) |
+
+                    @if (item.isActive)
+                    {
+                        @Html.ActionLink("Disable", "Disable", new { id = item.Id })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Enable", "Enable", new { id = item.Id })
+                    }
+
+                </td>
+            }
+            else
+            {
+                <td></td>
+            }
+        </tr>
+    }
+
+</table>

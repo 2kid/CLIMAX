@@ -1,0 +1,85 @@
+﻿@model CLIMAX.Models.Patient
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="page-header">Are you sure you want to Delete the Patient's Record?</h2>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @Html.ActionLink("Patients", "Index") > Delete Patient
+                </div>
+
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="dataTable_wrapper">
+                        <dl class="dl-horizontal">
+                            @using (Html.BeginForm())
+                            {
+                                @Html.AntiForgeryToken()
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.branch.BranchName)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.branch.BranchName)
+                                </dd>
+
+
+
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.FirstName)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.FirstName)
+                                </dd>
+
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.MiddleName)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.MiddleName)
+                                </dd>
+
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.LastName)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.LastName)
+                                </dd>
+                                <dd>
+                                    <button type="button" class="btn btn-default" aria-label="Left Align">
+                                        <span class="glyphicon glyphicon-trash" aria-hidden="true">@Html.ActionLink("Delete", "Delete", new { id = Model.PatientID })</span>
+                                    </button>
+                                </dd>
+                            }
+                        </dl>
+                    </div>
+
+
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+
+
+    

@@ -1,0 +1,56 @@
+﻿@model CLIMAX.Models.Treatments
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Treatments</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @Html.ActionLink("Treatments", "Index") > Details
+                </div>
+
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="dataTable_wrapper">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.TreatmentName)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.TreatmentName)
+                            </dd>
+                            <dt>Material / Qty</dt>
+                            @foreach (CLIMAX.Models.MaterialsViewModel item in ViewBag.MaterialList)
+                            {
+                                <dd>@item.MaterialName / @item.units</dd>
+                            }
+                            
+                        </dl>
+                    </div>
+
+
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+
+

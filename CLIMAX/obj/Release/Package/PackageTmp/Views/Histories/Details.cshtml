@@ -1,0 +1,66 @@
+﻿@model CLIMAX.Models.History
+
+@{
+    ViewBag.Title = "History - Details";
+}
+
+
+
+<div>
+    <h4>History</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.employee.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employee.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.patient.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.patient.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SessionNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SessionNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TreatmentID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TreatmentID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateTimeStart)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateTimeStart)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateTimeEnd)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateTimeEnd)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.HistoryID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
