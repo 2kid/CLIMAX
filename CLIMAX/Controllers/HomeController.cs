@@ -18,30 +18,10 @@ namespace CLIMAX.Controllers
 {
     public class HomeController : Controller
     {
-        CLIMAX.Models.ApplicationDbContext.ClimaxDbContext ClimaxDb = new CLIMAX.Models.ApplicationDbContext.ClimaxDbContext();
-        ApplicationDbContext db = new ApplicationDbContext();
-       
+    
         public ActionResult Index()
         {
-            return View();
-        }
-
-        public ActionResult MainMenu()
-        {
-            return View();
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+          return View();
         }
     }
 }

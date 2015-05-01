@@ -20,11 +20,11 @@
                                 @using (Html.BeginForm())
                                 {
                                     <p>Number of Patient</p>
-                                    @Html.TextBox("Number");
+                                    <span>(+63)</span> @Html.TextBox("Number","", new { placeholder = "ex. 9123456789" });
                                     <br />
                                     <br />
                                     <p>Message</p>
-                                    @Html.TextArea("Message");
+                                    @Html.TextArea("Message", new { placeholder = "Say something to customer." });
                                     <br />
                                     <br />
                                     <input type="submit" value="Send" class="btn btn-default">

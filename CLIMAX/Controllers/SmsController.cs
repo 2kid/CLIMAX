@@ -4,6 +4,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Twilio;
 
 namespace CLIMAX.Controllers
 {
@@ -11,25 +12,27 @@ namespace CLIMAX.Controllers
     {
         //
         // GET: /Sms/
-        SerialPort SP = new SerialPort();
+       
+        
         [Authorize(Roles = "Auditor,OIC")]     
+        [HttpPost]
         public ActionResult SMS(FormCollection form)
         {
-            string number = form["Number"];
-            string message = form["Message"];
-            
-            SP.PortName = "COM7";
-            SP.Open();
-            string ph_no;
-            ph_no = Char.ConvertFromUtf32(34) + number + Char.ConvertFromUtf32(34);
-            SP.Write("AT+CMGF=1" + Char.ConvertFromUtf32(13));
-            SP.Write("AT+CMGS=" + ph_no + Char.ConvertFromUtf32(13));
-            SP.Write(message + Char.ConvertFromUtf32(26) + Char.ConvertFromUtf32(13));
-            SP.Close();
-            Audit.CreateAudit(message, "Send", "None", User.Identity.Name);
+            string number = form["Number"]; //"+639153890655"; 
+            string message = form["Message"] ; //"Testing 101";
+            string AccountSid = "ACd74470b401f572522fb3d6471119e2b4";
+            string AuthToken = "76921e307fba754a29647827fcedc937";
+            var twilio = new TwilioRestClient(AccountSid, AuthToken);
+            var msg = twilio.SendSmsMessage("+12053012883","+63" + number , message);
+            Audit.CreateAudit(form["Message"], "Send", "None", User.Identity.Name);
 
- 
-            return View(form);
+            return View(form);           
         }
+
+        public ActionResult SMS()
+        {
+            return View();
+        }
+        
 	}
 }

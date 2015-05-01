@@ -9,6 +9,9 @@ using System.Web.Mvc;
 using CLIMAX.Models;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using System.Web.UI.WebControls;
+using System.IO;
+using System.Web.UI;
 
 namespace CLIMAX.Controllers
 {
@@ -21,9 +24,41 @@ namespace CLIMAX.Controllers
         private static bool isPDF = false;
         public ActionResult GeneratePDFPatients(string reportString, int BranchID)//Reports report)
         {
-            isPDF = true;
-            employeeName = db.Employees.Find(employeeID).FullName;
-            return new Rotativa.ActionAsPdf("Index", new { reportString = reportString, BranchID = BranchID });
+            var datasource = db.Employees.ToList(); // Your Data Source
+
+            if (datasource != null)
+            {
+                var gv = new GridView();
+                gv.DataSource = datasource;
+                gv.DataBind();
+
+                System.Web.HttpContext.Current.Response.ClearContent();
+                System.Web.HttpContext.Current.Response.Buffer = true;
+                System.Web.HttpContext.Current.Response.AddHeader(
+               "content-disposition", string.Format("attachment; filename={0}", "Report.xls"));
+                System.Web.HttpContext.Current.Response.ContentType = "application/vnd.ms-excel";
+                System.Web.HttpContext.Current.Response.Charset = "UTF-8";
+                System.Web.HttpContext.Current.Response.ContentEncoding = System.Text.Encoding.UTF8;
+                System.Web.HttpContext.Current.Response.Charset = "";
+
+                using (StringWriter sw = new StringWriter())
+                {
+                    using (HtmlTextWriter htw = new HtmlTextWriter(sw))
+                    {
+                        gv.RenderControl(htw);
+                        System.Web.HttpContext.Current.Response.Output.Write(sw.ToString());
+                        System.Web.HttpContext.Current.Response.Flush();
+                        System.Web.HttpContext.Current.Response.End();
+                    }
+                }
+
+                return new EmptyResult();
+            }
+
+            return View();
+            //isPDF = true;
+            //employeeName = db.Employees.Find(employeeID).FullName;
+            //return new Rotativa.ActionAsPdf("Index", new { reportString = reportString, BranchID = BranchID });
         }
 
         [AllowAnonymous]
