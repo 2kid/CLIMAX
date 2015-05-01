@@ -264,7 +264,7 @@ namespace CLIMAX.Controllers
             }
             else
             {
-                ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName");
+                ViewBag.BranchID = new SelectList(db.Branches.Where(r=>r.isEnabled).ToList(), "BranchID", "BranchName");
             }
 
             return View();
@@ -281,23 +281,27 @@ namespace CLIMAX.Controllers
             if (ModelState.IsValid)
             {
                 isPDF = false;
-                string startDate = form["start"];
-                string endDate = form["end"];
-                if (!string.IsNullOrEmpty(startDate))
-                    reports.DateStartOfReport = DateTime.Parse(startDate);
-                if (!string.IsNullOrEmpty(endDate))
-                    reports.DateEndOfReport = DateTime.Parse(endDate);
+                DateTime startDate;// = form["start"];
+                DateTime endDate;// = form["end"];
+                if (DateTime.TryParse(form["start"],out startDate))
+                    reports.DateStartOfReport = startDate;
+                if (DateTime.TryParse(form["end"], out endDate))
+                {
+                    endDate = endDate.AddDays(1);
+                    endDate = endDate.Subtract(new TimeSpan(1));
+                    reports.DateEndOfReport = endDate;
+                }
 
                 if (!Regex.IsMatch(reports.DateStartOfReport.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
                 {
-                    ModelState.AddModelError("DateStartOfReport", "The field Date Start is invalid");
+                    ModelState.AddModelError("", "The field Date Start is invalid");
                     ViewBag.ReportTypeID = new SelectList(db.ReportTypes, "ReportTypeID", "Type", reports.ReportTypeID);
                     return View(reports);
                 }
 
                 if (!Regex.IsMatch(reports.DateEndOfReport.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
                 {
-                    ModelState.AddModelError("DateEndOfReport", "The field Date End is invalid");
+                    ModelState.AddModelError("", "The field Date End is invalid");
                     ViewBag.ReportTypeID = new SelectList(db.ReportTypes, "ReportTypeID", "Type", reports.ReportTypeID);
                     return View(reports);
                 }
@@ -329,39 +333,39 @@ namespace CLIMAX.Controllers
         }
 
         // GET: Reports/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Reports reports = db.Reports.Find(id);
-            if (reports == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", reports.EmployeeID);
-            ViewBag.ReportTypeID = new SelectList(db.ReportTypes, "ReportTypeID", "reportType", reports.ReportTypeID);
-            return View(reports);
-        }
+        //public ActionResult Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Reports reports = db.Reports.Find(id);
+        //    if (reports == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", reports.EmployeeID);
+        //    ViewBag.ReportTypeID = new SelectList(db.ReportTypes, "ReportTypeID", "reportType", reports.ReportTypeID);
+        //    return View(reports);
+        //}
 
         // POST: Reports/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ReportsID,ReportTypeID,EmployeeID,DateTimeGenerated")] Reports reports)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(reports).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", reports.EmployeeID);
-            ViewBag.ReportTypeID = new SelectList(db.ReportTypes, "ReportTypeID", "reportType", reports.ReportTypeID);
-            return View(reports);
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit([Bind(Include = "ReportsID,ReportTypeID,EmployeeID,DateTimeGenerated")] Reports reports)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Entry(reports).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+        //    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", reports.EmployeeID);
+        //    ViewBag.ReportTypeID = new SelectList(db.ReportTypes, "ReportTypeID", "reportType", reports.ReportTypeID);
+        //    return View(reports);
+        //}
 
         protected override void Dispose(bool disposing)
         {

@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using CLIMAX.Models;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace CLIMAX.Controllers
 {
@@ -18,9 +19,61 @@ namespace CLIMAX.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: ChargeSlips
-        public ActionResult Index()
+        public ActionResult Index(FormCollection form)
         {
-            return View(db.ChargeSlips.ToList());
+          List<SelectListItem> paymentMethods  = new List<SelectListItem>()
+            {
+                new SelectListItem(){Text = "Cash", Value = "Cash"},
+                new SelectListItem(){Text = "Check", Value = "Check"},
+                new SelectListItem(){Text = "Credit Card", Value = "Credit Card"}
+            };
+            
+            ViewBag.PaymentMethod = new SelectList(paymentMethods,"Value","Text", form["PaymentMethod"]);
+            List<ChargeSlip> chargeslip = db.ChargeSlips.ToList();
+            DateTime start;
+            DateTime end;
+            
+            if(!string.IsNullOrEmpty(form["PaymentMethod"]))
+            {
+                chargeslip = chargeslip.Where(r => r.ModeOfPayment == form["PaymentMethod"]).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(form["searchValue"]))
+            {
+                chargeslip = chargeslip.Where(r => r.GiftCertificateNo != null && r.GiftCertificateNo.Contains(form["searchValue"])).ToList();
+
+                ViewBag.GCNumber = form["searchValue"];
+            }
+
+            if ((DateTime.TryParse(form["DateTimeStart"],out start) && DateTime.TryParse(form["DateTimeEnd"],out end)))
+            {
+                if (!Regex.IsMatch(start.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
+                {
+                    ModelState.AddModelError("DateTimeStart", "The field Date start is invalid");
+                    return View(chargeslip);
+                }
+
+                end = end.AddDays(1);
+                end = end.Subtract(new TimeSpan(1));
+
+                if (!Regex.IsMatch(end.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
+                {
+                    ModelState.AddModelError("DateTimeEnd", "The field Date end is invalid");
+                    return View(chargeslip);
+                }
+               
+                if (end.CompareTo(start) == -1)
+                {
+                    ModelState.AddModelError("", "Date Start cannot be after Date End");
+                    return View(chargeslip);
+                }
+                chargeslip = chargeslip.Where(r => end.CompareTo(r.DateTimePurchased) == 1 && r.DateTimePurchased.CompareTo(start) == 1).ToList();
+
+                ViewBag.startDate = start.ToString("yyyy-MM-dd");
+                ViewBag.endDate = end.ToString("yyyy-MM-dd");
+            }
+
+            return View(chargeslip);
         }
 
         // GET: ChargeSlips/Details/5
@@ -44,6 +97,7 @@ namespace CLIMAX.Controllers
         [Authorize(Roles="OIC")]
         public ActionResult Create()
         {
+            
             ViewBag.PaymentMethod = new List<SelectListItem>()
             {
                 new SelectListItem(){Text = "Cash", Value = "Cash"},
@@ -58,10 +112,10 @@ namespace CLIMAX.Controllers
                 new SelectListItem(){Text = "", Value = ""}
             };
 
-            ViewBag.Patients = new SelectList(db.Patients, "PatientID", "FullName");
+            ViewBag.Patients = new SelectList(db.Patients.Where(r=>r.isEnabled).ToList(), "PatientID", "FullName");
             ViewBag.Therapists = new SelectList(db.Employees.Include(a => a.roleType).Where(r => r.roleType.Type == "Therapist").ToList(), "EmployeeID", "FullName");
-            ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
-            ViewBag.Medicines = new SelectList(db.Materials, "MaterialID", "MaterialName");
+            ViewBag.Treatments = new SelectList(db.Treatments.Where(r=>r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
+            ViewBag.Medicines = new SelectList(db.Materials.Where(r=>r.isEnabled).ToList(), "MaterialID", "MaterialName");
             ViewBag.TreatmentOrders = treatmentOrders = new List<TreatmentsViewModel>();
             ViewBag.MaterialOrders = materialOrders = new List<MaterialsViewModel>();
             return View();
@@ -86,7 +140,7 @@ namespace CLIMAX.Controllers
                 new SelectListItem(){Text = "Visa", Value = "Visa"},
                 new SelectListItem(){Text = "", Value = ""}
             };
-            ViewBag.Patients = new SelectList(db.Patients, "PatientID", "FullName", chargeSlip.PatientID);
+            ViewBag.Patients = new SelectList(db.Patients.Where(r=>r.isEnabled).ToList(), "PatientID", "FullName", chargeSlip.PatientID);
             ViewBag.Therapists = new SelectList(db.Employees.Include(a => a.roleType).Where(r => r.roleType.Type == "Therapist").ToList(), "EmployeeID", "FullName", chargeSlip.EmployeeID);
             if (materialOrders == null)
             {
@@ -105,11 +159,25 @@ namespace CLIMAX.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    if (chargeSlip.GiftCertificateNo != null)
+                    {
+                        ChargeSlip duplicate = db.ChargeSlips.Where(r => r.GiftCertificateNo == chargeSlip.GiftCertificateNo).SingleOrDefault();
+                        if (duplicate != null)
+                        {
+                            ModelState.AddModelError("", "The Gift Certificate has already been used.");
+                            ViewBag.Treatments = new SelectList(db.Treatments.Where(r => r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
+                            ViewBag.Medicines = new SelectList(db.Materials.Where(r => r.isEnabled).ToList(), "MaterialID", "MaterialName");
+                            ViewBag.TreatmentOrders = treatmentOrders;
+                            ViewBag.MaterialOrders = materialOrders;
+                            return View(chargeSlip);
+                        }
+                    }
+
                     if(chargeSlip.AmtPayment < chargeSlip.AmtDue)
                     {
                         ModelState.AddModelError("", "The amount paid cannot be less than the amount due");
-                        ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
-                        ViewBag.Medicines = new SelectList(db.Materials, "MaterialID", "MaterialName");
+                        ViewBag.Treatments = new SelectList(db.Treatments.Where(r => r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
+                        ViewBag.Medicines = new SelectList(db.Materials.Where(r => r.isEnabled).ToList(), "MaterialID", "MaterialName");
                         ViewBag.TreatmentOrders = treatmentOrders;
                         ViewBag.MaterialOrders = materialOrders;
                         return View(chargeSlip);
@@ -118,8 +186,8 @@ namespace CLIMAX.Controllers
                     else if (chargeSlip.ModeOfPayment != "Cash" && chargeSlip.AmtPayment != chargeSlip.AmtDue)
                     {
                         ModelState.AddModelError("", "Check & Credit Payments must be exactly the same as amount due");
-                        ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
-                        ViewBag.Medicines = new SelectList(db.Materials, "MaterialID", "MaterialName");
+                        ViewBag.Treatments = new SelectList(db.Treatments.Where(r => r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
+                        ViewBag.Medicines = new SelectList(db.Materials.Where(r => r.isEnabled).ToList(), "MaterialID", "MaterialName");
                         ViewBag.TreatmentOrders = treatmentOrders;
                         ViewBag.MaterialOrders = materialOrders;
                         return View(chargeSlip);
@@ -128,8 +196,8 @@ namespace CLIMAX.Controllers
                     else if (chargeSlip.ModeOfPayment == "Check" && chargeSlip.CheckNo.Trim() == null)
                     {
                         ModelState.AddModelError("", "Check Payments must have Check No");
-                        ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
-                        ViewBag.Medicines = new SelectList(db.Materials, "MaterialID", "MaterialName");
+                        ViewBag.Treatments = new SelectList(db.Treatments.Where(r => r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
+                        ViewBag.Medicines = new SelectList(db.Materials.Where(r => r.isEnabled).ToList(), "MaterialID", "MaterialName");
                         ViewBag.TreatmentOrders = treatmentOrders;
                         ViewBag.MaterialOrders = materialOrders;
                         return View(chargeSlip);
@@ -168,7 +236,23 @@ namespace CLIMAX.Controllers
                                 }
                             }
 
+                            History newHistory = new History()
+                            {
+                                EmployeeID = chargeSlip.EmployeeID,
+                                PatientID = chargeSlip.PatientID,
+                                TreatmentID = item.TreatmentsID,
+                                DateTimeStart = chargeSlip.DateTimePurchased,
+                                ChargeSlipID = chargeSlip.ChargeSlipID
+                            };
+                         
+                            db.History.Add(newHistory);
+                            auditId = Audit.CreateAudit(patient, "Create", "History", User.Identity.Name);
+                            await db.SaveChangesAsync();
+
+                            Audit.CompleteAudit(auditId, newHistory.HistoryID);
+                            await db.SaveChangesAsync();
                         }
+
                         foreach (MaterialsViewModel item in materialOrders)
                         {
                             Medicine_ChargeSlip medicine = new Medicine_ChargeSlip()
@@ -188,6 +272,14 @@ namespace CLIMAX.Controllers
                                 await db.SaveChangesAsync();
                             }
                         }
+
+                        SurveyCode code = new SurveyCode();
+                        code.ChargeSlipID = chargeSlip.ChargeSlipID;
+                        code.Code = Guid.NewGuid().ToString().Substring(0, 8);
+                        code.isUsed = false;
+                        db.SurveyCode.Add(code);
+                        await db.SaveChangesAsync();
+
                     }
                     return RedirectToAction("Index");
                 }
@@ -228,8 +320,8 @@ namespace CLIMAX.Controllers
                                         {
                                             ModelState.AddModelError("", "Cannot add treatment. The branch has insufficient stock of \""+ inventory.material.MaterialName + "\".");
                                             ViewBag.MaterialOrders = materialOrders;
-                                            ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
-                                            ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID)).ToList(), "TreatmentsID", "TreatmentName");
+                                            ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
+                                            ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID) && r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
                                             ViewBag.TreatmentOrders = treatmentOrders;
                                             return View(chargeSlip);
                                         }
@@ -238,8 +330,8 @@ namespace CLIMAX.Controllers
                                     {
                                         ModelState.AddModelError("", "Cannot add item. This treatment requires \"" + inventory.material.MaterialName  +"\" which has not been added in this branch's inventory.");
                                         ViewBag.MaterialOrders = materialOrders;
-                                        ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
-                                        ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID)).ToList(), "TreatmentsID", "TreatmentName");
+                                        ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
+                                        ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID) && r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
                                         ViewBag.TreatmentOrders = treatmentOrders;
                                         return View(chargeSlip);
                                     }
@@ -252,8 +344,8 @@ namespace CLIMAX.Controllers
                 }
                 
                 ViewBag.MaterialOrders = materialOrders;
-                ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
-                ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID)).ToList(), "TreatmentsID", "TreatmentName");
+                ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
+                ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID) && r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
                 ViewBag.TreatmentOrders = treatmentOrders;
                 return View(chargeSlip);
             }
@@ -295,8 +387,8 @@ namespace CLIMAX.Controllers
                                 {
                                     ModelState.AddModelError("", "Cannot add item. The branch has insufficient stock of \"" + inventory.material.MaterialName + "\".");
                                     ViewBag.MaterialOrders = materialOrders;
-                                    ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
-                                    ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID)).ToList(), "TreatmentsID", "TreatmentName");
+                                    ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
+                                    ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID) && r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
                                     ViewBag.TreatmentOrders = treatmentOrders;
                                     return View(chargeSlip);
                                 }
@@ -305,8 +397,8 @@ namespace CLIMAX.Controllers
                             {
                                 ModelState.AddModelError("", "Cannot add item. This item has not been added in this branch's inventory.");
                                 ViewBag.MaterialOrders = materialOrders;
-                                ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
-                                ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID)).ToList(), "TreatmentsID", "TreatmentName");
+                                ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
+                                ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID) && r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
                                 ViewBag.TreatmentOrders = treatmentOrders;
                                 return View(chargeSlip);
                             }
@@ -317,9 +409,9 @@ namespace CLIMAX.Controllers
                         }
                     }
                 }
-                ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID)).ToList(), "TreatmentsID", "TreatmentName");
+                ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID) && r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
                 ViewBag.TreatmentOrders = treatmentOrders;
-                ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
+                ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
                 ViewBag.MaterialOrders = materialOrders;
                 return View(chargeSlip);
             }
@@ -335,8 +427,8 @@ namespace CLIMAX.Controllers
                     materialOrders.RemoveAt(index);
                     materialIDs.RemoveAt(index);
                     ViewBag.MaterialOrders = materialOrders;
-                    ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
-                    ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID)).ToList(), "TreatmentsID", "TreatmentName");
+                    ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
+                    ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID) && r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
                     ViewBag.TreatmentOrders = treatmentOrders;
                     return View(chargeSlip);
                 }
@@ -351,18 +443,18 @@ namespace CLIMAX.Controllers
                     treatmentOrders.RemoveAt(index);
                     treatmentIDs.RemoveAt(index);
                     ViewBag.TreatmentOrders = treatmentOrders;
-                    ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID)).ToList(), "TreatmentsID", "TreatmentName");
+                    ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID) && r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
                     ViewBag.MaterialOrders = materialOrders;
-                    ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
+                    ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
                     return View(chargeSlip);
                 }
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             #endregion
 
-         
-            ViewBag.Treatments = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
-            ViewBag.Medicines = new SelectList(db.Materials, "MaterialID", "MaterialName");
+
+            ViewBag.Treatments = new SelectList(db.Treatments.Where(r => r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
+            ViewBag.Medicines = new SelectList(db.Materials.Where(r => r.isEnabled).ToList(), "MaterialID", "MaterialName");
             ViewBag.TreatmentOrders = treatmentOrders;
             ViewBag.MaterialOrders = materialOrders;       
             return View(chargeSlip);

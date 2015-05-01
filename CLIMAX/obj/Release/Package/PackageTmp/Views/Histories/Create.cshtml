@@ -13,6 +13,7 @@
         <h4>History</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+       
         <div class="form-group">
             @Html.LabelFor(model => model.SessionNo, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -31,14 +32,14 @@
         <div class="form-group">
             @Html.LabelFor(model => model.TreatmentID, "Treatment Name",htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("TreatmentID")
+                @Html.DropDownList("TreatmentID",(IEnumerable<SelectListItem>)ViewBag.TreatmentID , "Select Treatment", htmlAttributes: new { @class = "form-control" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.EmployeeID, "Employee", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("EmployeeID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("EmployeeID",(IEnumerable<SelectListItem>)ViewBag.EmployeeID , "Select Employee", htmlAttributes: new { @class = "form-control" })
             </div>
         </div>
 
@@ -67,7 +68,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List","Index", new { id = Model.PatientID })
 </div>
 
 @section Scripts {

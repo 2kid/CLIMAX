@@ -85,9 +85,9 @@ namespace CLIMAX.Api
         //    return CreatedAtRoute("DefaultApi", new { id = treatments.TreatmentsID }, treatments);
         //}
 
-        //// DELETE: api/Treatments/5
+        //// Disable: api/Treatments/5
         //[ResponseType(typeof(Treatments))]
-        //public IHttpActionResult DeleteTreatments(int id)
+        //public IHttpActionResult DisableTreatments(int id)
         //{
         //    Treatments treatments = db.Treatments.Find(id);
         //    if (treatments == null)

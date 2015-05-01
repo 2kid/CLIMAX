@@ -391,7 +391,7 @@ namespace CLIMAX.Controllers
                 {
                     List<string> fields = new List<string>();
                     fields.Add(item.HistoryID.ToString());
-                    fields.Add(item.SessionNo.ToString());
+                  //  fields.Add(item.SessionNo.ToString());
                     fields.Add(item.PatientID.ToString());
                     fields.Add(item.TreatmentID.ToString());
                     fields.Add(item.EmployeeID.ToString());

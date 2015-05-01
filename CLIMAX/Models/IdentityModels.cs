@@ -41,6 +41,7 @@ namespace CLIMAX.Models
        public DbSet<ActionTypes> ActionTypes { get; set; }
        public DbSet<Branch> Branches { get; set; }
        public DbSet<ChargeSlip> ChargeSlips { get; set; }
+       public DbSet<SurveyCode> SurveyCode { get; set; }
        public DbSet<Employee> Employees { get; set; }
        public DbSet<History> History { get; set; }
        public DbSet<Inventory> Inventories { get; set; }

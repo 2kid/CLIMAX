@@ -12,7 +12,7 @@ namespace CLIMAX.Controllers
         //
         // GET: /Sms/
         SerialPort SP = new SerialPort();
- 
+        [Authorize(Roles = "Auditor,OIC")]     
         public ActionResult SMS(FormCollection form)
         {
             string number = form["Number"];

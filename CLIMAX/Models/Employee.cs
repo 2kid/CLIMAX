@@ -29,6 +29,9 @@ namespace CLIMAX.Models
         public int BranchID { get; set; }
         public virtual Branch Branch { get; set; }
 
+        public bool isEnabled { get; set; }
+
+
         public string FullName
         {
             get { return FirstName + " " + MiddleName + " " + LastName; }
@@ -38,5 +41,13 @@ namespace CLIMAX.Models
         {
             return "EmployeeID,LastName,FirstName,MiddleName,RoleTypeID,BranchID";
         }
+    }
+
+    public class EmployeeTransactionsViewModel
+    {
+        public string Patient { get; set; }
+        [Display(Name="Date & Time of Transaction")]
+        public string DateTimeOfTransaction { get; set; }
+        public List<string> Treatments { get; set; }
     }
 }

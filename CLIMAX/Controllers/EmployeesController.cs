@@ -63,7 +63,7 @@ namespace CLIMAX.Controllers
         [Authorize(Roles = "OIC,Auditor")]
         public ActionResult Create()
         {
-            ViewBag.Roles = new SelectList(db.RoleType.Where(r => r.Type == "Beauty Consultant" || r.Type == "Therapist").ToList(), "RoleTypeId", "Type");
+            ViewBag.Roles = new SelectList(db.RoleType.Where(r => r.Type != "Administrator" && r.Type != "Officer in Charge" && r.Type != "Auditor" && r.isEnabled).ToList(), "RoleTypeId", "Type");
             return View();
         }
 
@@ -81,6 +81,7 @@ namespace CLIMAX.Controllers
                 if (currentUser.BranchID != 0)
                 {
                     employee.BranchID = currentUser.BranchID;
+                    employee.isEnabled = true;
                     db.Employees.Add(employee);
                     int auditId =  Audit.CreateAudit(employee.FullName, "Create", "Employee",  User.Identity.Name);
                     db.SaveChanges();
@@ -93,7 +94,7 @@ namespace CLIMAX.Controllers
                 }
             }
 
-            ViewBag.Roles = new SelectList(db.RoleType.Where(r => r.Type == "Beauty Consultant" || r.Type == "Therapist").ToList(), "RoleTypeId", "Type");
+            ViewBag.Roles = new SelectList(db.RoleType.Where(r => r.Type != "Administrator" && r.Type != "Officer in Charge" && r.Type != "Auditor" && r.isEnabled).ToList(), "RoleTypeId", "Type");
             return View(employee);
         }
 
@@ -111,7 +112,7 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Roles = new SelectList(db.RoleType.Where(r => r.Type == "Beauty Consultant" || r.Type == "Therapist").ToList(), "RoleTypeId", "Type");
+            ViewBag.Roles = new SelectList(db.RoleType.Where(r => r.Type != "Administrator" && r.Type != "Officer in Charge" && r.Type != "Auditor" && r.isEnabled).ToList(), "RoleTypeId", "Type");
             return View(employee);
         }
 
@@ -129,6 +130,7 @@ namespace CLIMAX.Controllers
                 if (currentUser.BranchID != 0)
                 {
                     employee.BranchID = currentUser.BranchID;
+                    employee.isEnabled = true;
                     db.Entry(employee).State = EntityState.Modified;
                     int auditId = Audit.CreateAudit(employee.FullName, "Edit", "Employee", User.Identity.Name);
                     Audit.CompleteAudit(auditId, employee.EmployeeID);
@@ -136,13 +138,13 @@ namespace CLIMAX.Controllers
                     return RedirectToAction("Index");
                 }
             }
-            ViewBag.Roles = new SelectList(db.RoleType.Where(r => r.Type == "Beauty Consultant" || r.Type == "Therapist").ToList(), "RoleTypeId", "Type");
+            ViewBag.Roles = new SelectList(db.RoleType.Where(r => r.Type != "Administrator" && r.Type != "Officer in Charge" && r.Type != "Auditor" && r.isEnabled).ToList(), "RoleTypeId", "Type");
             return View(employee);
         }
 
-        // GET: Employees/Delete/5
+        // GET: Employees/Disable/5
         [Authorize(Roles = "OIC,Auditor")]
-        public ActionResult Delete(int? id)
+        public ActionResult Disable(int? id)
         {
             if (id == null)
             {
@@ -156,18 +158,48 @@ namespace CLIMAX.Controllers
             return View(employee);
         }
 
-        // POST: Employees/Delete/5
+        // POST: Employees/Disable/5
         [Authorize(Roles = "OIC,Auditor")]
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Disable")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DisableConfirmed(int id)
         {
             Employee employee = db.Employees.Find(id);
-            db.Employees.Remove(employee);
-            int auditId = Audit.CreateAudit(employee.FullName, "Delete", "Employee", User.Identity.Name);
+            employee.isEnabled = false;
+            db.Entry(employee).State = EntityState.Modified;
+            int auditId = Audit.CreateAudit(employee.FullName, "Disable", "Employee", User.Identity.Name);
             Audit.CompleteAudit(auditId, employee.EmployeeID);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [Authorize]
+        public ActionResult EmployeeHistory(int id, FormCollection form)
+        {
+            List<ChargeSlip> chargeslips = db.ChargeSlips.Where(r => r.EmployeeID == id).ToList();
+            List<EmployeeTransactionsViewModel> transactions = new List<EmployeeTransactionsViewModel>(); 
+            foreach (ChargeSlip item in chargeslips)
+            {
+                List<string> materials = db.Session_ChargeSlip.Where(r => r.ChargeSlipID == item.ChargeSlipID).Select(u => u.treatment.TreatmentName).ToList();
+
+                if (materials.Count > 0)
+                {
+                    transactions.Add(new EmployeeTransactionsViewModel()
+                    {
+                        Patient = item.Patient.FullName,
+                        DateTimeOfTransaction = item.DateTimePurchased.ToString(),
+                        Treatments = materials
+                    });
+                }
+            }
+
+            string search = form["searchValue"];
+            if (!string.IsNullOrEmpty(search))
+            {
+                transactions = transactions.Where(r => r.Patient.ToLower().Contains(search.ToLower())).ToList();
+            }
+
+            return View(transactions);
         }
 
         protected override void Dispose(bool disposing)

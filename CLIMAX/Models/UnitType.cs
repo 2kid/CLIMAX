@@ -13,6 +13,7 @@ namespace CLIMAX.Models
         [Required]
         [Display(Name = "Unit Type")]
         public string Type { get; set; }
+        public bool isEnabled { get; set; }
 
         public string getColumns()
         {

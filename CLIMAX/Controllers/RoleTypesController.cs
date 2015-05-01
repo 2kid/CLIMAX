@@ -18,7 +18,7 @@ namespace CLIMAX.Controllers
         // GET: RoleTypes
         public ActionResult Index()
         {
-            return View(db.RoleType.ToList());
+            return View(db.RoleType.Where(r=>r.isEnabled).ToList());
         }
 
         // GET: RoleTypes/Details/5
@@ -30,6 +30,10 @@ namespace CLIMAX.Controllers
             }
             RoleType roleType = db.RoleType.Find(id);
             if (roleType == null)
+            {
+                return HttpNotFound();
+            }
+            if (!roleType.isEnabled)
             {
                 return HttpNotFound();
             }
@@ -51,6 +55,7 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
+                roleType.isEnabled = true;
                 db.RoleType.Add(roleType);
                int auditId =  Audit.CreateAudit(roleType.Type, "Create", "RoleType", User.Identity.Name);
                 db.SaveChanges();
@@ -73,6 +78,10 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
+            if (!roleType.isEnabled)
+            {
+                return HttpNotFound();
+            }
             return View(roleType);
         }
 
@@ -85,6 +94,7 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
+                roleType.isEnabled = true;
                 db.Entry(roleType).State = EntityState.Modified;
                 int auditId =  Audit.CreateAudit(roleType.Type, "Edit", "RoleType", User.Identity.Name);
                 Audit.CompleteAudit(auditId, roleType.RoleTypeId);
@@ -94,7 +104,7 @@ namespace CLIMAX.Controllers
             return View(roleType);
         }
 
-        // GET: RoleTypes/Delete/5
+        // GET: RoleTypes/Disable/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -109,14 +119,15 @@ namespace CLIMAX.Controllers
             return View(roleType);
         }
 
-        // POST: RoleTypes/Delete/5
+        // POST: RoleTypes/Disable/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DisableConfirmed(int id)
         {
             RoleType roleType = db.RoleType.Find(id);
-            db.RoleType.Remove(roleType);
-            int auditId =  Audit.CreateAudit(roleType.Type, "Delete", "RoleType", User.Identity.Name);
+            roleType.isEnabled = false;
+            db.Entry(roleType).State = EntityState.Modified;
+            int auditId =  Audit.CreateAudit(roleType.Type, "Disable", "RoleType", User.Identity.Name);
             Audit.CompleteAudit(auditId, roleType.RoleTypeId);
             db.SaveChanges();
             return RedirectToAction("Index");

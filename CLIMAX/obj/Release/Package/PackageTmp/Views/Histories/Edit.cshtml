@@ -26,26 +26,25 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PatientID, "PatientID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.PatientID, "Patient", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("PatientID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.PatientID, "", new { @class = "text-danger" })
+                @ViewBag.Patient
+              </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TreatmentID,"Treatment", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("TreatmentID", (IEnumerable<SelectListItem>)ViewBag.TreatmentID, "Select Treatment", htmlAttributes: new { @class = "form-control" })
+       @Html.ValidationMessageFor(model => model.TreatmentID, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.TreatmentID, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.EmployeeID, "Therapist", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.TreatmentID, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TreatmentID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EmployeeID, "EmployeeID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("EmployeeID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.EmployeeID, "", new { @class = "text-danger" })
+                @Html.DropDownList("EmployeeID", (IEnumerable<SelectListItem>)ViewBag.EmployeeID, "Select Employee", htmlAttributes: new { @class = "form-control" })
+          @Html.ValidationMessageFor(model => model.EmployeeID, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -74,7 +73,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", new { id = Model.PatientID })
 </div>
 
 @section Scripts {

@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "SMS";
+}
+
+<div id="page-wrapper">
+    <div class="row white">
+        <div class="col-lg-12">
+            <h1 class="page-header">Message</h1>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Send SMS Notification to Patient
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="dataTable_wrapper">
+                            <div class="form-horizontal">
+                                @using (Html.BeginForm())
+                                {
+                                    <p>Number of Patient</p>
+                                    @Html.TextBox("Number");
+                                    <br />
+                                    <br />
+                                    <p>Message</p>
+                                    @Html.TextArea("Message");
+                                    <br />
+                                    <br />
+                                    <input type="submit" value="Send" class="btn btn-default">
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

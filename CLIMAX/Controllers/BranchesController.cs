@@ -52,6 +52,7 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
+                branch.isEnabled = true;
                 db.Branches.Add(branch);
                 int auditId = Audit.CreateAudit(branch.BranchName, "Create", "Branch", User.Identity.Name);
                 db.SaveChanges();
@@ -86,6 +87,7 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
+                branch.isEnabled = true;
                 db.Entry(branch).State = EntityState.Modified;
                 int auditId = Audit.CreateAudit(branch.BranchName, "Edit", "Branch", User.Identity.Name);
                 Audit.CompleteAudit(auditId, branch.BranchID);
@@ -95,8 +97,8 @@ namespace CLIMAX.Controllers
             return View(branch);
         }
 
-        // GET: Branches/Delete/5
-        public ActionResult Delete(int? id)
+        // GET: Branches/Disable/5
+        public ActionResult Disable(int? id)
         {
             if (id == null)
             {
@@ -110,14 +112,42 @@ namespace CLIMAX.Controllers
             return View(branch);
         }
 
-        // POST: Branches/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Branches/Disable/5
+        [HttpPost, ActionName("Disable")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DisableConfirmed(int id)
         {
             Branch branch = db.Branches.Find(id);
-            db.Branches.Remove(branch);
-            int auditId = Audit.CreateAudit(branch.BranchName, "Delete", "Branch",User.Identity.Name);
+            branch.isEnabled = false;
+            int auditId = Audit.CreateAudit(branch.BranchName, "Disable", "Branch",User.Identity.Name);
+            Audit.CompleteAudit(auditId, branch.BranchID);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        // GET: Branches/Disable/5
+        public ActionResult Enable(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Branch branch = db.Branches.Find(id);
+            if (branch == null)
+            {
+                return HttpNotFound();
+            }
+            return View(branch);
+        }
+
+        // POST: Branches/Disable/5
+        [HttpPost, ActionName("Enable")]
+        [ValidateAntiForgeryToken]
+        public ActionResult EnableConfirmed(int id)
+        {
+            Branch branch = db.Branches.Find(id);
+            branch.isEnabled = true;
+            int auditId = Audit.CreateAudit(branch.BranchName, "Disable", "Branch", User.Identity.Name);
             Audit.CompleteAudit(auditId, branch.BranchID);
             db.SaveChanges();
             return RedirectToAction("Index");

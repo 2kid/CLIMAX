@@ -2,39 +2,126 @@
 
 @{
     ViewBag.Title = "Audit Trails - Index";
+    int currentPage = ViewBag.CPage;
+    int LastPage = ViewBag.LastPage;
+
 }
 
 @section Styles{
-    <link rel="stylesheet"  href='@Url.Content("~/Content/_all-skins.min.css")'/>
-<link rel="stylesheet" href='@Url.Content("~/Content/AdminLTE.min.css")' />
+    <link rel="stylesheet" href='@Url.Content("~/Content/_all-skins.min.css")' />
+    <link rel="stylesheet" href='@Url.Content("~/Content/AdminLTE.min.css")' />
 }
 
-<div class="row">
-    <div class="col-md-12">
-        <!-- The time line -->
-        <ul class="timeline">
-            <!-- timeline time label -->
-            <li class="time-label">
-                <span class="bg-red">
-                    Record ID
-                </span>
-            </li>
-            <!-- /.timeline-label -->
-            @foreach (var item in Model)
-            {
-                <!-- timeline item -->
-                <li>
-                    @Html.DisplayFor(modelItem => item.RecordID)
-                    <div class="timeline-item">
-                        <span class="time"><i class="fa fa-clock-o"></i> @Html.DisplayFor(modelItem => item.DateTimeOfAction)</span>
-                        <h3 class="timeline-header">@Html.DisplayFor(modelItem => item.employee.LastName): @Html.DisplayFor(modelItem => item.actionType.AffectedRecord)</h3>
-                        <div class="timeline-body">
-                            Details: <br /> @Html.DisplayFor(modelItem => item.ActionDetail)
-                        </div>
-                    </div>
+<div class="container">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @using (Html.BeginForm())
+    {
+        <div class="form-horizontal">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <div class="row col-md-offset-1">
+                    <span class="col-md-2">
+                        @Html.Label("DateTimeStart", "Date Start")
+                    </span>
+                    <span class="col-md-2 col-md-offset-1">@Html.Label("DateTimeEnd", "Date End")</span>
+                </div>
+                <div class="row col-md-offset-1">
+                    <span class="col-md-2">
+                        <input name="DateTimeStart" class="ui-datepicker date-picker form-control mediumwidth " />
+                    </span><span class="col-md-1">
+                        <b>
+                            -->
+                        </b>
+                    </span>
+                    <span class="col-md-2">
+                        <input name="DateTimeEnd" class="ui-datepicker date-picker form-control mediumwidth" />
+                    </span>
+                    <button type="submit" class="btn btn-default">Search by Date</button>
+                </div>
+            </div>
+        </div>
+    }
+    @using (Html.BeginForm())
+    {
+        <div class="form-horizontal">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                @Html.Label("searchValue", "Log Type", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <span class="col-md-4">
+                        @Html.TextBox("searchValue", "", new { @class = "form-control" })
+                    </span>
+                    <span class="col-md-3">
+                        <button type="submit" class="btn btn-default">Search by Log Type</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-md-12">
+            <!-- The time line -->
+            <ul class="timeline">
+                <!-- timeline time label -->
+                <li class="time-label">
+                    <span class="bg-red">
+                        Record ID
+                    </span>
                 </li>
-            }
-        </ul>
+                <!-- /.timeline-label -->
+                @foreach (var item in Model)
+                {
+                <!-- timeline item -->
+                    <li>
+                        @Html.DisplayFor(modelItem => item.RecordID)
+                        <div class="timeline-item">
+                            <span class="time"><i class="fa fa-clock-o"></i> @Html.DisplayFor(modelItem => item.DateTimeOfAction)</span>
+                            <h3 class="timeline-header">@Html.DisplayFor(modelItem => item.employee.LastName): @Html.DisplayFor(modelItem => item.actionType.AffectedRecord)</h3>
+                            <div class="timeline-body">
+                                Details: <br /> @Html.DisplayFor(modelItem => item.ActionDetail)
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
     </div>
+    <div class="row">
+        @if (currentPage != 1)
+        {
+            <span class="btn btn-default">@Html.ActionLink("first", "Index", new { page = 1 })</span>
+        }
+        @if ((currentPage - 1) > 1)
+        {
+            <span class="btn btn-default">@Html.ActionLink("prev", "Index", new { page = currentPage - 1 })</span>
+        }
+        <span class="h2 body-content" style="color:lightgreen;">@currentPage</span>
+        @if ((currentPage + 1) < LastPage)
+        {
+            <span class="btn btn-default">@Html.ActionLink("next", "Index", new { page = currentPage + 1 })</span>
+        }
+        @if (currentPage != LastPage)
+        {
+            <span class="btn btn-default">@Html.ActionLink("last", "Index", new { page = LastPage })</span>
+        }
+    </div>
+
 </div>
 <!-- END timeline item -->
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.11.4.min.js")"></script>
+    <script>
+        $(function () {
+            $(".date-picker").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy-mm-dd',
+                beforeShow: function (input, inst) {
+                    $(inst.dpDiv).removeClass('calendar-off');
+                },
+
+            });
+        });
+    </script>
+}

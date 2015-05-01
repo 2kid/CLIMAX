@@ -40,62 +40,66 @@ namespace CLIMAX.Controllers
         }
 
         static int patientID;
+        static int adminEmpID;
         // GET: Histories/Create
-        [Authorize(Roles="OIC,Auditor")]
-        public ActionResult Create(int id)
-        {
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName");
-            ViewBag.TreatmentID = new SelectList(db.Treatments, "TreatmentID", "TreatmentName");
-            ViewBag.Patient = db.Patients.Find(id).FullName;
-            patientID = id;
-            return View();
-        }
+        //[Authorize(Roles="OIC,Auditor")]
+        //public ActionResult Create(int id)
+        //{
+        //    adminEmpID = db.Users.Where(r=>r.UserName == "admin@yahoo.com").Select(u=>u.EmployeeID).Single();
+        //    ViewBag.EmployeeID = new SelectList(db.Employees.Where(r=>r.EmployeeID != adminEmpID).ToList(), "EmployeeID", "LastName");
+        //    ViewBag.TreatmentID = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName");
+        //    ViewBag.Patient = db.Patients.Find(id).FullName;
+        //    patientID = id;
+        //    return View();
+        //}
 
-        // POST: Histories/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "OIC,Auditor")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "HistoryID,SessionNo,PatientID,TreatmentID,EmployeeID,DateTimeStart,DateTimeEnd")] History history)
-        {
-            if (ModelState.IsValid)
-            {
-                if (!Regex.IsMatch(history.DateTimeStart.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
-                {
-                    ModelState.AddModelError("DateTimeStart", "The field Date & Time Start is invalid");
-                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName");
-                    ViewBag.TreatmentID = new SelectList(db.Treatments, "TreatmentID", "TreatmentName");
-                    ViewBag.Patient = db.Patients.Find(patientID).FullName; 
-                    return View(history);
-                }
+        //// POST: Histories/Create
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[Authorize(Roles = "OIC,Auditor")]
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Include = "HistoryID,SessionNo,TreatmentID,EmployeeID,DateTimeStart,DateTimeEnd")] History history)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        adminEmpID = db.Users.Where(r => r.UserName == "admin@yahoo.com").Select(u => u.EmployeeID).Single();
+        //        history.PatientID = patientID;
+        //        if (!Regex.IsMatch(history.DateTimeStart.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
+        //        {
+        //            ModelState.AddModelError("DateTimeStart", "The field Date & Time Start is invalid");
+        //            ViewBag.EmployeeID = new SelectList(db.Employees.Where(r => r.EmployeeID != adminEmpID).ToList(), "EmployeeID", "LastName", history.EmployeeID);
+        //            ViewBag.TreatmentID = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName", history.TreatmentID);
+        //            ViewBag.Patient = db.Patients.Find(patientID).FullName; 
+        //            return View(history);
+        //        }
 
-                if (!Regex.IsMatch(history.DateTimeEnd.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
-                {
-                    ModelState.AddModelError("DateTimeEnd", "The field Date & Time End is invalid");
-                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName");
-                    ViewBag.TreatmentID = new SelectList(db.Treatments, "TreatmentID", "TreatmentName");
-                    ViewBag.Patient = db.Patients.Find(patientID).FullName;
-                    return View(history);
-                }
-                db.History.Add(history);
-                String patient = db.Patients.Find(history.PatientID).FullName;
-                int auditId = Audit.CreateAudit(patient, "Create", "History", User.Identity.Name);
-                db.SaveChanges();
-                Audit.CompleteAudit(auditId, history.HistoryID);
-                return RedirectToAction("Index");
-            }
+        //        if (!Regex.IsMatch(history.DateTimeEnd.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
+        //        {
+        //            ModelState.AddModelError("DateTimeEnd", "The field Date & Time End is invalid");
+        //            ViewBag.EmployeeID = new SelectList(db.Employees.Where(r => r.EmployeeID != adminEmpID).ToList(), "EmployeeID", "LastName", history.EmployeeID);
+        //            ViewBag.TreatmentID = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName", history.TreatmentID);
+        //            ViewBag.Patient = db.Patients.Find(patientID).FullName;
+        //            return View(history);
+        //        }
+        //        db.History.Add(history);
+        //        String patient = db.Patients.Find(history.PatientID).FullName;
+        //        int auditId = Audit.CreateAudit(patient, "Create", "History", User.Identity.Name);
+        //        db.SaveChanges();
+        //        Audit.CompleteAudit(auditId, history.HistoryID);
+        //        return RedirectToAction("Index", "Histories", new { id = history.PatientID });
+        //    }
 
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName");
-            ViewBag.TreatmentID = new SelectList(db.Treatments, "TreatmentID", "TreatmentName");
-            ViewBag.Patient = db.Patients.Find(patientID).FullName;
-            return View(history);
-        }
+        //    ViewBag.EmployeeID = new SelectList(db.Employees.Where(r => r.EmployeeID != adminEmpID).ToList(), "EmployeeID", "LastName", history.EmployeeID);
+        //    ViewBag.TreatmentID = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName", history.TreatmentID);
+        //    ViewBag.Patient = db.Patients.Find(patientID).FullName;
+        //    return View(history);
+        //}
 
       
         // GET: Histories/Edit/5
         [Authorize(Roles = "OIC,Auditor")]
-        public ActionResult Edit(int? id)
+        public ActionResult Confirm(int? id)
         {
             if (id == null)
             {
@@ -106,8 +110,12 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", history.EmployeeID);
-            ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName", history.PatientID);
+            patientID = history.PatientID;
+            //adminEmpID = db.Users.Where(r => r.UserName == "admin@yahoo.com").Select(u => u.EmployeeID).Single();
+            //patientID = id.Value;
+            //ViewBag.EmployeeID = new SelectList(db.Employees.Where(r => r.EmployeeID != adminEmpID).ToList(), "EmployeeID", "LastName", history.EmployeeID);
+            //ViewBag.TreatmentID = new SelectList(db.Treatments, "TreatmentsID", "TreatmentName",history.TreatmentID);
+            //ViewBag.Patient = db.Patients.Find(patientID).FullName;
             return View(history);
         }
 
@@ -117,67 +125,52 @@ namespace CLIMAX.Controllers
         [Authorize(Roles = "OIC,Auditor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "HistoryID,SessionNo,PatientID,TreatmentID,EmployeeID,DateTimeStart,DateTimeEnd")] History history)
+        public ActionResult Confirm([Bind(Include = "HistoryID,TreatmentID,EmployeeID,ChargeSlipID,DateTimeStart")] History history)
         {
             if (ModelState.IsValid)
             {
-                if (!Regex.IsMatch(history.DateTimeStart.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
-                {
-                    ModelState.AddModelError("DateTimeStart", "The field Date & Time Start is invalid");
-                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", history.EmployeeID);
-                    ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName", history.PatientID);
-                    return View(history);
-                }
-
-                if (!Regex.IsMatch(history.DateTimeEnd.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
-                {
-                    ModelState.AddModelError("DateTimeEnd", "The field Date & Time End is invalid");
-                    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", history.EmployeeID);
-                    ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName", history.PatientID);
-                    return View(history);
-                }
+                 history.PatientID = patientID;
+                 history.DateTimeEnd = DateTime.Now;
                 db.Entry(history).State = EntityState.Modified;
                 String patient = db.Patients.Find(history.PatientID).FullName;
                 int auditId = Audit.CreateAudit(patient, "Edit", "History", User.Identity.Name);
                 Audit.CompleteAudit(auditId, history.HistoryID);
                  db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", history.EmployeeID);
-            ViewBag.PatientID = new SelectList(db.Patients, "PatientID", "FirstName", history.PatientID);
-            return View(history);
-        }
-
-        // GET: Histories/Delete/5
-        [Authorize(Roles = "OIC,Auditor")]
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            History history = db.History.Find(id);
-            if (history == null)
-            {
-                return HttpNotFound();
+                 return RedirectToAction("Index", "Histories", new { id = history.PatientID });
             }
             return View(history);
         }
 
-        // POST: Histories/Delete/5
-        [Authorize(Roles = "OIC,Auditor")]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            History history = db.History.Find(id);
-            db.History.Remove(history);
-            String patient = db.Patients.Find(history.PatientID).FullName;
-            int auditId = Audit.CreateAudit(patient, "Delete", "History", User.Identity.Name);
-            Audit.CompleteAudit(auditId, history.HistoryID);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        //// GET: Histories/Disable/5
+        //[Authorize(Roles = "OIC,Auditor")]
+        //public ActionResult Disable(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    History history = db.History.Find(id);
+        //    if (history == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(history);
+        //}
+
+        //// POST: Histories/Disable/5
+        //[Authorize(Roles = "OIC,Auditor")]
+        //[HttpPost, ActionName("Disable")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult DisableConfirmed(int id)
+        //{
+        //    History history = db.History.Find(id);
+        //    db.History.Remove(history);
+        //    String patient = db.Patients.Find(history.PatientID).FullName;
+        //    int auditId = Audit.CreateAudit(patient, "Disable", "History", User.Identity.Name);
+        //    Audit.CompleteAudit(auditId, history.HistoryID);
+        //    db.SaveChanges();
+        //    return RedirectToAction("Index", "Histories", new { id = history.PatientID });
+        //}
 
         protected override void Dispose(bool disposing)
         {

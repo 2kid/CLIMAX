@@ -35,6 +35,7 @@ namespace CLIMAX
                        "~/Content/font-awesome.min.css",
                        "~/Content/nivo-lightbox.css",
                       "~/Content/Site.css",
+                       "~/Content/style.css",
                       "~/Content/Moses_custom.css",
                       "~/Content/Logstyle.css"));
         }

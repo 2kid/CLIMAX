@@ -35,6 +35,7 @@ namespace CLIMAX.Models
         public int EmployeeID { get; set; }
         public virtual Employee Employee { get; set; }
 
+        public bool isEnabled { get; set; }
 
         public string getColumns()
         {
@@ -58,6 +59,15 @@ namespace CLIMAX.Models
         public double AmountDue { get; set; }
         public string Therapist { get; set; }
 
+    }
+
+    public class SurveyCode
+    {
+        [Key]
+        public int SurveyCodeID { get; set; }
+        public int ChargeSlipID { get; set; }
+        public string Code { get; set; }
+        public bool isUsed { get; set; }
     }
 
 

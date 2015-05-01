@@ -105,9 +105,9 @@ namespace CLIMAX.Api
         }
 
       
-        //// DELETE: api/Surveys/5
+        //// Disable: api/Surveys/5
         //[ResponseType(typeof(Survey))]
-        //public IHttpActionResult DeleteSurvey(int id)
+        //public IHttpActionResult DisableSurvey(int id)
         //{
         //    Survey survey = db.Surveys.Find(id);
         //    if (survey == null)

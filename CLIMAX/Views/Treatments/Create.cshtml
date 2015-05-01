@@ -36,7 +36,9 @@
                                             <div class="form-group">
                                                 @Html.LabelFor(model => model.TreatmentPrice, htmlAttributes: new { @class = "control-label col-md-2" })
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.TreatmentPrice, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.HiddenFor(model => model.TreatmentPrice)
+                                                    @Html.TextBox("txtPrice","", new { @class= "form-control price"})
+                                                    @*@Html.EditorFor(model => model.TreatmentPrice, new { htmlAttributes = new { @class = "form-control price" } })*@
                                                     @Html.ValidationMessageFor(model => model.TreatmentPrice, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -69,7 +71,7 @@
                                                 <tr>
                                                     <td class="col-md-3">@materialList[i].MaterialName</td>
                                                     <td class="col-md-3">@materialList[i].units</td>
-                                                    <td class="col-md-3">@materialList[i].TotalPrice</td>
+                                                    <td class="col-md-3 price">@materialList[i].TotalPrice</td>
                                                     <td class="col-md-3"><button name="submit" type="submit" value="Remove-@i">Remove</button></td>
                                                 </tr>
                                             }
@@ -78,7 +80,7 @@
                                                 <tr>
                                                     <td class="col-md-3">Total</td>
                                                     <td class="col-md-3"></td>
-                                                    <th class="col-md-3">@totalPrice</th>
+                                                    <th class="col-md-3 price">@totalPrice</th>
                                                     <td class="col-md-3"></td>
                                                 </tr>
                                             </table>
@@ -89,7 +91,7 @@
                                                         @Html.DropDownList("Medicines", null, new { @class = "col-md-12" })
                                                     </div>
                                                     <div class="col-md-2">
-                                                        @Html.TextBox("MedicineQty", null, new { type = "number" , min = "0" })
+                                                        @Html.TextBox("MedicineQty", null, new { type = "number" , min = "0" , @class="form-control"})
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -109,4 +111,15 @@
         </div>
     </div>
 </div>
- 
+@Scripts.Render("~/bundles/jqueryval")
+@section scripts{
+<script>    
+    $(document).ready(function () {
+        $("#txtPrice").keydown(filterNumeric);
+        $("#txtPrice").change(function () {
+            var submitValue = $(this).val().replace(/,/g, '');
+            $(this).prev().val(submitValue);
+        });
+    });
+     </script>
+ }

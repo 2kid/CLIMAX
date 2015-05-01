@@ -13,7 +13,7 @@
     <div class="form-horizontal">
         <h4>Reports</h4>
         <hr />
-        @Html.ValidationSummary(true)
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <div class="form-group">
             @Html.LabelFor(model => model.ReportTypeID, "ReportTypeID", new { @class = "control-label col-md-2" })
@@ -25,14 +25,14 @@
         <div class="form-group">
             @Html.Label("start", new { @class = "control-label col-md-2" })
             <div class="col-9-md-10">
-                @Html.TextBox("start", "", new { type = "Date" })
+                <input name="start" class="ui-datepicker date-picker form-control" />
             </div>
         </div>
 
         <div class="form-group">
             @Html.Label("end", new { @class = "control-label col-md-2" })
             <div class="col-9-md-10">
-                @Html.TextBox("end", "", new { type = "Date" })
+                <input name="end" class="ui-datepicker date-picker form-control" />
             </div>
         </div>
         @if (User.IsInRole("OIC"))
@@ -64,3 +64,21 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.11.4.min.js")"></script>
+    <script>
+        $(function () {
+            $(".date-picker").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy-mm-dd',
+                beforeShow: function (input, inst) {
+                    $(inst.dpDiv).removeClass('calendar-off');
+                },
+                yearRange: "-0:+20"
+            });
+        });
+    </script>
+}

@@ -58,9 +58,8 @@
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.BirthDate, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.TextBox("BirthDate", Model.BirthDate.ToString("yyyy-MM-dd"), new { @class = "form-control", type = "date" })
-                                                @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
-                                            </div>
+                                                <input name="BirthDate" class="ui-datepicker date-picker form-control" value="@Model.BirthDate.ToString("yyyy-MM-dd")" />
+                                              </div>
                                         </div>
 
                                         <div class="form-group">
@@ -124,15 +123,25 @@
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.LandlineNo, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.EditorFor(model => model.LandlineNo, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.LandlineNo, "", new { @class = "text-danger" })
+                                                <span class="col-md-1" style="font-size:x-large">
+                                                    @Html.DropDownList("areaCode")
+                                                </span>
+                                                <span class="col-md-4">
+                                                    @Html.TextBox("landlineNo", (string)ViewBag.landlineNo , new { @class = "form-control", maxlength = "7" })
+                                                </span>
+                                                <h4 class="col-md-1 margintop-0">local</h4>
+                                                <span class="col-md-2">
+                                                    @Html.TextBox("extCode", (string)ViewBag.extCode , new { @class = "form-control", maxlength = "3"})
+                                                </span>
+                                                
+                                                 @Html.ValidationMessageFor(model => model.LandlineNo, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.CellphoneNo, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.EditorFor(model => model.CellphoneNo, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.EditorFor(model => model.CellphoneNo, new { htmlAttributes = new { @class = "form-control" , maxlength="11" } })
                                                 @Html.ValidationMessageFor(model => model.CellphoneNo, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -200,3 +209,23 @@
         </div>
     </div>
 </div>
+
+@section scripts{
+@Scripts.Render("~/bundles/jqueryval")
+<script src="@Url.Content("~/Scripts/jquery-ui-1.11.4.min.js")"></script>
+<script>
+    $(function () {
+        $(".date-picker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy-mm-dd',
+            beforeShow: function (input, inst) {
+                $(inst.dpDiv).removeClass('calendar-off');
+            },
+           // setDate: '@Model.BirthDate.ToString("yyyy-MM-dd")',
+            defaultDate: '@Model.BirthDate.ToString("yyyy-MM-dd")'
+            });
+        });
+</script>
+
+}

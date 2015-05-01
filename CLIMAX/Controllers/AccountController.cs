@@ -10,6 +10,10 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using CLIMAX.Models;
 using System.Data.Entity;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Configuration;
+using System.Net.Mail;
 
 namespace CLIMAX.Controllers
 {
@@ -136,10 +140,40 @@ namespace CLIMAX.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    if (db.Users.Where(r => r.UserName == model.Email).Select(u=>u.isActive).Single())
-                    return RedirectToLocal(returnUrl);
+                    ApplicationUser user = db.Users.Where(r => r.UserName == model.Email).Single();
+                    string message = "";
+                    if (user.isActive)
+                    {
+                        if (User.IsInRole("OIC"))
+                        {
+                            int branchId = db.Employees.Where(r => r.EmployeeID == user.EmployeeID).Select(u => u.BranchID).Single();
+
+                            if (branchId != 1)
+                            {
+                                List<Inventory> inventory = db.Inventories.Include(a => a.material).Where(r => r.BranchID == branchId).ToList();
+                                //check if stocks is low
+                                List<InventoryMessageViewModel> items = new List<InventoryMessageViewModel>();
+                                foreach(Inventory material in inventory)
+                                {
+                                    if(material.isLowInStock)
+                                    items.Add(new InventoryMessageViewModel() { Inventory = material.material.MaterialName, QtyLeft = material.QtyInStock.ToString() });
+                                }
+
+                                message = JsonConvert.SerializeObject(items);
+                            }
+                        }
+
+                        if (returnUrl != null)
+                        {
+                            return (returnUrl.Contains('?')) ? RedirectToLocal(returnUrl, "&", message) : RedirectToLocal(returnUrl, "?", message);
+                        }
+                        else
+                        {
+                            return RedirectToLocal(returnUrl, "?", message);
+                        }     
+                    }
                     else
-                          ModelState.AddModelError("", "Account has been deactivated.");
+                        ModelState.AddModelError("", "Account has been deactivated.");
                     return View(model);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -159,7 +193,7 @@ namespace CLIMAX.Controllers
         public ActionResult AddAccount()
         {
             ViewBag.RoleType = new SelectList(db.RoleType.Where(r => r.Type == "Officer in Charge" || r.Type == "Administrator" || r.Type == "Auditor").ToList(), "RoleTypeId", "Type");
-            ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");
+            ViewBag.Branch = new SelectList(db.Branches.Where(r=>r.isEnabled).ToList(), "BranchID", "BranchName");
             return View();
         }
 
@@ -178,7 +212,7 @@ namespace CLIMAX.Controllers
                 {
                     ModelState.AddModelError("", "Officer in Charge must be assigned to a branch");
                     ViewBag.RoleType = new SelectList(db.RoleType.Where(r => r.Type == "Officer in Charge" || r.Type == "Administrator" || r.Type == "Auditor").ToList(), "RoleTypeId", "Type");
-                    ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");
+                    ViewBag.Branch = new SelectList(db.Branches.Where(r=>r.isEnabled).ToList(), "BranchID", "BranchName");
                     return View(model);
                 }
 
@@ -208,6 +242,21 @@ namespace CLIMAX.Controllers
                             break;
                     }
                     int auditId = Audit.CreateAudit(user.UserName, "Create", "Account", User.Identity.Name);
+
+                    System.Net.Mail.MailMessage m = new System.Net.Mail.MailMessage(
+                    new System.Net.Mail.MailAddress(ConfigurationManager.AppSettings["EMAIL"], "Web Registration"),
+                    new System.Net.Mail.MailAddress(user.Email));
+                    m.Subject = "Email confirmation";
+                    m.Body = string.Format("Dear {0}<BR/>Thank you for your registration, please click on the below link to complete your registration: <a href=\"{1}\" title=\"User Email Confirm\">{1}</a>",
+                    user.UserName, Url.Action("ConfirmEmail", "Account",
+                    new { Token = user.Id, Email = user.Email }, Request.Url.Scheme));
+                    m.IsBodyHtml = true;
+                    System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient("smtp.gmail.com");
+                    smtp.Port = 587;
+                    smtp.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["EMAIL"], ConfigurationManager.AppSettings["EMAIL_PASSWORD"]);
+                    smtp.EnableSsl = true;
+                    smtp.Send(m);
+
                     return RedirectToAction("AdminIndex", "Account");
                 }
                 AddErrors(result);
@@ -215,13 +264,14 @@ namespace CLIMAX.Controllers
 
             // If we got this far, something failed, redisplay form
             ViewBag.RoleType = new SelectList(db.RoleType.Where(r => r.Type == "Officer in Charge" || r.Type == "Administrator" || r.Type == "Auditor").ToList(), "RoleTypeId", "Type");
-            ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");
+            ViewBag.Branch = new SelectList(db.Branches.Where(r=>r.isEnabled).ToList(), "BranchID", "BranchName");
             return View(model);
         }
 
     
         //
         // POST: /Account/LogOff
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
@@ -229,6 +279,145 @@ namespace CLIMAX.Controllers
             AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }
+
+        [AllowAnonymous]
+        public ActionResult Confirm(string Email)
+        {
+            ViewBag.Email = Email;
+            return View();
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> ConfirmEmail(string Token, string Email)
+        {
+            ApplicationUser user = this.UserManager.FindById(Token);
+            if (user != null)
+            {
+                if (user.Email == Email && user.EmailConfirmed == false)
+                {
+                    user.EmailConfirmed = true;
+                    await UserManager.UpdateAsync(user);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    return RedirectToAction("Index", "Home", new { ConfirmedEmail = user.Email });
+                }
+                else
+                {
+                    return RedirectToAction("Confirm", "Account", new { Email = user.Email });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Confirm", "Account", new { Email = "" });
+            }
+        }
+
+        [AllowAnonymous]
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByNameAsync(model.Email);
+                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                {
+                    // Don't reveal that the user does not exist or is not confirmed
+                    return View("ForgotPasswordConfirmation");
+                }
+
+                //generate password token
+                var token = UserManager.GeneratePasswordResetToken(user.Id);
+                //create url with above token
+                var resetLink = Url.Action("ResetPassword", "Account", new { un = model.Email, rt = token }, protocol: Request.Url.Scheme);
+
+                //send mail
+                string subject = "Password Reset";
+                //string body = "<b>Please find the Password Reset Token</b><br/>" + resetLink;
+                string body = string.Format("Dear {0}<BR/>Someone has requested to reset your password, please click on the link below to complete the password reset: <a href=\"" + resetLink + "\">Reset Password</a>", user.UserName);
+                try
+                {
+                    SmtpClient client = new SmtpClient();
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.EnableSsl = true;
+                    client.Host = "smtp.gmail.com";
+                    client.Port = 587;
+
+                    System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["EMAIL"], ConfigurationManager.AppSettings["EMAIL_PASSWORD"]);
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = credentials;
+
+                    MailMessage msg = new MailMessage();
+                    msg.From = new MailAddress(ConfigurationManager.AppSettings["EMAIL"]);
+                    msg.To.Add(new MailAddress(user.Email));
+
+                    msg.Subject = subject;
+                    msg.IsBodyHtml = true;
+                    msg.Body = body;
+
+                    client.Send(msg);
+                }
+                catch
+                {
+
+                }
+            }
+            return View("ForgotPasswordConfirmation");
+        }
+
+        //
+        // GET: /Account/ResetPassword
+        [AllowAnonymous]
+        public ActionResult ResetPassword(string un, string rt)
+        {
+            ApplicationUser user = this.UserManager.FindByEmail(un);
+            if (user != null)
+            {
+                return rt == null ? View("Error") : View(new ResetPasswordViewModel { Email = un, Code = rt });
+            }
+            return View("Error");
+
+        }
+
+        //
+        // POST: /Account/ResetPassword
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await UserManager.FindByNameAsync(model.Email);
+            if (user == null)
+            {
+                // Don't reveal that the user does not exist
+                return RedirectToAction("ResetPasswordConfirmation", "Account");
+            }
+            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("ResetPasswordConfirmation", "Account");
+            }
+            AddErrors(result);
+            return View();
+        }
+
+        //
+        // GET: /Account/ResetPasswordConfirmation
+        [AllowAnonymous]
+        public ActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+
 
         protected override void Dispose(bool disposing)
         {
@@ -267,13 +456,14 @@ namespace CLIMAX.Controllers
             }
         }
 
-        private ActionResult RedirectToLocal(string returnUrl)
+        private ActionResult RedirectToLocal(string returnUrl,string symbol,string message)
         {
             if (Url.IsLocalUrl(returnUrl))
             {
-                return Redirect(returnUrl);
+                if (!returnUrl.Contains("/Account/LogOff"))
+                return Redirect(returnUrl + symbol +"message=" + message);
             }
-            return RedirectToAction("Index", "Patients");
+            return RedirectToAction("Index", "Patients", new { message = message});
         }
         #endregion
     }

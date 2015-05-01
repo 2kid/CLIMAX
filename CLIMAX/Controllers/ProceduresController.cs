@@ -19,7 +19,7 @@ namespace CLIMAX.Controllers
         public ActionResult Index(int id)
         {
             ViewBag.TreatmentID = id;
-            return View(db.Procedure.Include(a=> a.treatment).OrderBy(u=>u.StepNo).ToList());
+            return View(db.Procedure.Where(r=>r.isEnabled).Include(a=> a.treatment).OrderBy(u=>u.StepNo).ToList());
         }
 
         // GET: Procedures/Details/5
@@ -34,6 +34,10 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
+            if (!procedure.isEnabled)
+            {
+                return HttpNotFound();
+            }
             return View(procedure);
         }
 
@@ -43,7 +47,9 @@ namespace CLIMAX.Controllers
         public ActionResult Create(int id)
         {
             TreatmentID = id;
-            return View();
+            Procedure procedure = new Procedure();
+            procedure.TreatmentID = id;
+            return View(procedure);
         }
 
         // POST: Procedures/Create
@@ -56,6 +62,7 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
+                procedure.isEnabled = true;
                 procedure.TreatmentID = TreatmentID;
                 db.Procedure.Add(procedure);
                 int auditId =  Audit.CreateAudit(procedure.ProcedureName, "Create", "Procedure", User.Identity.Name);
@@ -76,10 +83,16 @@ namespace CLIMAX.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Procedure procedure = db.Procedure.Find(id);
+            TreatmentID = id.Value;
             if (procedure == null)
             {
                 return HttpNotFound();
             }
+            if (!procedure.isEnabled)
+            {
+                return HttpNotFound();
+            }
+
             return View(procedure);
         }
 
@@ -89,20 +102,22 @@ namespace CLIMAX.Controllers
         [Authorize(Roles = "Admin,Auditor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProcedureID,ProcedureName,TreatmentID,StepNo")] Procedure procedure)
+        public ActionResult Edit([Bind(Include = "ProcedureID,ProcedureName,StepNo")] Procedure procedure)
         {
             if (ModelState.IsValid)
             {
+                procedure.TreatmentID = TreatmentID;
+                procedure.isEnabled = true;
                 db.Entry(procedure).State = EntityState.Modified;
                 int auditId =  Audit.CreateAudit(procedure.ProcedureName, "Edit", "Procedure", User.Identity.Name);
                 Audit.CompleteAudit(auditId, procedure.ProcedureID);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { id = TreatmentID });
             }
             return View(procedure);
         }
 
-        // GET: Procedures/Delete/5
+        // GET: Procedures/Disable/5
         [Authorize(Roles = "Admin,Auditor")]
         public ActionResult Delete(int? id)
         {
@@ -118,18 +133,19 @@ namespace CLIMAX.Controllers
             return View(procedure);
         }
 
-        // POST: Procedures/Delete/5
+        // POST: Procedures/Disable/5
         [Authorize(Roles = "Admin,Auditor")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DisableConfirmed(int id)
         {
             Procedure procedure = db.Procedure.Find(id);
-            db.Procedure.Remove(procedure);
-            int auditId =  Audit.CreateAudit(procedure.ProcedureName, "Delete", "Procedure", User.Identity.Name);
+            procedure.isEnabled = false;
+            db.Entry(procedure).State = EntityState.Modified;
+            int auditId =  Audit.CreateAudit(procedure.ProcedureName, "Disable", "Procedure", User.Identity.Name);
             Audit.CompleteAudit(auditId, procedure.ProcedureID);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { id = TreatmentID });
         }
 
         protected override void Dispose(bool disposing)

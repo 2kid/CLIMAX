@@ -11,7 +11,7 @@ namespace CLIMAX.Models
     {
         public int HistoryID { get; set; }
         //which session is it
-        public int SessionNo { get; set; }
+        //public int SessionNo { get; set; }
        
         public int PatientID { get; set; }
         public virtual Patient patient { get; set; }
@@ -27,11 +27,13 @@ namespace CLIMAX.Models
         public DateTime DateTimeStart { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
-        public DateTime DateTimeEnd { get; set; }
+        public DateTime? DateTimeEnd { get; set; }
+
+        public int ChargeSlipID { get; set; }
 
         public string getColumns()
         {
-            return "HistoryID,SessionNo,PatientID,TreatmentID,EmployeeID,DateTimeStart,DateTimeEnd";
+            return "HistoryID,PatientID,TreatmentID,EmployeeID,DateTimeStart,DateTimeEnd";
         }
     }
 }

@@ -23,6 +23,8 @@ namespace CLIMAX.Models
         public double Price { get; set; }     
         public int UnitTypeID { get; set; }
         public virtual UnitType unitType { get; set; }
+        
+        public bool isEnabled { get; set; }
 
         public string getColumns()
         {

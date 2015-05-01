@@ -19,14 +19,13 @@ namespace CLIMAX.Controllers
         // GET: Patients
         public ActionResult Index(FormCollection form)
         {
-            var patients = db.Patients.Include(p => p.branch).ToList();
+            var patients = db.Patients.Where(r => r.isEnabled).Include(p => p.branch).ToList();
 
             string search = form["searchValue"];
             if (!string.IsNullOrEmpty(search))
             {
                 patients = patients.Where(r => r.FullName.ToLower().Contains(search.ToLower())).ToList();
             }
-
             return View(patients);
         }
 
@@ -39,6 +38,10 @@ namespace CLIMAX.Controllers
             }
             Patient patient = db.Patients.Find(id);
             if (patient == null)
+            {
+                return HttpNotFound();
+            }
+            if (!patient.isEnabled)
             {
                 return HttpNotFound();
             }
@@ -64,7 +67,13 @@ namespace CLIMAX.Controllers
                 new SelectListItem(){Text = "Separated", Value = "Separated"}
             };
 
+            List<SelectListItem> areaCode = new List<SelectListItem>();
+            for (int i = 2; i < 90; i++)
+            {
+                areaCode.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString() });
+            }
 
+            ViewBag.areaCode = areaCode;
             ViewBag.Gender = new SelectList(item, "Value", "Text");
             ViewBag.CivilStatus = civilStatus;
 
@@ -76,7 +85,7 @@ namespace CLIMAX.Controllers
             }
             else
             {
-                ViewBag.BranchID = new SelectList(db.Branches.Where(r => r.BranchName != "*").ToList(), "BranchID", "BranchName");
+                ViewBag.BranchID = new SelectList(db.Branches.Where(r => r.BranchName != "*" && r.isEnabled).ToList(), "BranchID", "BranchName");
                 return View();
             }
 
@@ -88,7 +97,7 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "PatientID,FirstName,MiddleName,LastName,BirthDate,Gender,CivilStatus,Height,Weight,HomeNo,Street,City,LandlineNo,CellphoneNo,EmailAddress,Occupation,EmergencyContactNo,EmergencyContactFName,EmergencyContactMName,EmergencyContactLName,BranchID")] Patient patient)
+        public ActionResult Create([Bind(Include = "PatientID,FirstName,MiddleName,LastName,Gender,CivilStatus,Height,Weight,HomeNo,Street,City,CellphoneNo,EmailAddress,Occupation,EmergencyContactNo,EmergencyContactFName,EmergencyContactMName,EmergencyContactLName,BranchID")] Patient patient, FormCollection form)
         {
             IEnumerable<SelectListItem> civilStatus = new List<SelectListItem>()
                         {
@@ -97,14 +106,23 @@ namespace CLIMAX.Controllers
                             new SelectListItem(){Text = "Widowed", Value = "Widowed"},
                             new SelectListItem(){Text = "Divorced", Value = "Divorced"},
                             new SelectListItem(){Text = "Separated", Value = "Separated"}
-                        }; 
-            
+                        };
+         
+            List<SelectListItem> areaCode = new List<SelectListItem>();
+            for (int i = 2; i < 90; i++)
+            {
+                areaCode.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString() });
+            }
+
+            ViewBag.areaCode = new SelectList(areaCode, form["areaCode"]);
+
             if (ModelState.IsValid)
             {
-                if (!Regex.IsMatch(patient.BirthDate.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
+
+                if (!Regex.IsMatch(form["landlineNo"], "^[0-9]{7}$"))
                 {
-                    ModelState.AddModelError("BirthDate", "The field BirthDate is invalid");
-                    ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName", patient.BranchID);            
+                    ModelState.AddModelError("LandlineNo", "landline number is invalid");
+                    ViewBag.BranchID = new SelectList(db.Branches.Where(r => r.isEnabled).ToList(), "BranchID", "BranchName", patient.BranchID);
                     ViewBag.Gender = new List<SelectListItem>()
                         {
                             new SelectListItem(){
@@ -117,10 +135,43 @@ namespace CLIMAX.Controllers
                     return View(patient);
                 }
 
-              if(patient.BirthDate.CompareTo(DateTime.Now) == 1)
+                if (!Regex.IsMatch(form["extCode"], "^[0-9]{3}$"))
+                {
+                    ModelState.AddModelError("LandlineNo", "local number is invalid");
+                    ViewBag.BranchID = new SelectList(db.Branches.Where(r => r.isEnabled).ToList(), "BranchID", "BranchName", patient.BranchID);
+                    ViewBag.Gender = new List<SelectListItem>()
+                        {
+                            new SelectListItem(){
+                                Text = "Female", Value = "false"},
+                          new SelectListItem(){
+                                Text = "Male", Value = "true"}   
+                        };
+
+                    ViewBag.CivilStatus = civilStatus;
+                    return View(patient);
+                }
+                patient.LandlineNo = form["areaCode"] + '-' + form["landlineNo"] + "-" + form["extCode"];
+                patient.BirthDate = DateTime.Parse(form["BirthDate"]);
+                if (!Regex.IsMatch(patient.BirthDate.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
+                {
+                    ModelState.AddModelError("BirthDate", "The field BirthDate is invalid");
+                    ViewBag.BranchID = new SelectList(db.Branches.Where(r => r.isEnabled).ToList(), "BranchID", "BranchName", patient.BranchID);
+                    ViewBag.Gender = new List<SelectListItem>()
+                        {
+                            new SelectListItem(){
+                                Text = "Female", Value = "false"},
+                          new SelectListItem(){
+                                Text = "Male", Value = "true"}   
+                        };
+
+                    ViewBag.CivilStatus = civilStatus;
+                    return View(patient);
+                }
+
+                if (patient.BirthDate.CompareTo(DateTime.Now) == 1)
                 {
                     ModelState.AddModelError("", "Date of Birth cannot be after today");
-                    ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName", patient.BranchID);
+                    ViewBag.BranchID = new SelectList(db.Branches.Where(r => r.isEnabled).ToList(), "BranchID", "BranchName", patient.BranchID);
                     ViewBag.Gender = new List<SelectListItem>()
                         {
                             new SelectListItem(){
@@ -135,9 +186,9 @@ namespace CLIMAX.Controllers
 
                 if (User.IsInRole("OIC"))
                     patient.BranchID = branchId.Value;
-
+                patient.isEnabled = true;
                 db.Patients.Add(patient);
-                int auditId =  Audit.CreateAudit(patient.FullName, "Create", "Patient", User.Identity.Name);
+                int auditId = Audit.CreateAudit(patient.FullName, "Create", "Patient", User.Identity.Name);
                 db.SaveChanges();
                 Audit.CompleteAudit(auditId, patient.PatientID);
                 return RedirectToAction("Index");
@@ -151,7 +202,7 @@ namespace CLIMAX.Controllers
             }
             else
             {
-                ViewBag.BranchID = new SelectList(db.Branches.Where(r => r.BranchName != "*").ToList(), "BranchID", "BranchName");
+                ViewBag.BranchID = new SelectList(db.Branches.Where(r => r.BranchName != "*" && r.isEnabled).ToList(), "BranchID", "BranchName");
             }
 
             ViewBag.Gender = new List<SelectListItem>()
@@ -178,7 +229,11 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
-          
+
+            if (!patient.isEnabled)
+            {
+                return HttpNotFound();
+            }
 
             ViewBag.Gender = new List<SelectListItem>()
             {
@@ -196,6 +251,24 @@ namespace CLIMAX.Controllers
                 new SelectListItem(){Text = "Divorced", Value = "Divorced"},
                 new SelectListItem(){Text = "Separated", Value = "Separated"}
             };
+
+            string[] array = patient.LandlineNo.Split('-');
+            List<SelectListItem> areaCode = new List<SelectListItem>();
+            for (int i = 2; i < 90; i++)
+            {
+                if (array[0] == i.ToString())
+                {
+                    areaCode.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString(), Selected = true });
+                }
+                else
+                {
+                    areaCode.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString() });
+                }
+            }
+
+            ViewBag.areaCode = areaCode;
+            ViewBag.landlineNo = array[1];
+            ViewBag.extCode = array[2];
             return View(patient);
         }
 
@@ -204,7 +277,7 @@ namespace CLIMAX.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PatientID,FirstName,MiddleName,LastName,BirthDate,Gender,CivilStatus,Height,Weight,HomeNo,Street,City,LandlineNo,CellphoneNo,EmailAddress,Occupation,EmergencyContactNo,EmergencyContactFName,EmergencyContactMName,EmergencyContactLName")] Patient patient)
+        public ActionResult Edit([Bind(Include = "PatientID,FirstName,MiddleName,LastName,Gender,CivilStatus,Height,Weight,HomeNo,Street,City,CellphoneNo,EmailAddress,Occupation,EmergencyContactNo,EmergencyContactFName,EmergencyContactMName,EmergencyContactLName")] Patient patient, FormCollection form)
         {
             IEnumerable<SelectListItem> civilStatus = new List<SelectListItem>()
                         {
@@ -214,13 +287,46 @@ namespace CLIMAX.Controllers
                             new SelectListItem(){Text = "Divorced", Value = "Divorced"},
                             new SelectListItem(){Text = "Separated", Value = "Separated"}
                         };
+            if (!Regex.IsMatch(form["landlineNo"], "^[0-9]{7}$"))
+            {
+                ModelState.AddModelError("LandlineNo", "landline number is invalid");
+                ViewBag.BranchID = new SelectList(db.Branches.Where(r => r.isEnabled).ToList(), "BranchID", "BranchName", patient.BranchID);
+                ViewBag.Gender = new List<SelectListItem>()
+                        {
+                            new SelectListItem(){
+                                Text = "Female", Value = "false"},
+                          new SelectListItem(){
+                                Text = "Male", Value = "true"}   
+                        };
+
+                ViewBag.CivilStatus = civilStatus;
+                return View(patient);
+            }
+
+            if (!Regex.IsMatch(form["extCode"], "^[0-9]{3}$"))
+            {
+                ModelState.AddModelError("LandlineNo", "local number is invalid");
+                ViewBag.BranchID = new SelectList(db.Branches.Where(r => r.isEnabled).ToList(), "BranchID", "BranchName", patient.BranchID);
+                ViewBag.Gender = new List<SelectListItem>()
+                        {
+                            new SelectListItem(){
+                                Text = "Female", Value = "false"},
+                          new SelectListItem(){
+                                Text = "Male", Value = "true"}   
+                        };
+
+                ViewBag.CivilStatus = civilStatus;
+                return View(patient);
+            }
+            patient.LandlineNo = form["areaCode"] + '-' + form["landlineNo"] + "-" + form["extCode"];
 
             if (ModelState.IsValid)
             {
+                patient.BirthDate = DateTime.Parse(form["BirthDate"]);
                 if (!Regex.IsMatch(patient.BirthDate.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
                 {
                     ModelState.AddModelError("BirthDate", "The field BirthDate is invalid");
-                    ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName", patient.BranchID);
+                    ViewBag.BranchID = new SelectList(db.Branches.Where(r => r.isEnabled).ToList(), "BranchID", "BranchName", patient.BranchID);
                     ViewBag.Gender = new List<SelectListItem>()
                         {
                             new SelectListItem(){
@@ -236,7 +342,7 @@ namespace CLIMAX.Controllers
                 if (patient.BirthDate.CompareTo(DateTime.Now) == 1)
                 {
                     ModelState.AddModelError("", "Date of Birth cannot be after today");
-                    ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "BranchName", patient.BranchID);
+                    ViewBag.BranchID = new SelectList(db.Branches.Where(r => r.isEnabled).ToList(), "BranchID", "BranchName", patient.BranchID);
                     ViewBag.Gender = new List<SelectListItem>()
                         {
                           new SelectListItem(){
@@ -249,15 +355,16 @@ namespace CLIMAX.Controllers
                     return View(patient);
                 }
 
-                patient.BranchID = db.Patients.Find(patient.PatientID).BranchID;
-
+                patient.BranchID = db.Patients.Where(r=>r.PatientID == patient.PatientID).Select(u=>u.BranchID).Single();
+                //  patient.LandlineNo = form["areaCode"]+form[""]
+                patient.isEnabled = true;
                 db.Entry(patient).State = EntityState.Modified;
-               int auditId =  Audit.CreateAudit(patient.FullName, "Edit", "Patient", User.Identity.Name);
-               Audit.CompleteAudit(auditId, patient.PatientID);
+                int auditId = Audit.CreateAudit(patient.FullName, "Edit", "Patient", User.Identity.Name);
+                Audit.CompleteAudit(auditId, patient.PatientID);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-           
+
             IEnumerable<SelectListItem> item = new List<SelectListItem>()
             {
                 new SelectListItem(){
@@ -271,7 +378,7 @@ namespace CLIMAX.Controllers
             return View(patient);
         }
 
-        // GET: Patients/Delete/5
+        // GET: Patients/Disable/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -286,14 +393,16 @@ namespace CLIMAX.Controllers
             return View(patient);
         }
 
-        // POST: Patients/Delete/5
+        // POST: Patients/Disable/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DisableConfirmed(int id)
         {
             Patient patient = db.Patients.Find(id);
-            db.Patients.Remove(patient);
-            int auditId =  Audit.CreateAudit(patient.FullName, "Delete", "Patient", User.Identity.Name);
+            patient.isEnabled = false;
+            db.Entry(patient).State = EntityState.Modified;
+
+            int auditId = Audit.CreateAudit(patient.FullName, "Disable", "Patient", User.Identity.Name);
             Audit.CompleteAudit(auditId, patient.PatientID);
             db.SaveChanges();
             return RedirectToAction("Index");

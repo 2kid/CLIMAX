@@ -19,9 +19,9 @@ namespace CLIMAX.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            var materials = db.Materials.Include(m => m.unitType);
+            var materials = db.Materials.Where(r=>r.isEnabled).Include(m => m.unitType);
 
-            return View(materials.ToList());
+            return View(materials.Where(r=>r.isEnabled).ToList());
         }
          
    
@@ -29,7 +29,7 @@ namespace CLIMAX.Controllers
         [Authorize(Roles = "Auditor,Admin")]
         public ActionResult Create()
         {
-            ViewBag.UnitTypeID = new SelectList(db.UnitTypes, "UnitTypeID", "Type");
+            ViewBag.UnitTypeID = new SelectList(db.UnitTypes.Where(r=>r.isEnabled).ToList(), "UnitTypeID", "Type");
             return View();
         }
 
@@ -43,7 +43,7 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+                materials.isEnabled = true;
                 db.Materials.Add(materials);
                 int auditId = Audit.CreateAudit(materials.MaterialName, "Create", "Material", User.Identity.Name);
                 db.SaveChanges();
@@ -51,7 +51,7 @@ namespace CLIMAX.Controllers
                 return RedirectToAction("Index");
     }
 
-            ViewBag.UnitTypeID = new SelectList(db.UnitTypes, "UnitTypeID", "Type", materials.UnitTypeID);
+            ViewBag.UnitTypeID = new SelectList(db.UnitTypes.Where(r=>r.isEnabled).ToList(), "UnitTypeID", "Type", materials.UnitTypeID);
             return View(materials);
         }
 
@@ -68,7 +68,11 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.UnitTypeID = new SelectList(db.UnitTypes, "UnitTypeID", "Type", materials.UnitTypeID);
+            if (!materials.isEnabled)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.UnitTypeID = new SelectList(db.UnitTypes.Where(r=>r.isEnabled).ToList(), "UnitTypeID", "Type", materials.UnitTypeID);
             return View(materials);
         }
 
@@ -82,17 +86,18 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
+                materials.isEnabled = true;
                 db.Entry(materials).State = EntityState.Modified;
                 int auditId = Audit.CreateAudit(materials.MaterialName, "Edit", "Material", User.Identity.Name);
                 Audit.CompleteAudit(auditId, materials.MaterialID);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.UnitTypeID = new SelectList(db.UnitTypes, "UnitTypeID", "Type", materials.UnitTypeID);
+            ViewBag.UnitTypeID = new SelectList(db.UnitTypes.Where(r=>r.isEnabled).ToList(), "UnitTypeID", "Type", materials.UnitTypeID);
             return View(materials);
         }
 
-        // GET: Materials/Delete/5
+        // GET: Materials/Disable/5
         [Authorize(Roles = "Auditor,Admin")]
         public ActionResult Delete(int? id)
         {
@@ -108,15 +113,16 @@ namespace CLIMAX.Controllers
             return View(materials);
         }
 
-        // POST: Materials/Delete/5
+        // POST: Materials/Disable/5
         [Authorize(Roles = "Auditor,Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DisableConfirmed(int id)
         {
             Materials materials = db.Materials.Find(id);
-            db.Materials.Remove(materials);
-            int auditId = Audit.CreateAudit(materials.MaterialName, "Delete", "Material", User.Identity.Name);
+            materials.isEnabled = false;
+            db.Entry(materials).State = EntityState.Modified;
+            int auditId = Audit.CreateAudit(materials.MaterialName, "Disable", "Material", User.Identity.Name);
             Audit.CompleteAudit(auditId, materials.MaterialID);
             db.SaveChanges();
             return RedirectToAction("Index");

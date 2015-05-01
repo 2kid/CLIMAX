@@ -5,13 +5,15 @@
 }
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("Create", "Surveys", FormMethod.Post, new { id = "surveyForm", name="surveyForm"}))
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
         <h4>Survey</h4>
         <hr />
+        @Html.Hidden("SurveyCodeID",(string)ViewBag.SurveyCodeID)
+        @Html.Hidden("SurveyCode",(string)ViewBag.Code)
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -40,7 +42,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.StarRating, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.StarRating, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.StarRating, new { htmlAttributes = new { @class = "form-control" , min="1",max="5"} })
                 @Html.ValidationMessageFor(model => model.StarRating, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -63,39 +65,21 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input id="submit" type="button" value="Create" class="btn btn-default" />
+                <input id="button" type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index","Home")
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-    $(document).ready(function () {
-        $("#submit").click(function () {
-            var Fname = $("#FirstName").val();
-            var Mname = $("#MiddleName").val();
-            var Lname = $("#LastName").val();
-            var rating = $("#StarRating").val();
-            var comment = $("#Comment").val();
-            var treatment = $("#TreatmentID").val();
-            $.ajax({
-                url: "http://climax.azurewebsites.net/api/Surveys",
-                type: "Post",
-                data: JSON.stringify([Fname, Mname, Lname, rating, comment, treatment]),
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    alert("success");
-                    location.href = '@Url.Content("~/Home/Index")';
-                },
-                error: function () { alert('error'); }
-            });
-        });
+        $(document).ready(function () {
+            $("#StarRating").keydown(filterNumeric);
     });
 </script>
 }

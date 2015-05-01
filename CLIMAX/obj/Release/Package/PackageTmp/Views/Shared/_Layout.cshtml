@@ -42,17 +42,18 @@
                             <li>@Html.ActionLink("Materials", "Index", "Materials")</li>
                             <li>@Html.ActionLink("Branches", "Index", "Branches")</li>
                             <li>@Html.ActionLink("Admin", "AdminIndex", "Account")</li>
-                            <li>@Html.ActionLink("Backup", "UploadDatabase", "Home")</li>
+                    
                         </ul>
                         </li>
                     </ul>
-                        <ul class="nav navbar-default layout">
-                            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-                            {
-                                @Html.AntiForgeryToken()
-                                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-                            }
-                        </ul>
+                <ul class="nav navbar-default layout">
+                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <li><a  href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                    }
+                </ul>
+
 </div>
         </div>
     </nav>

@@ -1,0 +1,3 @@
+AuditTrailID,EmployeeID,ActionDetail,RecordID,ActionTypeID,DateTimeOfAction
+1,1,Christia P Sanz,1,1,3/20/2015 5:08:00 AM
+2,1,patrick@yahoo.com,,40,3/20/2015 5:08:54 AM

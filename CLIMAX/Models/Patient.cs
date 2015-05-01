@@ -39,7 +39,7 @@ namespace CLIMAX.Models
         public string City { get; set; }
         //Contact Details
         [Display(Name="Landline No")]
-        [RegularExpression("^[0-9]{7}$",ErrorMessage="Invalid landline number")]
+        [RegularExpression("^[0-9]{1,2}-[0-9]{7}-[0-9]{3}$",ErrorMessage="Invalid landline number")]
         public string LandlineNo { get; set; }
         [RegularExpression("^09[0-9]{9}$", ErrorMessage = "Invalid cellphone number")]
         [Display(Name = "Cellphone No")]
@@ -70,6 +70,8 @@ namespace CLIMAX.Models
        
         public int BranchID { get; set; }
         public virtual Branch branch { get; set; }
+
+        public bool isEnabled { get; set; }
 
         public string FullName
         {

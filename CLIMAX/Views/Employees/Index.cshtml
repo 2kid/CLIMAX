@@ -23,7 +23,7 @@
                 </div>
                 @using (Html.BeginForm())
                 {
-                    @Html.TextBox("searchValue") <button type="submit" class="btn btn-default">SEARCH</button>
+                    @Html.TextBox("searchValue", "", new { @class="form-control"}) <button type="submit" class="btn btn-default">SEARCH</button>
                 }
                 <!-- /.panel-heading -->
                 <div class="panel-body">
@@ -65,14 +65,20 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.roleType.Type)
                                         </td>
-                                        @if (User.IsInRole("OIC"))
-                                        {
-                                            <td>
-                                                    @Html.ActionLink("Edit", "Edit", new { id = item.EmployeeID }, new { @class = "btn btn-default"})
-                                                    @Html.ActionLink("Details", "Details", new { id = item.EmployeeID }, new { @class = "btn btn-default" })
-                                                    @Html.ActionLink("Delete", "Delete", new { id = item.EmployeeID }, new { @class = "btn btn-default" })
-                                            </td>
-                                        }
+                                        <td>
+                                            @if (item.roleType.Type == "Therapist")
+                                            {
+                                                @Html.ActionLink("ViewHistory", "EmployeeHistory", new { id = item.EmployeeID }, new { @class = "btn btn-default" })
+                                            }
+                                            
+                                              @if (User.IsInRole("OIC"))
+                                            {
+                                                @Html.ActionLink("Edit", "Edit", new { id = item.EmployeeID }, new { @class = "btn btn-default" })
+                                                @Html.ActionLink("Details", "Details", new { id = item.EmployeeID }, new { @class = "btn btn-default" })
+                                                @Html.ActionLink("Disable", "Disable", new { id = item.EmployeeID }, new { @class = "btn btn-default" })
+                                            }
+                                        </td>
+
                                     </tr>
                                 }
                             </tbody>

@@ -22,6 +22,8 @@ namespace CLIMAX.Models
         public int BranchID { get; set; }
         public Branch branch { get; set; }
 
+        public bool isEnabled { get; set; }
+
         public bool isLowInStock {
             get
             {
@@ -52,7 +54,11 @@ namespace CLIMAX.Models
         public int Sold { get; set; }
         public int Balance { get; set; }
     }
-
+    public class InventoryMessageViewModel
+    {
+        public string Inventory { get; set; }
+        public string QtyLeft { get; set; }
+    }
 
 
 }

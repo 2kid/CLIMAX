@@ -22,7 +22,7 @@ namespace CLIMAX.Controllers
             if (currentUser != null && currentUser.BranchID != 0)
             {
                 List<Inventory> inventory = new List<Inventory>();
-                   inventory = db.Inventories.Include(a=>a.material).Where(r => r.BranchID == currentUser.BranchID).ToList();
+                   inventory = db.Inventories.Include(a=>a.material).Where(r => r.BranchID == currentUser.BranchID && r.isEnabled).ToList();
 
                    if (currentUser.BranchID == 1 && !string.IsNullOrEmpty(form["branchValue"]))
                    {
@@ -54,6 +54,10 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
+            if (!inventory.isEnabled)
+            {
+                return HttpNotFound();
+            }
             return View(inventory);
         }
 
@@ -63,7 +67,7 @@ namespace CLIMAX.Controllers
         {
               Employee currentUser = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee).SingleOrDefault();
               List<int> materialIDs = db.Inventories.Where(r => r.BranchID == currentUser.BranchID).Select(u => u.MaterialID).ToList();
-            ViewBag.Materials = new SelectList(db.Materials.Where(r=> !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
+            ViewBag.Materials = new SelectList(db.Materials.Where(r=> !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
             return View();
         }
 
@@ -85,11 +89,12 @@ namespace CLIMAX.Controllers
                     if(materialIDs.Contains(inventory.MaterialID))
                     {
                         ModelState.AddModelError("", "This branch already contains that material.");
-                        ViewBag.Materials = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
+                        ViewBag.Materials = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
                         return View(inventory);
                     }
                     inventory.BranchID = currentUser.BranchID;
                     inventory.LastDateUpdated = DateTime.Now;
+                    inventory.isEnabled = true;
                     db.Inventories.Add(inventory);
                     db.SaveChanges();
                     string material = db.Materials.Find(inventory.MaterialID).MaterialName;
@@ -102,7 +107,7 @@ namespace CLIMAX.Controllers
                     ModelState.AddModelError("", "You need to be the Officer in Charge to add an inventory item.");
                 }
             }
-            ViewBag.Materials = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID)).ToList(), "MaterialID", "MaterialName");
+            ViewBag.Materials = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
             return View(inventory);
         }
 
@@ -120,10 +125,14 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
+            if (!inventory.isEnabled)
+            {
+                return HttpNotFound();
+            }
             QtyInStock = inventory.QtyInStock;
 
-            ViewBag.Materials = new SelectList(db.Materials, "MaterialID", "MaterialName");
-            ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");
+            ViewBag.Materials = new SelectList(db.Materials.Where(r=>r.isEnabled).ToList(), "MaterialID", "MaterialName");
+            ViewBag.Branch = new SelectList(db.Branches.Where(r=>r.isEnabled).ToList(), "BranchID", "BranchName");
           
             return View(inventory);
         }
@@ -154,6 +163,7 @@ namespace CLIMAX.Controllers
                     }
                     inventory.BranchID = currentUser.BranchID;
                     inventory.LastDateUpdated = DateTime.Now;
+                    inventory.isEnabled = true;
                     db.Entry(inventory).State = EntityState.Modified;
                     string material = db.Materials.Find(inventory.MaterialID).MaterialName;
                     int auditId;
@@ -178,8 +188,8 @@ namespace CLIMAX.Controllers
                     ModelState.AddModelError("", "You need to be the Officer in Charge to add an inventory item.");
                 }
             }
-            ViewBag.Materials = new SelectList(db.Materials, "MaterialID", "MaterialName");
-            ViewBag.Branch = new SelectList(db.Branches, "BranchID", "BranchName");
+            ViewBag.Materials = new SelectList(db.Materials.Where(r=>r.isEnabled).ToList(), "MaterialID", "MaterialName");
+            ViewBag.Branch = new SelectList(db.Branches.Where(r=>r.isEnabled).ToList(), "BranchID", "BranchName");
           
             return View(inventory);
         }
@@ -187,7 +197,7 @@ namespace CLIMAX.Controllers
      
 
         [Authorize(Roles="OIC")]
-        // GET: Inventories/Delete/5
+        // GET: Inventories/Disable/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -202,16 +212,18 @@ namespace CLIMAX.Controllers
             return View(inventory);
         }
 
-        // POST: Inventories/Delete/5
+        // POST: Inventories/Disable/5
         [Authorize(Roles = "OIC")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DisableConfirmed(int id)
         {
             Inventory inventory = db.Inventories.Find(id);
-            db.Inventories.Remove(inventory);
+            inventory.isEnabled = false;
+            db.Entry(inventory).State = EntityState.Modified;
+
             string material = db.Materials.Find(inventory.MaterialID).MaterialName;
-            int auditId = Audit.CreateAudit(material, "Delete", "Inventory", User.Identity.Name);
+            int auditId = Audit.CreateAudit(material, "Disable", "Inventory", User.Identity.Name);
             Audit.CompleteAudit(auditId, inventory.InventoryID);
             db.SaveChanges();
             return RedirectToAction("Index");

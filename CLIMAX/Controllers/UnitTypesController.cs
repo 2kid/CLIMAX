@@ -18,7 +18,7 @@ namespace CLIMAX.Controllers
         // GET: UnitTypes
         public ActionResult Index()
         {
-            return View(db.UnitTypes.ToList());
+            return View(db.UnitTypes.Where(r=>r.isEnabled).ToList());
         }
 
         // GET: UnitTypes/Details/5
@@ -33,6 +33,11 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
+            if (!unitType.isEnabled)
+            {
+                return HttpNotFound();            
+            }
+             
             return View(unitType);
         }
 
@@ -53,6 +58,7 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
+                unitType.isEnabled = true;
                 db.UnitTypes.Add(unitType);
                 int auditId =  Audit.CreateAudit(unitType.Type, "Create", "UnitType",User.Identity.Name);
                 db.SaveChanges();
@@ -76,6 +82,10 @@ namespace CLIMAX.Controllers
             {
                 return HttpNotFound();
             }
+            if(unitType.isEnabled == false)
+            {
+                return HttpNotFound();
+            }
             return View(unitType);
         }
 
@@ -89,6 +99,7 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
+                unitType.isEnabled = true;
                 db.Entry(unitType).State = EntityState.Modified;
                 int auditId =  Audit.CreateAudit(unitType.Type, "Edit", "UnitType",User.Identity.Name);
                 Audit.CompleteAudit(auditId, unitType.UnitTypeID);
@@ -98,7 +109,7 @@ namespace CLIMAX.Controllers
             return View(unitType);
         }
 
-        // GET: UnitTypes/Delete/5
+        // GET: UnitTypes/Disable/5
         [Authorize(Roles = "Auditor,Admin")]
         public ActionResult Delete(int? id)
         {
@@ -114,15 +125,17 @@ namespace CLIMAX.Controllers
             return View(unitType);
         }
 
-        // POST: UnitTypes/Delete/5
+        // POST: UnitTypes/Disable/5
         [Authorize(Roles = "Auditor,Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DisableConfirmed(int id)
         {
             UnitType unitType = db.UnitTypes.Find(id);
-            db.UnitTypes.Remove(unitType);
-            int auditId =  Audit.CreateAudit(unitType.Type, "Delete", "UnitType",  User.Identity.Name);
+            unitType.isEnabled = false;
+            db.Entry(unitType).State = EntityState.Modified;
+        
+            int auditId =  Audit.CreateAudit(unitType.Type, "Disable", "UnitType",  User.Identity.Name);
             Audit.CompleteAudit(auditId, unitType.UnitTypeID);
             db.SaveChanges();
             return RedirectToAction("Index");

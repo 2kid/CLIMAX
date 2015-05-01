@@ -26,17 +26,9 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.TreatmentID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TreatmentID, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TreatmentID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.StepNo, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.StepNo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.StepNo, new { htmlAttributes = new { @class = "form-control" , min="0", max="999"} })
                 @Html.ValidationMessageFor(model => model.StepNo, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -50,9 +42,15 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", new { id = Model.TreatmentID })
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+<script>
+        $(document).ready(function () {
+            $("#StepNo").keydown(filterNumeric);
+        });
+
+</script>
 }

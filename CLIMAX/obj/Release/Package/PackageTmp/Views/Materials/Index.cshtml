@@ -41,8 +41,8 @@
             @Html.DisplayFor(modelItem => item.Price)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.MaterialID }) | 
-            @Html.ActionLink("Delete", "Delete", new { id=item.MaterialID })
+            @Html.ActionLink("Edit", "Edit", new { id = item.MaterialID }, new { @class = "btn btn-default"}) 
+            @Html.ActionLink("Delete", "Delete", new { id = item.MaterialID }, new { @class = "btn btn-default" })
         </td>
     </tr>
 }
