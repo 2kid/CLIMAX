@@ -1,1 +1,2 @@
-InventoryID,MaterialID,QtyInStock,QtyToAlert,LastDateUpdated,BranchID
+InventoryID,MaterialID,QtyInStock,QtyToAlert,LastDateUpdated,BranchID,isEnabled
+1,1,90,50,5/4/2015 9:32:19 PM,2

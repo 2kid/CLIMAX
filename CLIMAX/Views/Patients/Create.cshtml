@@ -18,7 +18,7 @@
                     <div class="panel-body">
                         <div class="dataTable_wrapper">
                             <div class="form-horizontal">
-                                @using (Html.BeginForm())
+                                @using (Html.BeginForm("Create", "Patients", FormMethod.Post, new { id = "patientForm"}))
                                 {
                                     @Html.AntiForgeryToken()
 
@@ -78,7 +78,7 @@
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.Height, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.EditorFor(model => model.Height, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.EditorFor(model => model.Height, new { htmlAttributes = new { @class = "form-control", placeholder = "ex. 5'10\"" } }) 
                                                 @Html.ValidationMessageFor(model => model.Height, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -86,7 +86,7 @@
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.Weight, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.EditorFor(model => model.Weight, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.EditorFor(model => model.Weight, new { htmlAttributes = new { @class = "form-control col-md-4", type = "number", min = "1", max = "999" } }) <span class="col-md-1">kg</span>
                                                 @Html.ValidationMessageFor(model => model.Weight, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -118,17 +118,19 @@
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.LandlineNo, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                <span class="col-md-1" style="font-size:x-large">
-                                                    @Html.DropDownList("areaCode",(IEnumerable<SelectListItem>)ViewBag.areaCode,"")
+                                                @Html.HiddenFor(model => model.LandlineNo)
+                                                <span class="col-md-2" style="font-size:x-large">
+                                                    @Html.DropDownList("areaCode", (IEnumerable<SelectListItem>)ViewBag.areaCode, "", new { @class = "col-md-12" })
                                                 </span>
-                                                <span class="col-md-4">
-                                                @Html.Editor("landlineNo", new { htmlAttributes = new { @class = "form-control" , maxlength="7"} })
-                                                </span>
-                                                <h3 class="col-md-1 margintop-0"> local</h3>
                                                 <span class="col-md-2">
-                                                @Html.Editor("extCode", new { htmlAttributes = new { @class = "form-control", maxlength="3" } })
+                                                @Html.Editor("landlineNo", new { htmlAttributes = new { @class = "form-control", maxlength = "7" } })
+                                                </span>
+                                                <h5 class="col-md-1 margintop-0"> local</h5>
+                                                <span class="col-md-1">
+                                                @Html.Editor("extCode", new { htmlAttributes = new { @class = "form-control", maxlength = "3" } })
                                                 </span>
                                                 (ex. 02 7263190 local 123)
+                                                <br />
                                                 @Html.ValidationMessageFor(model => model.LandlineNo, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -160,7 +162,7 @@
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.EmergencyContactNo, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.EditorFor(model => model.EmergencyContactNo, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.EditorFor(model => model.EmergencyContactNo, new { htmlAttributes = new { @class = "form-control", maxlength = "11" } })
                                                 @Html.ValidationMessageFor(model => model.EmergencyContactNo, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -204,7 +206,7 @@
                                         }
                                         <div class="form-group">
                                             <div class="col-md-offset-2 col-md-10">
-                                                <input type="submit" value="Create" class="btn btn-default" />
+                                                <input id="Create" type="button" value="Create" class="btn btn-default" />
                                             </div>
                                         </div>
                                     </div>
@@ -227,6 +229,21 @@
         $(document).ready(function () {
             $("#landlineNo").keydown(filterNumeric);
             $("#extCode").keydown(filterNumeric);
+            $("#EmergencyContactNo").keydown(filterNumeric);
+            $("#Create").click(function () {
+                var area = $("#areaCode").val();
+                var landline = $("#landlineNo").val();
+                var ext = $("#extCode").val();
+                if(area != "" || landline != "" || ext != "")
+                {
+                    $("#LandlineNo").val($("#areaCode") + '-' + $("#landlineNo").val() + "-" + $("#extCode").val());
+                }
+                else
+                {
+                    $("#LandlineNo").val("00-0000000-000");
+                }
+                $("#patientForm").submit();
+            });
             $(".date-picker").datepicker({
                 changeMonth: true,
                 changeYear: true,

@@ -1,3 +1,4 @@
-EmployeeID,LastName,FirstName,MiddleName,RoleTypeID,BranchID
+EmployeeID,LastName,FirstName,MiddleName,RoleTypeID,BranchID,isEnabled
 1,,sa,,CLIMAX.Models.RoleType,1
-2,Garcia,Patrick,J,CLIMAX.Models.RoleType,2
+2,Marzan,Moses,B,CLIMAX.Models.RoleType,2
+3,Rodriguez,Miguel,S,CLIMAX.Models.RoleType,2

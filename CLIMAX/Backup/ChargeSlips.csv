@@ -1,1 +1,3 @@
 ChargeSlipID,DateTimePurchased,DiscountRate,AmtDiscount,AmtDue,ModeOfPayment,AmtPayment,GiftCertificateAmt,GiftCertificateNo,CheckNo,CardType,PatientID,EmployeeID
+5/4/2015 9:32:56 PM,10,25,125,Cash,150,100,1001,,,1,3
+5/4/2015 10:07:58 PM,,0,500,Cash,1000,,,,,1,3

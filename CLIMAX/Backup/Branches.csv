@@ -1,0 +1,4 @@
+BranchID,BranchName,Location,ContactNo,isEnabled
+1,,sa,,CLIMAX.Models.RoleType,1
+2,Marzan,Moses,B,CLIMAX.Models.RoleType,2
+3,Rodriguez,Miguel,S,CLIMAX.Models.RoleType,2

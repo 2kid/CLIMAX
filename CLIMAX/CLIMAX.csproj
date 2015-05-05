@@ -38,6 +38,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PublishDatabases>false</PublishDatabases>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -60,6 +61,9 @@
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.105.0.1\lib\net4\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="Rotativa, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -130,6 +134,9 @@
     </Reference>
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="Twilio.Api">
+      <HintPath>..\packages\Twilio.4.0.0\lib\3.5\Twilio.Api.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
@@ -236,14 +243,14 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\aspnet-CLIMAX-20150121121039.mdf" />
-    <Content Include="App_Data\aspnet-CLIMAX-20150121121039_log.ldf">
-      <DependentUpon>aspnet-CLIMAX-20150121121039.mdf</DependentUpon>
+    <Content Include="App_Data\aspnet-CLIMAX-20150121121070.mdf" />
+    <Content Include="App_Data\aspnet-CLIMAX-20150121121070_log.ldf">
+      <DependentUpon>aspnet-CLIMAX-20150121121070.mdf</DependentUpon>
     </Content>
     <Content Include="Content\AdminLTE.min.css" />
     <Content Include="Content\animations.css" />
+    <Content Include="Content\Group copy 1 1.png" />
     <Content Include="Content\images\bg.jpg" />
-    <Content Include="Content\bg1.JPG" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-3.3.2-dist\bootstrap.css" />
@@ -275,70 +282,9 @@
     <Content Include="Content\images\ui-icons_ffd27a_256x240.png" />
     <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
     <Content Include="Content\images\user-icon.png" />
-    <Content Include="Content\img\aqua_dayDown.gif" />
-    <Content Include="Content\img\aqua_dayNormal.gif" />
-    <Content Include="Content\img\aqua_dayOver.gif" />
-    <Content Include="Content\img\armygreen_dayDown.gif" />
-    <Content Include="Content\img\armygreen_dayNormal.gif" />
-    <Content Include="Content\img\armygreen_dayOver.gif" />
-    <Content Include="Content\img\bananasplit_dayDown.gif" />
-    <Content Include="Content\img\bananasplit_dayNormal.gif" />
-    <Content Include="Content\img\bananasplit_dayOver.gif" />
-    <Content Include="Content\img\beige_dayDown.gif" />
-    <Content Include="Content\img\beige_dayNormal.gif" />
-    <Content Include="Content\img\beige_dayOver.gif" />
-    <Content Include="Content\img\boxBottomLeftCorner.png" />
-    <Content Include="Content\img\boxBottomRightCorner.png" />
-    <Content Include="Content\img\boxSideWallPx.gif" />
-    <Content Include="Content\img\boxSideWallPx.png" />
-    <Content Include="Content\img\boxTopLeftCorner.png" />
-    <Content Include="Content\img\boxTopPx.gif" />
-    <Content Include="Content\img\boxTopPx.png" />
-    <Content Include="Content\img\boxTopRightCorner.png" />
-    <Content Include="Content\img\closeButton_down.gif" />
-    <Content Include="Content\img\closeButton_normal.gif" />
-    <Content Include="Content\img\closeButton_over.gif" />
-    <Content Include="Content\img\deepblue_dayDown.gif" />
-    <Content Include="Content\img\deepblue_dayNormal.gif" />
-    <Content Include="Content\img\deepblue_dayOver.gif" />
-    <Content Include="Content\img\greenish_dayDown.gif" />
-    <Content Include="Content\img\greenish_dayNormal.gif" />
-    <Content Include="Content\img\greenish_dayOver.gif" />
-    <Content Include="Content\img\lightgreen_dayDown.gif" />
-    <Content Include="Content\img\lightgreen_dayNormal.gif" />
-    <Content Include="Content\img\lightgreen_dayOver.gif" />
-    <Content Include="Content\img\monthBackward_down.gif" />
-    <Content Include="Content\img\monthBackward_normal.gif" />
-    <Content Include="Content\img\monthBackward_over.gif" />
-    <Content Include="Content\img\monthForward_down.gif" />
-    <Content Include="Content\img\monthForward_normal.gif" />
-    <Content Include="Content\img\monthForward_over.gif" />
-    <Content Include="Content\img\ocean_blue_dayDown.gif" />
-    <Content Include="Content\img\ocean_blue_dayNormal.gif" />
-    <Content Include="Content\img\ocean_blue_dayOver.gif" />
-    <Content Include="Content\img\orange_dayDown.gif" />
-    <Content Include="Content\img\orange_dayNormal.gif" />
-    <Content Include="Content\img\orange_dayOver.gif" />
-    <Content Include="Content\img\peppermint_dayDown.gif" />
-    <Content Include="Content\img\peppermint_dayNormal.gif" />
-    <Content Include="Content\img\peppermint_dayOver.gif" />
-    <Content Include="Content\img\pink_dayDown.gif" />
-    <Content Include="Content\img\pink_dayNormal.gif" />
-    <Content Include="Content\img\pink_dayOver.gif" />
-    <Content Include="Content\img\purple_dayDown.gif" />
-    <Content Include="Content\img\purple_dayNormal.gif" />
-    <Content Include="Content\img\purple_dayOver.gif" />
-    <Content Include="Content\img\torqoise_dayDown.gif" />
-    <Content Include="Content\img\torqoise_dayNormal.gif" />
-    <Content Include="Content\img\torqoise_dayOver.gif" />
-    <Content Include="Content\img\yearBackward_down.gif" />
-    <Content Include="Content\img\yearBackward_normal.gif" />
-    <Content Include="Content\img\yearBackward_over.gif" />
-    <Content Include="Content\img\yearForward_down.gif" />
-    <Content Include="Content\img\yearForward_normal.gif" />
-    <Content Include="Content\img\yearForward_over.gif" />
     <Content Include="Content\jquery-ui-1.7.2.custom.css" />
     <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\Logo Demrstrata.png" />
     <Content Include="Content\Logstyle.css" />
     <Content Include="Content\Moses_custom.css" />
     <Content Include="Content\nivo-lightbox.css" />
@@ -477,6 +423,7 @@
     <Content Include="Views\Surveys\ConfirmCode.cshtml" />
     <Content Include="Views\Account\Confirm.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Home\UploadDatabase.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

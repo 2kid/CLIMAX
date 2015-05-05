@@ -19,9 +19,9 @@ namespace CLIMAX.Controllers
         // GET: Histories
         public ActionResult Index(int id)
         {
-            var history = db.History.Include(h => h.employee).Include(h => h.patient).Where(r=>r.PatientID == id);
+            var history = db.History.Include(h => h.employee).Include(h => h.patient).Where(r=>r.PatientID == id).ToList();
             ViewBag.PatientID = id;
-            return View(history.ToList());
+            return View(history);
         }
 
         // GET: Histories/Details/5

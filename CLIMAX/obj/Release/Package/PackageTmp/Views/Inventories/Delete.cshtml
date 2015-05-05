@@ -1,12 +1,12 @@
 ﻿@model CLIMAX.Models.Inventory
 
 @{
-    ViewBag.Title = "Inventory - Delete";
+    ViewBag.Title = "Inventory - Disable";
 }
 
 
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Are you sure you want to Disable this?</h3>
 <div>
     <h4>Inventory</h4>
     <hr />
@@ -41,7 +41,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <input type="submit" value="Disable" class="btn btn-default" /> |
             @Html.ActionLink("Back to List", "Index")
         </div>
     }

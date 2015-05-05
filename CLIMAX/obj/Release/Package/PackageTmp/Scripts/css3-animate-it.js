@@ -331,14 +331,14 @@
     
     // Clear any existing timeout for this id.
     data.id && clearTimeout( data.id );
-    delete data.id;
+    Disable data.id;
     
     // Clean up when necessary.
     function cleanup() {
       if ( jquery_data_key ) {
         elem.removeData( jquery_data_key );
       } else if ( id ) {
-        delete cache[ id ];
+        Disable cache[ id ];
       }
     };
     

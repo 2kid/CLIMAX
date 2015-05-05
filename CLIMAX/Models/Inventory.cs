@@ -38,7 +38,7 @@ namespace CLIMAX.Models
 
         public string getColumns()
         {
-            return "InventoryID,MaterialID,QtyInStock,QtyToAlert,LastDateUpdated,BranchID";
+            return "InventoryID,MaterialID,QtyInStock,QtyToAlert,LastDateUpdated,BranchID,isEnabled";
         }
 
     }

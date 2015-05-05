@@ -4,11 +4,6 @@
     ViewBag.Title = "History - Index";
 }
 
-
-
-<p>
-    @Html.ActionLink("Create New", "Create", new { id = ViewBag.PatientID})
-</p>
 <table class="table">
     <tr>
         <th>
@@ -18,10 +13,10 @@
           Patient
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.SessionNo)
+            @Html.DisplayNameFor(model => model.treatment.TreatmentName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TreatmentID)
+            @Html.DisplayNameFor(model => model.ChargeSlipID)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.DateTimeStart)
@@ -29,7 +24,6 @@
         <th>
             @Html.DisplayNameFor(model => model.DateTimeEnd)
         </th>
-        <th></th>
     </tr>
 
 @foreach (var item in Model) {
@@ -41,23 +35,33 @@
             @Html.DisplayFor(modelItem => item.patient.FullName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.SessionNo)
+            @Html.DisplayFor(modelItem => item.treatment.TreatmentName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.TreatmentID)
+            @Html.DisplayFor(modelItem => item.ChargeSlipID)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.DateTimeStart)
         </td>
+       
+@if(item.DateTimeEnd == null && (User.IsInRole("OIC")||User.IsInRole("Auditor")))
+            {
         <td>
-            @Html.DisplayFor(modelItem => item.DateTimeEnd)
+          
+            @Html.ActionLink("Finish Treatment", "Confirm", new { id = item.HistoryID }, new { @class = "btn btn-default" })
+              
         </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.HistoryID }, new { @class = "btn btn-default" })
-            @Html.ActionLink("Details", "Details", new { id = item.HistoryID }, new { @class = "btn btn-default" })
-            @Html.ActionLink("Delete", "Delete", new { id = item.HistoryID }, new { @class = "btn btn-default" })
-        </td>
+            }
+else
+{
+    <td>
+
+        @Html.DisplayFor(modelItem => item.DateTimeEnd)
+
+    </td>
+}
     </tr>
 }
 
 </table>
+@Html.ActionLink("Back to List","Index","Patients")

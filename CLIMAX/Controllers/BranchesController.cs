@@ -19,7 +19,7 @@ namespace CLIMAX.Controllers
         public ActionResult Index()
         {
             
-            return View(db.Branches.ToList());
+            return View(db.Branches.Where(r => r.isEnabled).ToList());
         }
 
         // GET: Branches/Details/5
@@ -72,6 +72,10 @@ namespace CLIMAX.Controllers
             }
             Branch branch = db.Branches.Find(id);
             if (branch == null)
+            {
+                return HttpNotFound();
+            }
+            if (branch.isEnabled == false)
             {
                 return HttpNotFound();
             }

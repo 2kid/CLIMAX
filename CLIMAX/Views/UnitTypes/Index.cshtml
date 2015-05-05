@@ -22,10 +22,17 @@
         <td>
             @Html.DisplayFor(modelItem => item.Type)
         </td>
+        @if(User.IsInRole("Auditor")||User.IsInRole("Admin"))
+        { 
         <td>
             @Html.ActionLink("Edit", "Edit", new { id = item.UnitTypeID }, new { @class="btn btn-primary"}) |
-            @Html.ActionLink("Disable", "Disable", new { id=item.UnitTypeID },null)
+            @Html.ActionLink("Delete", "Delete", new { id=item.UnitTypeID },null)
         </td>
+        }
+        else
+        {
+            <td></td>
+        }
     </tr>
 }
 

@@ -10,6 +10,10 @@ using CLIMAX.Models;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Web.UI.WebControls;
+using System.Web.UI;
+using System.Text;
 
 namespace CLIMAX.Controllers
 {
@@ -19,21 +23,82 @@ namespace CLIMAX.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: ChargeSlips
-        public ActionResult Index(FormCollection form)
+        public ActionResult Index(string paymentMethod, string searchValue, string DateTimeStart, string DateTimeEnd)
         {
-          List<SelectListItem> paymentMethods  = new List<SelectListItem>()
+            List<SelectListItem> paymentMethods = new List<SelectListItem>()
             {
                 new SelectListItem(){Text = "Cash", Value = "Cash"},
                 new SelectListItem(){Text = "Check", Value = "Check"},
                 new SelectListItem(){Text = "Credit Card", Value = "Credit Card"}
             };
-            
-            ViewBag.PaymentMethod = new SelectList(paymentMethods,"Value","Text", form["PaymentMethod"]);
+
+            ViewBag.PaymentMethod = new SelectList(paymentMethods, "Value", "Text", paymentMethod);
             List<ChargeSlip> chargeslip = db.ChargeSlips.ToList();
             DateTime start;
             DateTime end;
-            
-            if(!string.IsNullOrEmpty(form["PaymentMethod"]))
+
+            if (!string.IsNullOrEmpty(paymentMethod))
+            {
+                chargeslip = chargeslip.Where(r => r.ModeOfPayment == paymentMethod).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                chargeslip = chargeslip.Where(r => r.GiftCertificateNo != null && r.GiftCertificateNo.Contains(searchValue)).ToList();
+
+                ViewBag.GCNumber = searchValue;
+            }
+
+            if ((DateTime.TryParse(DateTimeStart, out start) && DateTime.TryParse(DateTimeEnd, out end)))
+            {
+
+                end = end.AddDays(1);
+                end = end.Subtract(new TimeSpan(1));
+
+                ViewBag.startDate = start.ToString("yyyy-MM-dd");
+                ViewBag.endDate = end.ToString("yyyy-MM-dd");
+
+                if (!Regex.IsMatch(start.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
+                {
+                    ModelState.AddModelError("DateTimeStart", "The field Date start is invalid");
+                    return View(chargeslip);
+                }
+
+
+                if (!Regex.IsMatch(end.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
+                {
+                    ModelState.AddModelError("DateTimeEnd", "The field Date end is invalid");
+                    return View(chargeslip);
+                }
+
+                if (end.CompareTo(start) == -1)
+                {
+                    ModelState.AddModelError("", "Date Start cannot be after Date End");
+                    return View(chargeslip);
+                }
+                chargeslip = chargeslip.Where(r => end.CompareTo(r.DateTimePurchased) == 1 && r.DateTimePurchased.CompareTo(start) == 1).ToList();         
+            }
+
+            return View(chargeslip);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(int id, FormCollection form)
+        {
+            List<SelectListItem> paymentMethods = new List<SelectListItem>()
+            {
+                new SelectListItem(){Text = "Cash", Value = "Cash"},
+                new SelectListItem(){Text = "Check", Value = "Check"},
+                new SelectListItem(){Text = "Credit Card", Value = "Credit Card"}
+            };
+
+            ViewBag.PaymentMethod = new SelectList(paymentMethods, "Value", "Text", form["PaymentMethod"]);
+            List<ChargeSlip> chargeslip = db.ChargeSlips.ToList();
+            DateTime start;
+            DateTime end;
+
+            if (!string.IsNullOrEmpty(form["PaymentMethod"]))
             {
                 chargeslip = chargeslip.Where(r => r.ModeOfPayment == form["PaymentMethod"]).ToList();
             }
@@ -45,7 +110,7 @@ namespace CLIMAX.Controllers
                 ViewBag.GCNumber = form["searchValue"];
             }
 
-            if ((DateTime.TryParse(form["DateTimeStart"],out start) && DateTime.TryParse(form["DateTimeEnd"],out end)))
+            if ((DateTime.TryParse(form["DateTimeStart"], out start) && DateTime.TryParse(form["DateTimeEnd"], out end)))
             {
                 if (!Regex.IsMatch(start.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
                 {
@@ -61,7 +126,7 @@ namespace CLIMAX.Controllers
                     ModelState.AddModelError("DateTimeEnd", "The field Date end is invalid");
                     return View(chargeslip);
                 }
-               
+
                 if (end.CompareTo(start) == -1)
                 {
                     ModelState.AddModelError("", "Date Start cannot be after Date End");
@@ -72,6 +137,72 @@ namespace CLIMAX.Controllers
                 ViewBag.startDate = start.ToString("yyyy-MM-dd");
                 ViewBag.endDate = end.ToString("yyyy-MM-dd");
             }
+
+            ChargeSlip cs = db.ChargeSlips.Find(id);          
+                SurveyCode code = db.SurveyCode.Where(r => r.ChargeSlipID == cs.ChargeSlipID).Single();
+
+                System.Web.HttpContext.Current.Response.ClearContent();
+                System.Web.HttpContext.Current.Response.Buffer = true;
+                System.Web.HttpContext.Current.Response.AddHeader(
+               "content-disposition", string.Format("attachment; filename={0}", "Reports-"+DateTime.Now.ToString("yyyy-MM-dd")+".xls"));
+                System.Web.HttpContext.Current.Response.ContentType = "application/vnd.ms-excel";
+                System.Web.HttpContext.Current.Response.Charset = "UTF-8";
+                System.Web.HttpContext.Current.Response.ContentEncoding = System.Text.Encoding.UTF8;
+                System.Web.HttpContext.Current.Response.Charset = "";
+
+                using (StringWriter sw = new StringWriter())
+                {
+                    using (HtmlTextWriter htw = new HtmlTextWriter(sw))
+                    {
+                       // gv.RenderControl(htw);
+                        System.Web.HttpContext.Current.Response.Output.Write(sw.ToString());
+                        System.Web.HttpContext.Current.Response.Flush();
+                        System.Web.HttpContext.Current.Response.Write("Dermstrata");
+                        System.Web.HttpContext.Current.Response.Write("&nbsp;&nbsp;&nbsp;<span>" + cs.DateTimePurchased + "</span><br>Patient: " + cs.Patient.FullName + "<br>Therapist:" + cs.Employee.FullName);
+
+                        double subTotal = 0;
+                        StringBuilder Content = new StringBuilder();
+                        Content.Append("<table><tr><th>Quantity</th><th>Item</th><th>Amount</th></tr>");
+                        foreach (Session_ChargeSlip session in db.Session_ChargeSlip.Include(a => a.treatment).Where(r => r.ChargeSlipID == id).ToList())
+                        {
+                            subTotal += session.treatment.TreatmentPrice * session.Qty;
+                           Content.Append("<tr><td>"+ session.Qty +"</td><td>"+session.treatment.TreatmentName+"</td><td>"+ session.treatment.TreatmentPrice * session.Qty+"</td></tr>");
+                        }
+                        foreach (Medicine_ChargeSlip medicine in db.Medicine_ChargeSlip.Include(a => a.Materials).Where(r => r.ChargeSlipID == id).ToList())
+                        {
+                           subTotal += medicine.Materials.Price * medicine.Qty;
+                            Content.Append("<tr><td>" + medicine.Qty + "</td><td>" + medicine.Materials.MaterialName + "</td><td>" + medicine.Materials.Price * medicine.Qty + "</td></tr>");
+                        }
+                        Content.Append("<tr><td>Sub-Total</td><td></td><td>"+ subTotal + "</td></tr>");
+                        Content.Append("<tr><td>Discount</td><td></td><td>" + cs.AmtDiscount + "</td></tr>");
+                        Content.Append("<tr><td>Gift Certificate</td><td></td><td>" + cs.GiftCertificateAmt + "</td></tr>");
+                        Content.Append("<tr><th>Total</th><th></th><th>" + cs.AmtDue + "</th></tr>");                   
+                        Content.Append("<tr><th>Payment</th><th></th><th></th></tr>");
+                        if (cs.ModeOfPayment == "Cash")
+                        {
+                            Content.Append("<tr><th>Cash</th><th></th><th>" + cs.AmtPayment + "</th></tr>");
+                        }
+                        else if(cs.ModeOfPayment == "Check")
+                        {
+                            Content.Append("<tr><td>CheckNo</td><td>"+cs.CheckNo+"</td><td></td></tr>");
+                            Content.Append("<tr><th>Check Amount</th><th></th><th>" + cs.AmtPayment + "</th></tr>");
+                        }
+                        else
+                        {
+                            Content.Append("<tr><td>Card Type</td><td>" + cs.CardType + "</td><td></td></tr>");
+                            Content.Append("<tr><td>Credit Amount</td><td></td><td>" + cs.AmtPayment + "</td></tr>");
+                        }
+                        Content.Append("<tr><td>Change</td><td></td><td>" + (cs.AmtPayment - cs.AmtDue) + "</th></tr>");
+
+                        System.Web.HttpContext.Current.Response.Write(Content);
+                        System.Web.HttpContext.Current.Response.Write("<br>Number:" + code.SurveyCodeID + "&nbsp;&nbsp;&nbsp; Security Code:" + code.Code);
+                        System.Web.HttpContext.Current.Response.Write(@"<br><Table><tr><td><img src=""https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-xpa1/v/t1.0-9/11209466_1613806435529994_6640960158631838574_n.jpg?oh=cc41af819a8323c5a5300ef64b7d4843&oe=55CFE1FE&__gda__=1440035476_d351330cfc1a374f945f62f68735be3a"" \></td></tr></Table>");                    
+                        System.Web.HttpContext.Current.Response.End();
+                    }
+                }
+
+            //    return new EmptyResult();
+            //}
 
             return View(chargeslip);
         }
@@ -91,13 +222,9 @@ namespace CLIMAX.Controllers
             return View(chargeSlip);
         }
 
-        static List<TreatmentsViewModel> treatmentOrders;
-        static List<MaterialsViewModel> materialOrders;
 
-        [Authorize(Roles="OIC")]
-        public ActionResult Create()
+        void SetChoices()
         {
-            
             ViewBag.PaymentMethod = new List<SelectListItem>()
             {
                 new SelectListItem(){Text = "Cash", Value = "Cash"},
@@ -109,13 +236,25 @@ namespace CLIMAX.Controllers
             {
                 new SelectListItem(){Text = "Mastercard", Value = "Mastercard"},
                 new SelectListItem(){Text = "Visa", Value = "Visa"},
-                new SelectListItem(){Text = "", Value = ""}
             };
 
-            ViewBag.Patients = new SelectList(db.Patients.Where(r=>r.isEnabled).ToList(), "PatientID", "FullName");
-            ViewBag.Therapists = new SelectList(db.Employees.Include(a => a.roleType).Where(r => r.roleType.Type == "Therapist").ToList(), "EmployeeID", "FullName");
-            ViewBag.Treatments = new SelectList(db.Treatments.Where(r=>r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
-            ViewBag.Medicines = new SelectList(db.Materials.Where(r=>r.isEnabled).ToList(), "MaterialID", "MaterialName");
+            ViewBag.Patients = new SelectList(db.Patients.Where(r => r.isEnabled).ToList(), "PatientID", "FullName");
+
+            List<int> histories = db.History.Where(r => r.DateTimeEnd == null).Select(u=>u.EmployeeID).ToList();
+            ViewBag.Therapists = new SelectList(db.Employees.Include(a => a.roleType).Where(r => r.roleType.Type == "Therapist" && !histories.Contains(r.EmployeeID)).ToList(), "EmployeeID", "FullName");
+          
+           
+        }
+
+        static List<TreatmentsViewModel> treatmentOrders;
+        static List<MaterialsViewModel> materialOrders;
+
+        [Authorize(Roles = "OIC")]
+        public ActionResult Create()
+        {
+            SetChoices();
+            ViewBag.Treatments = new SelectList(db.Treatments.Where(r => r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
+            ViewBag.Medicines = new SelectList(db.Materials.Where(r => r.isEnabled).ToList(), "MaterialID", "MaterialName");
             ViewBag.TreatmentOrders = treatmentOrders = new List<TreatmentsViewModel>();
             ViewBag.MaterialOrders = materialOrders = new List<MaterialsViewModel>();
             return View();
@@ -124,24 +263,13 @@ namespace CLIMAX.Controllers
         // POST: ChargeSlips/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "OIC")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "ChargeSlipID,PatientID,EmployeeID,DiscountRate,AmtDiscount,AmtDue,ModeOfPayment,AmtPayment,GiftCertificateAmt,GiftCertificateNo,CheckNo,CardType")] ChargeSlip chargeSlip, FormCollection form)
         {
-            ViewBag.PaymentMethod = new List<SelectListItem>()
-            {
-                new SelectListItem(){Text = "Cash", Value = "Cash"},
-                new SelectListItem(){Text = "Check", Value = "Check"},
-                new SelectListItem(){Text = "Credit Card", Value = "Credit Card"}
-            };
-            ViewBag.CardType = new List<SelectListItem>()
-            {
-                new SelectListItem(){Text = "Mastercard", Value = "Mastercard"},
-                new SelectListItem(){Text = "Visa", Value = "Visa"},
-                new SelectListItem(){Text = "", Value = ""}
-            };
-            ViewBag.Patients = new SelectList(db.Patients.Where(r=>r.isEnabled).ToList(), "PatientID", "FullName", chargeSlip.PatientID);
-            ViewBag.Therapists = new SelectList(db.Employees.Include(a => a.roleType).Where(r => r.roleType.Type == "Therapist").ToList(), "EmployeeID", "FullName", chargeSlip.EmployeeID);
+            SetChoices();
+
             if (materialOrders == null)
             {
                 materialOrders = new List<MaterialsViewModel>();
@@ -164,7 +292,7 @@ namespace CLIMAX.Controllers
                         ChargeSlip duplicate = db.ChargeSlips.Where(r => r.GiftCertificateNo == chargeSlip.GiftCertificateNo).SingleOrDefault();
                         if (duplicate != null)
                         {
-                            ModelState.AddModelError("", "The Gift Certificate has already been used.");
+                            ModelState.AddModelError("", "The Gift Certificate has already been taken.");
                             ViewBag.Treatments = new SelectList(db.Treatments.Where(r => r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
                             ViewBag.Medicines = new SelectList(db.Materials.Where(r => r.isEnabled).ToList(), "MaterialID", "MaterialName");
                             ViewBag.TreatmentOrders = treatmentOrders;
@@ -173,7 +301,7 @@ namespace CLIMAX.Controllers
                         }
                     }
 
-                    if(chargeSlip.AmtPayment < chargeSlip.AmtDue)
+                    if (chargeSlip.AmtPayment < chargeSlip.AmtDue)
                     {
                         ModelState.AddModelError("", "The amount paid cannot be less than the amount due");
                         ViewBag.Treatments = new SelectList(db.Treatments.Where(r => r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
@@ -203,6 +331,19 @@ namespace CLIMAX.Controllers
                         return View(chargeSlip);
                     }
 
+                    if (chargeSlip.ModeOfPayment == "Cash" || chargeSlip.ModeOfPayment == "Check")
+                    {
+                        chargeSlip.CardType = "";
+                    }
+                    if (treatmentOrders.Count == 0 && materialOrders.Count == 0)
+                    {
+                        ModelState.AddModelError("", "You are not buying anything.");
+                        ViewBag.Treatments = new SelectList(db.Treatments.Where(r => r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
+                        ViewBag.Medicines = new SelectList(db.Materials.Where(r => r.isEnabled).ToList(), "MaterialID", "MaterialName");
+                        ViewBag.TreatmentOrders = treatmentOrders;
+                        ViewBag.MaterialOrders = materialOrders;
+                        return View(chargeSlip);
+                    }
                     chargeSlip.DateTimePurchased = DateTime.Now;
                     db.ChargeSlips.Add(chargeSlip);
                     string patient = db.Patients.Find(chargeSlip.PatientID).FullName;
@@ -244,7 +385,7 @@ namespace CLIMAX.Controllers
                                 DateTimeStart = chargeSlip.DateTimePurchased,
                                 ChargeSlipID = chargeSlip.ChargeSlipID
                             };
-                         
+
                             db.History.Add(newHistory);
                             auditId = Audit.CreateAudit(patient, "Create", "History", User.Identity.Name);
                             await db.SaveChangesAsync();
@@ -280,6 +421,7 @@ namespace CLIMAX.Controllers
                         db.SurveyCode.Add(code);
                         await db.SaveChangesAsync();
 
+
                     }
                     return RedirectToAction("Index");
                 }
@@ -303,46 +445,46 @@ namespace CLIMAX.Controllers
                         if (branchId != 0)
                         {
                             TreatmentsViewModel treatment = db.Treatments.Where(r => r.TreatmentsID == TreatmentID).Select(u => new TreatmentsViewModel() { TreatmentName = u.TreatmentName, TreatmentsID = u.TreatmentsID, Qty = TreatmentQty, TotalPrice = TreatmentQty * u.TreatmentPrice }).Single();
-                        
-                             int qtyRequested = 0;
-                             List<MaterialList> materialList = db.MaterialList.Where(r => r.TreatmentID == treatment.TreatmentsID).ToList();
-                                foreach (MaterialList material_treatment in materialList)
+
+                            int qtyRequested = 0;
+                            List<MaterialList> materialList = db.MaterialList.Where(r => r.TreatmentID == treatment.TreatmentsID).ToList();
+                            foreach (MaterialList material_treatment in materialList)
+                            {
+                                Inventory inventory = db.Inventories.Include(a => a.material).Where(r => r.MaterialID == material_treatment.MaterialID && r.BranchID == branchId).SingleOrDefault();
+                                if (inventory != null)
                                 {
-                                    Inventory inventory = db.Inventories.Include(a=>a.material).Where(r => r.MaterialID == material_treatment.MaterialID && r.BranchID == branchId).SingleOrDefault();
-                                    if (inventory != null)
+                                    qtyRequested = treatment.Qty * material_treatment.Qty;
+                                    MaterialsViewModel additionalMaterial = materialOrders.Where(r => r.MaterialID == material_treatment.MaterialID).SingleOrDefault();
+                                    if (additionalMaterial != null)
+                                        qtyRequested += additionalMaterial.Qty;
+
+                                    if (inventory.QtyInStock < qtyRequested)
                                     {
-                                        qtyRequested = treatment.Qty * material_treatment.Qty;
-                                      MaterialsViewModel additionalMaterial = materialOrders.Where(r => r.MaterialID == material_treatment.MaterialID).SingleOrDefault();
-                                      if (additionalMaterial != null)
-                                          qtyRequested += additionalMaterial.Qty;
-   
-                                        if(inventory.QtyInStock < qtyRequested)
-                                        {
-                                            ModelState.AddModelError("", "Cannot add treatment. The branch has insufficient stock of \""+ inventory.material.MaterialName + "\".");
-                                            ViewBag.MaterialOrders = materialOrders;
-                                            ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
-                                            ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID) && r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
-                                            ViewBag.TreatmentOrders = treatmentOrders;
-                                            return View(chargeSlip);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        ModelState.AddModelError("", "Cannot add item. This treatment requires \"" + inventory.material.MaterialName  +"\" which has not been added in this branch's inventory.");
+                                        ModelState.AddModelError("", "Cannot add treatment. The branch has insufficient stock of \"" + inventory.material.MaterialName + "\".");
                                         ViewBag.MaterialOrders = materialOrders;
                                         ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
                                         ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID) && r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
                                         ViewBag.TreatmentOrders = treatmentOrders;
                                         return View(chargeSlip);
                                     }
+                                }
+                                else
+                                {
+                                    ModelState.AddModelError("", "Cannot add item. This treatment requires \"" + material_treatment.material.MaterialName + "\" which has not been added in this branch's inventory.");
+                                    ViewBag.MaterialOrders = materialOrders;
+                                    ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
+                                    ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID) && r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
+                                    ViewBag.TreatmentOrders = treatmentOrders;
+                                    return View(chargeSlip);
+                                }
                             }
-                                treatmentOrders.Add(treatment);
-                                //remove already put treatments from the options
-                                treatmentIDs.Add(TreatmentID);
-                        }     
+                            treatmentOrders.Add(treatment);
+                            //remove already put treatments from the options
+                            treatmentIDs.Add(TreatmentID);
+                        }
                     }
                 }
-                
+
                 ViewBag.MaterialOrders = materialOrders;
                 ViewBag.Medicines = new SelectList(db.Materials.Where(r => !materialIDs.Contains(r.MaterialID) && r.isEnabled).ToList(), "MaterialID", "MaterialName");
                 ViewBag.Treatments = new SelectList(db.Treatments.Where(r => !treatmentIDs.Contains(r.TreatmentsID) && r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
@@ -456,7 +598,7 @@ namespace CLIMAX.Controllers
             ViewBag.Treatments = new SelectList(db.Treatments.Where(r => r.isEnabled).ToList(), "TreatmentsID", "TreatmentName");
             ViewBag.Medicines = new SelectList(db.Materials.Where(r => r.isEnabled).ToList(), "MaterialID", "MaterialName");
             ViewBag.TreatmentOrders = treatmentOrders;
-            ViewBag.MaterialOrders = materialOrders;       
+            ViewBag.MaterialOrders = materialOrders;
             return View(chargeSlip);
         }
 

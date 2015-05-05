@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Web.UI.WebControls;
 using System.IO;
 using System.Web.UI;
+using System.Text;
 
 namespace CLIMAX.Controllers
 {
@@ -21,15 +22,25 @@ namespace CLIMAX.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private static int employeeID;
         private static string employeeName;
-        private static bool isPDF = false;
-        public ActionResult GeneratePDFPatients(string reportString, int BranchID)//Reports report)
-        {
-            var datasource = db.Employees.ToList(); // Your Data Source
 
-            if (datasource != null)
+        public ActionResult GenerateExcelReports(string reportType)//, int BranchID)//Reports report)
+        {
+            GridView gv = new GridView();
+            if (reportType == "Sales Report")
             {
-                var gv = new GridView();
-                gv.DataSource = datasource;
+                gv.DataSource = chargeSlip;
+            }
+            else if (reportType == "Summary Report")
+            {
+                gv.DataSource = summaryReport;
+            }
+            else
+            {
+                gv.DataSource = iReport;
+            }
+
+            if (gv.DataSource != null)
+            {
                 gv.DataBind();
 
                 System.Web.HttpContext.Current.Response.ClearContent();
@@ -48,6 +59,62 @@ namespace CLIMAX.Controllers
                         gv.RenderControl(htw);
                         System.Web.HttpContext.Current.Response.Output.Write(sw.ToString());
                         System.Web.HttpContext.Current.Response.Flush();
+
+                        StringBuilder Content = new StringBuilder();
+                        double totalSales = 0;
+                        double totalDiscount = 0;
+                        double totalGiftCert = 0;
+                        double totalRevenueTreatment = 0;
+                        double totalRevenueMedicines = 0;
+                        foreach (ChargeSlipContainerViewModel container in chargeSlip)
+                        {
+                            ChargeSlip cs = db.ChargeSlips.Find(container.ChargeSlipID);
+                            Content.Append("<br /><table><tr><td>Patient: </td><td>" + cs.Patient.FullName + "</td><td>" + cs.DateTimePurchased + "</td></tr><tr><td>Therapist: </td><td>" + cs.Employee.FullName + "</td><td></td></tr>");
+
+                            if (cs.GiftCertificateAmt != null)
+                                totalGiftCert += cs.GiftCertificateAmt.Value;
+                            totalSales += cs.AmtDue;
+                            if (cs.AmtDiscount != null)
+                                totalDiscount += cs.AmtDiscount.Value;
+                            double subTotal = 0;
+                            Content.Append("<tr><th>Quantity</th><th>Item</th><th>Amount</th></tr>");
+                            foreach (Session_ChargeSlip session in db.Session_ChargeSlip.Include(a => a.treatment).Where(r => r.ChargeSlipID == cs.ChargeSlipID).ToList())
+                            {
+                                subTotal += session.treatment.TreatmentPrice * session.Qty;
+                                Content.Append("<tr><td>" + session.Qty + "</td><td>" + session.treatment.TreatmentName + "</td><td>" + session.treatment.TreatmentPrice * session.Qty + "</td></tr>");
+                                totalRevenueTreatment += (session.treatment.TreatmentPrice * session.Qty);
+                            }
+                            foreach (Medicine_ChargeSlip medicine in db.Medicine_ChargeSlip.Include(a => a.Materials).Where(r => r.ChargeSlipID == cs.ChargeSlipID).ToList())
+                            {
+                                subTotal += medicine.Materials.Price * medicine.Qty;
+                                Content.Append("<tr><td>" + medicine.Qty + "</td><td>" + medicine.Materials.MaterialName + "</td><td>" + medicine.Materials.Price * medicine.Qty + "</td></tr>");
+                                totalRevenueMedicines += (medicine.Materials.Price * medicine.Qty);
+                            }
+                            Content.Append("<tr><td>Sub-Total</td><td></td><td>" + subTotal + "</td></tr>");
+                            Content.Append("<tr><td>Discount</td><td></td><td>" + cs.AmtDiscount + "</td></tr>");
+                            Content.Append("<tr><td>Gift Certificate</td><td></td><td>" + cs.GiftCertificateAmt + "</td></tr>");
+                            Content.Append("<tr><th>Total</th><th></th><th>" + cs.AmtDue + "</th></tr>");
+                            Content.Append("<tr><th>Payment</th><th></th><th></th></tr>");
+                            if (cs.ModeOfPayment == "Cash")
+                            {
+                                Content.Append("<tr><th>Cash</th><th></th><th>" + cs.AmtPayment + "</th></tr>");
+                            }
+                            else if (cs.ModeOfPayment == "Check")
+                            {
+                                Content.Append("<tr><td>CheckNo</td><td>" + cs.CheckNo + "</td><td></td></tr>");
+                                Content.Append("<tr><th>Check Amount</th><th></th><th>" + cs.AmtPayment + "</th></tr>");
+                            }
+                            else
+                            {
+                                Content.Append("<tr><td>Card Type</td><td>" + cs.CardType + "</td><td></td></tr>");
+                                Content.Append("<tr><td>Credit Amount</td><td></td><td>" + cs.AmtPayment + "</td></tr>");
+                            }
+                            Content.Append("<tr><td>Change</td><td></td><td>" + (cs.AmtPayment - cs.AmtDue) + "</th></tr>");
+                        }
+                        System.Web.HttpContext.Current.Response.Write("<h1>Dermstrata</h1><br />Total Revenue Treatments: " + totalRevenueTreatment + "<br />Total Revenue Medicines: " + totalRevenueMedicines + "<br />Total Discount: " + totalDiscount + "<br />Total Gift Certificate: " + totalGiftCert + "<br />Total Sales: " + totalSales);
+
+                        System.Web.HttpContext.Current.Response.Write(Content);
+
                         System.Web.HttpContext.Current.Response.End();
                     }
                 }
@@ -56,33 +123,24 @@ namespace CLIMAX.Controllers
             }
 
             return View();
-            //isPDF = true;
-            //employeeName = db.Employees.Find(employeeID).FullName;
-            //return new Rotativa.ActionAsPdf("Index", new { reportString = reportString, BranchID = BranchID });
         }
-
-        [AllowAnonymous]
+        static List<ChargeSlipContainerViewModel> chargeSlip;
+        static SummaryReportContainerViewModel summaryReport;
+        static List<InventoryReportsViewModel> iReport;
         public ActionResult Index(string reportString, int BranchID, FormCollection form)
         {
-           
+
             Reports report = JsonConvert.DeserializeObject<Reports>(reportString);
             int auditId;
             string reportType = db.ReportTypes.Find(report.ReportTypeID).Type;
-            if (isPDF)
-            {
-                report.EmployeeID = employeeID;
-                string user = db.Users.Where(r => r.EmployeeID == employeeID).Select(u => u.UserName).Single();
-                //add audit
-                auditId = Audit.CreateAudit("Generated For " + employeeName, "PDF", "Reports", user);
-            }
-            else
-            {
-                report.EmployeeID = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.EmployeeID).SingleOrDefault();
-                employeeID = report.EmployeeID;
-                isPDF = false;
-                auditId = Audit.CreateAudit(reportType, "Create", "Reports", User.Identity.Name);
-       
-            }
+            chargeSlip = null;
+            summaryReport = null;
+            iReport = null;
+
+            report.EmployeeID = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.EmployeeID).SingleOrDefault();
+            employeeID = report.EmployeeID;
+            auditId = Audit.CreateAudit(reportType, "Create", "Reports", User.Identity.Name);
+
             try
             {
                 db.Reports.Add(report);
@@ -97,67 +155,67 @@ namespace CLIMAX.Controllers
             {
                 BranchID = db.Users.Include(a => a.employee).Where(r => r.UserName == User.Identity.Name).Select(u => u.employee.BranchID).Single();
             }
-            if (isPDF)
-            {
-                Audit.CompleteAudit(auditId,report.ReportsID);
-                employeeID = 0;
-                employeeName = null;
-                ViewBag.isPDF = isPDF;
-                isPDF = false;
-            }
-            else
-            {
-                Audit.CompleteAudit(auditId, report.ReportsID);
-                ViewBag.isPDF = isPDF;             
-            }
+         
+            Audit.CompleteAudit(auditId, report.ReportsID);
+         
             ViewBag.Type = reportType;
             ViewBag.Branch = db.Branches.Find(BranchID).BranchName;
             ViewBag.Employee = db.Employees.Find(report.EmployeeID).FullName;
             if (reportType == "Sales Report")
             {
-                List<ChargeSlipViewModel> chargeSlip = new List<ChargeSlipViewModel>();
+                chargeSlip = new List<ChargeSlipContainerViewModel>();
 
                 double totalTreatmentAmount = 0;
                 double totalMedicineAmount = 0;
                 double totalRevenue = 0;
+                double totalDiscountAmount = 0;
+                double totalGiftCert = 0;
+                List<ChargeSlipViewModel> items = new List<ChargeSlipViewModel>();
+
                 foreach (ChargeSlip model in db.ChargeSlips.Where(r => report.DateStartOfReport.CompareTo(r.DateTimePurchased) == -1 && report.DateEndOfReport.CompareTo(r.DateTimePurchased) == 1).ToList())
                 {
-                    double individualTotalAmount = 0;
 
                     foreach (Session_ChargeSlip session in db.Session_ChargeSlip.Include(a => a.treatment).Where(r => r.ChargeSlipID == model.ChargeSlipID).ToList())
                     {
                         totalTreatmentAmount += session.treatment.TreatmentPrice * session.Qty;
-                        individualTotalAmount += session.treatment.TreatmentPrice * session.Qty;
-                        chargeSlip.Add(new ChargeSlipViewModel() { ChargeSlipID = session.ChargeSlipID, Treatment = session.treatment.TreatmentName, TreatmentQty = session.Qty, TreatmentAmount = session.treatment.TreatmentPrice * session.Qty });
+                        items.Add(new ChargeSlipViewModel() { Treatment = session.treatment.TreatmentName, TreatmentQty = session.Qty, TreatmentAmount = session.treatment.TreatmentPrice * session.Qty });
                     }
                     foreach (Medicine_ChargeSlip medicine in db.Medicine_ChargeSlip.Include(a => a.Materials).Where(r => r.ChargeSlipID == model.ChargeSlipID).ToList())
                     {
                         totalMedicineAmount += medicine.Materials.Price * medicine.Qty;
-                        individualTotalAmount += medicine.Materials.Price * medicine.Qty;
-                        chargeSlip.Add(new ChargeSlipViewModel() { ChargeSlipID = medicine.ChargeSlipID, Medicine = medicine.Materials.MaterialName, MedicineQty = medicine.Qty, MedicineAmount = medicine.Materials.Price * medicine.Qty });
+                        items.Add(new ChargeSlipViewModel() { Medicine = medicine.Materials.MaterialName, MedicineQty = medicine.Qty, MedicineAmount = medicine.Materials.Price * medicine.Qty });
                     }
 
-
-                    chargeSlip.First(r => r.ChargeSlipID == model.ChargeSlipID).Therapist = model.Employee.FullName;
-                    chargeSlip.First(r => r.ChargeSlipID == model.ChargeSlipID).Patient = model.Patient.FullName;
-                    chargeSlip.Last().Total = individualTotalAmount;
-                    chargeSlip.Last().DiscountAmount = model.AmtDiscount;
-                    chargeSlip.Last().AmountDue = model.AmtDue;
+                    chargeSlip.Add(new ChargeSlipContainerViewModel() { ChargeSlipID = model.ChargeSlipID, Patient = model.Patient.FullName, DateTimePurchased = model.DateTimePurchased, Therapist = model.Employee.FullName, DiscountAmount = model.AmtDiscount, Total = model.AmtDue, items = items , GiftCertificateAmt = model.GiftCertificateAmt});
+                    items = new List<ChargeSlipViewModel>();
+                    if(model.GiftCertificateAmt !=null)
+                    totalGiftCert += model.GiftCertificateAmt.Value;
                     totalRevenue += model.AmtDue;
-
+                    if (model.AmtDiscount != null)
+                    totalDiscountAmount += model.AmtDiscount.Value;
                 }
-                chargeSlip.Add(new ChargeSlipViewModel() { TreatmentAmount = totalTreatmentAmount, MedicineAmount = totalMedicineAmount, Total = totalTreatmentAmount + totalMedicineAmount, AmountDue = totalRevenue });
+
+                ViewBag.TotalRevenueTreatments = totalTreatmentAmount;
+                ViewBag.TotalRevenueMedicines = totalMedicineAmount;
+                ViewBag.TotalDiscount = totalDiscountAmount;
+                ViewBag.TotalGCAmount = totalGiftCert;
+                ViewBag.TotalSales = totalRevenue;
                 ViewBag.Transactions = chargeSlip;
             }
             else if (reportType == "Summary Report")
             {
-                List<SummaryReportViewModel> chargeSlip = new List<SummaryReportViewModel>();
+                summaryReport = new SummaryReportContainerViewModel();
 
                 double totalGross = 0;
                 double totalRevenue = 0;
+                int cardCount = 0;
+                List<SummaryReportViewModel> sr = new List<SummaryReportViewModel>();
                 foreach (ChargeSlip model in db.ChargeSlips.Where(r => report.DateStartOfReport.CompareTo(r.DateTimePurchased) == -1 && report.DateEndOfReport.CompareTo(r.DateTimePurchased) == 1).ToList())
                 {
-                    chargeSlip.Add(new SummaryReportViewModel()
+                    if (model.CardType != "")
+                        cardCount++;
+
+                    sr.Add(new SummaryReportViewModel()
                     {
                         Patient = model.Patient.FullName,
                         CardType = model.CardType,
@@ -168,12 +226,17 @@ namespace CLIMAX.Controllers
                     totalGross += model.AmtDue + model.AmtDiscount.Value;
                     totalRevenue += model.AmtDue;
                 }
-                chargeSlip.Add(new SummaryReportViewModel() { GrossAmount = totalGross, Net = totalRevenue });
-                ViewBag.Summary = chargeSlip;
+                summaryReport.items = sr;
+                summaryReport.TotalGrossAmount = totalGross;
+                summaryReport.TotalNet = totalRevenue;
+                summaryReport.CardTypeCount = cardCount;
+
+                ViewBag.Summary = summaryReport;
+
             }
             else if (reportType == "Inventory Report")
             {
-                List<InventoryReportsViewModel> iReport = new List<InventoryReportsViewModel>();
+                iReport = new List<InventoryReportsViewModel>();
 
                 foreach (Materials item in db.Materials.ToList())
                 {
@@ -181,104 +244,58 @@ namespace CLIMAX.Controllers
                     int? currentQty = db.Inventories.Where(r => r.MaterialID == item.MaterialID && r.BranchID == BranchID).Select(u => u.QtyInStock).SingleOrDefault();
                     if (currentQty != null)
                         iReport.Add(new InventoryReportsViewModel() { MaterialID = item.MaterialID, Medicine = item.MaterialName, Balance = currentQty.Value });
-                }          
-                
-                    foreach (InventoryReportsViewModel item in iReport)
+                }
+
+                foreach (InventoryReportsViewModel item in iReport)
+                {
+                    int sold = 0;
+                    foreach (AuditTrail audit in db.AuditTrail.Include(a => a.actionType).Where(r => report.DateStartOfReport.CompareTo(r.DateTimeOfAction) == -1 && r.actionType.AffectedRecord == "ChargeSlip" && report.DateEndOfReport.CompareTo(r.DateTimeOfAction) == 1).ToList())
                     {
-                        int sold = 0;
-                        foreach (AuditTrail audit in db.AuditTrail.Include(a => a.actionType).Where(r => report.DateStartOfReport.CompareTo(r.DateTimeOfAction) == -1 && r.actionType.AffectedRecord == "ChargeSlip").ToList()) //&& report.DateEndOfReport.CompareTo(r.DateTimeOfAction) == 1).ToList())
+                        foreach (Session_ChargeSlip session in db.Session_ChargeSlip.Where(r => r.ChargeSlipID == audit.RecordID).ToList())
                         {
-                            foreach (Session_ChargeSlip session in db.Session_ChargeSlip.Where(r => r.ChargeSlipID == audit.RecordID).ToList())
+                            MaterialList b = db.MaterialList.Where(r => r.TreatmentID == session.TreatmentID && r.MaterialID == item.MaterialID).SingleOrDefault();
+                            if (b != null)
                             {
-                                MaterialList b = db.MaterialList.Where(r => r.TreatmentID == session.TreatmentID && r.MaterialID == item.MaterialID).SingleOrDefault();
-                                if (b != null)
-                                {
-                                    sold += b.Qty * session.Qty;
-                                    if (report.DateEndOfReport.CompareTo(audit.DateTimeOfAction) == 1)
-                                    {
-                                        if (item.Control == null)
-                                        {
-                                            item.Control = item.Balance;
-                                        }
-                                        item.Control += b.Qty * session.Qty;
-                                    }
-                                    else if (report.DateEndOfReport.CompareTo(audit.DateTimeOfAction) == -1)
-                                    {
-                                        item.Balance += b.Qty * session.Qty;
-                                    }
-                                }
+                                sold += b.Qty * session.Qty;
                             }
-
-                            foreach (int c in db.Medicine_ChargeSlip.Where(r => r.ChargeSlipID == audit.RecordID && r.MaterialID == item.MaterialID).Select(u => u.Qty).ToList())
-                            {
-                                sold += c;
-                                if (report.DateEndOfReport.CompareTo(audit.DateTimeOfAction) == 1)
-                                {
-                                    if (item.Control == null)
-                                    {
-                                        item.Control = item.Balance;
-                                    }
-                                    item.Control += c;
-                                }
-                                else if (report.DateEndOfReport.CompareTo(audit.DateTimeOfAction) == -1)
-                                {
-                                    item.Balance += c;
-                                }
-                            }                          
                         }
-                        item.Sold = sold;
-                    }
-                 
-                    foreach (InventoryReportsViewModel item in iReport)
-                    {
-                        int add = 0;
-                        int removed = 0;
-                        foreach (AuditTrail audit in db.AuditTrail.Include(a => a.actionType).Where(r => report.DateStartOfReport.CompareTo(r.DateTimeOfAction) == -1 && r.actionType.AffectedRecord == "Inventory").OrderBy(b=>b.DateTimeOfAction).ToList())
-                        {
-                            if (audit.actionType.Action == "Edit")
-                            {
 
-                                Inventory inv = db.Inventories.Find(audit.RecordID);
-                                string[] array = audit.ActionDetail.Split('-');
+                        foreach (int c in db.Medicine_ChargeSlip.Where(r => r.ChargeSlipID == audit.RecordID && r.MaterialID == item.MaterialID).Select(u => u.Qty).ToList())
+                        {
+                            sold += c;
+                        }
+                    }
+                    item.Sold = sold;
+                    //   }
+
+                    //     foreach (InventoryReportsViewModel item in iReport)
+                    //    {
+                    int add = 0;
+                    int removed = 0;
+                    foreach (AuditTrail audit in db.AuditTrail.Include(a => a.actionType).Where(r => report.DateStartOfReport.CompareTo(r.DateTimeOfAction) == -1 && r.actionType.AffectedRecord == "Inventory").OrderBy(b => b.DateTimeOfAction).ToList())
+                    {
+                        if (audit.actionType.Action == "Edit")
+                        {
+
+                            Inventory inv = db.Inventories.Find(audit.RecordID);
+                            string[] array = audit.ActionDetail.Split('-');
+                            if (array[2] == item.Medicine)
+                            {
                                 if (array[1] == "Added")
                                 {
                                     add += int.Parse(array[0]);
-                                    if (report.DateEndOfReport.CompareTo(audit.DateTimeOfAction) == 1)
-                                    {
-                                        if (item.Control == null)
-                                        {
-                                            item.Control = item.Balance;
-                                        }
-                                        item.Control -= int.Parse(array[0]);
-                                    }
-                                    else if (report.DateEndOfReport.CompareTo(audit.DateTimeOfAction) == -1)
-                                    {
-                                        item.Balance -= int.Parse(array[0]);
-                                    }
-
                                 }
                                 else if (array[1] == "Removed")
                                 {
                                     removed += int.Parse(array[0]);
-                                    if (report.DateEndOfReport.CompareTo(audit.DateTimeOfAction) == 1)
-                                    {
-                                        if (item.Control == null)
-                                        {
-                                            item.Control = item.Balance;
-                                        }
-                                        item.Control += int.Parse(array[0]);
-                                    }
-                                    else if (report.DateEndOfReport.CompareTo(audit.DateTimeOfAction) == -1)
-                                    {
-                                        item.Balance += int.Parse(array[0]);
-                                    }
                                 }
                             }
                         }
-                        item.Add = add;
-                        item.Remove = removed;
-                        item.Control = item.Balance + removed - add + item.Sold;
                     }
+                    item.Add = add;
+                    item.Remove = removed;
+                    item.Control = item.Balance + removed - add + item.Sold;
+                }
                 ViewBag.Inventories = iReport;
             }
             return View(report);
@@ -299,7 +316,7 @@ namespace CLIMAX.Controllers
             }
             else
             {
-                ViewBag.BranchID = new SelectList(db.Branches.Where(r=>r.isEnabled).ToList(), "BranchID", "BranchName");
+                ViewBag.BranchID = new SelectList(db.Branches.Where(r => r.isEnabled).ToList(), "BranchID", "BranchName");
             }
 
             return View();
@@ -315,10 +332,9 @@ namespace CLIMAX.Controllers
         {
             if (ModelState.IsValid)
             {
-                isPDF = false;
                 DateTime startDate;// = form["start"];
                 DateTime endDate;// = form["end"];
-                if (DateTime.TryParse(form["start"],out startDate))
+                if (DateTime.TryParse(form["start"], out startDate))
                     reports.DateStartOfReport = startDate;
                 if (DateTime.TryParse(form["end"], out endDate))
                 {
@@ -366,41 +382,6 @@ namespace CLIMAX.Controllers
             ViewBag.ReportTypeID = new SelectList(db.ReportTypes, "ReportTypeID", "Type", reports.ReportTypeID);
             return View(reports);
         }
-
-        // GET: Reports/Edit/5
-        //public ActionResult Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Reports reports = db.Reports.Find(id);
-        //    if (reports == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", reports.EmployeeID);
-        //    ViewBag.ReportTypeID = new SelectList(db.ReportTypes, "ReportTypeID", "reportType", reports.ReportTypeID);
-        //    return View(reports);
-        //}
-
-        // POST: Reports/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Include = "ReportsID,ReportTypeID,EmployeeID,DateTimeGenerated")] Reports reports)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(reports).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "LastName", reports.EmployeeID);
-        //    ViewBag.ReportTypeID = new SelectList(db.ReportTypes, "ReportTypeID", "reportType", reports.ReportTypeID);
-        //    return View(reports);
-        //}
 
         protected override void Dispose(bool disposing)
         {

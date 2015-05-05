@@ -278,6 +278,10 @@
             setToPrice($("#AmtDiscount"),discountAmount);
             GFAmount =  $("#GiftCertificateAmt").val();
             TotalPrice = price - discountAmount - GFAmount;
+            if(TotalPrice < 0)
+            {
+                TotalPrice = 0 ;    
+            }
            // $("#Total").html(TotalPrice);
             setToPrice($("#Total"),TotalPrice);
           
@@ -295,23 +299,31 @@
         }
 
         function setToPrice(ele,value){
-            if(value=="")
-            {
-                value = "0";
-            }
-            var DecimalSeparator = Number("1.2").toLocaleString().substr(1, 1);
+                if (value == '' || value == undefined) {
+                    value = "0";
+                }
+              
+                if (value.indexOf(",") != -1) {
+                    value = value.replace(",", "");
+                }
 
-            var AmountWithCommas = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                var DecimalSeparator = ".";
+                var AmountWithCommas;
+                if (value.length > 3) {
+                     AmountWithCommas = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+                else
+                {
+                    AmountWithCommas = value.toString();
+                }
             var arParts = String(AmountWithCommas).split(DecimalSeparator);
             var intPart = arParts[0];
             var decPart = (arParts.length > 1 ? arParts[1] : '');
             decPart = (decPart + '00').substr(0, 2);
 
             value = intPart + DecimalSeparator + decPart;
-           
                 $(ele).val(value);
-                $(ele).text(value);
-            
+                $(ele).text(value);   
         }
 
         $(document).ready(function(){
@@ -523,10 +535,8 @@
             });
 
             $("#CreateSlip").click(function(){
-                //$("#AmtDiscount").val(discountAmount);
-                //$("#AmtPayment").val(AmtPayment);
-                //$("#AmtDue").val(TotalPrice);
-                //$("#Change").val(Change);
+         
+
                 $("#GiftCertificateAmt").val(GFAmount);
                 $("#AmtPayment").val(AmtPayment);
                 $("#chargeSlipForm").submit();

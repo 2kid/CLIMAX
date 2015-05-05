@@ -37,116 +37,115 @@ namespace CLIMAX.Models
             return new ApplicationDbContext();
         }
 
-       public DbSet<AuditTrail> AuditTrail { get; set; }
-       public DbSet<ActionTypes> ActionTypes { get; set; }
-       public DbSet<Branch> Branches { get; set; }
-       public DbSet<ChargeSlip> ChargeSlips { get; set; }
-       public DbSet<SurveyCode> SurveyCode { get; set; }
-       public DbSet<Employee> Employees { get; set; }
-       public DbSet<History> History { get; set; }
-       public DbSet<Inventory> Inventories { get; set; }
-       public DbSet<MaterialList> MaterialList { get; set; }
-       public DbSet<Materials> Materials { get; set; }
-       public DbSet<Medicine_ChargeSlip> Medicine_ChargeSlip { get; set; }
-       public DbSet<Patient> Patients { get; set; }
-       public DbSet<Procedure> Procedure { get; set; }
-       public DbSet<Reports> Reports { get; set; }
-       public DbSet<ReportType> ReportTypes { get; set; }
-       public DbSet<Reservation> Reservations { get; set; }
-       public DbSet<RoleType> RoleType { get; set; }
-       public DbSet<Session_ChargeSlip> Session_ChargeSlip { get; set; }
-       public DbSet<Treatments> Treatments { get; set; }
-       public DbSet<UnitType> UnitTypes { get; set; }
-       public DbSet<Survey> Surveys { get; set; }
+        public DbSet<AuditTrail> AuditTrail { get; set; }
+        public DbSet<ActionTypes> ActionTypes { get; set; }
+        public DbSet<Branch> Branches { get; set; }
+        public DbSet<ChargeSlip> ChargeSlips { get; set; }
+        public DbSet<SurveyCode> SurveyCode { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<History> History { get; set; }
+        public DbSet<Inventory> Inventories { get; set; }
+        public DbSet<MaterialList> MaterialList { get; set; }
+        public DbSet<Materials> Materials { get; set; }
+        public DbSet<Medicine_ChargeSlip> Medicine_ChargeSlip { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<Procedure> Procedure { get; set; }
+        public DbSet<Reports> Reports { get; set; }
+        public DbSet<ReportType> ReportTypes { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<RoleType> RoleType { get; set; }
+        public DbSet<Session_ChargeSlip> Session_ChargeSlip { get; set; }
+        public DbSet<Treatments> Treatments { get; set; }
+        public DbSet<UnitType> UnitTypes { get; set; }
+        public DbSet<Survey> Surveys { get; set; }
 
-       protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
-       {
-           base.OnModelCreating(modelBuilder);
+        protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-           modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
-           modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+            modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
-       }
+        }
+    }
+    public class ClimaxDbContext : IdentityDbContext<ApplicationUser>
+    {
+        public ClimaxDbContext()
+            : base("ClimaxDbContext", throwIfV1Schema: false)
+        {
+        }
 
-       public class ClimaxDbContext : IdentityDbContext<ApplicationUser>
-       {
-           public ClimaxDbContext()
-               : base("ClimaxDbContext", throwIfV1Schema: false)
-           {
-           }
+        public static ClimaxDbContext Create()
+        {
+            return new ClimaxDbContext();
+        }
 
-           public static ClimaxDbContext Create()
-           {
-               return new ClimaxDbContext();
-           }
+        public DbSet<AuditTrail> AuditTrail { get; set; }
+        public DbSet<ActionTypes> ActionTypes { get; set; }
+        public DbSet<Branch> Branches { get; set; }
+        public DbSet<ChargeSlip> ChargeSlips { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<History> History { get; set; }
+        public DbSet<Inventory> Inventories { get; set; }
+        public DbSet<MaterialList> MaterialList { get; set; }
+        public DbSet<Materials> Materials { get; set; }
+        public DbSet<Medicine_ChargeSlip> Medicine_ChargeSlip { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<Procedure> Procedure { get; set; }
+        public DbSet<Reports> Reports { get; set; }
+        public DbSet<ReportType> ReportTypes { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<RoleType> RoleType { get; set; }
+        public DbSet<Session_ChargeSlip> Session_ChargeSlip { get; set; }
+        public DbSet<Treatments> Treatments { get; set; }
+        public DbSet<UnitType> UnitTypes { get; set; }
+        public DbSet<Survey> Surveys { get; set; }
 
-           public DbSet<AuditTrail> AuditTrail { get; set; }
-           public DbSet<ActionTypes> ActionTypes { get; set; }
-           public DbSet<Branch> Branches { get; set; }
-           public DbSet<ChargeSlip> ChargeSlips { get; set; }
-           public DbSet<Employee> Employees { get; set; }
-           public DbSet<History> History { get; set; }
-           public DbSet<Inventory> Inventories { get; set; }
-           public DbSet<MaterialList> MaterialList { get; set; }
-           public DbSet<Materials> Materials { get; set; }
-           public DbSet<Medicine_ChargeSlip> Medicine_ChargeSlip { get; set; }
-           public DbSet<Patient> Patients { get; set; }
-           public DbSet<Procedure> Procedure { get; set; }
-           public DbSet<Reports> Reports { get; set; }
-           public DbSet<ReportType> ReportTypes { get; set; }
-           public DbSet<Reservation> Reservations { get; set; }
-           public DbSet<RoleType> RoleType { get; set; }
-           public DbSet<Session_ChargeSlip> Session_ChargeSlip { get; set; }
-           public DbSet<Treatments> Treatments { get; set; }
-           public DbSet<UnitType> UnitTypes { get; set; }
-           public DbSet<Survey> Surveys { get; set; }
+        protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-           protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
-           {
-               base.OnModelCreating(modelBuilder);
-
-               modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
-               modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
-           }
-       }
-      
-
-       public class IdentityManager
-       {
-           RoleManager<ApplicationRole> _roleManager = new RoleManager<ApplicationRole>(
-           new RoleStore<ApplicationRole>(new ApplicationDbContext()));
-
-           UserManager<ApplicationUser> _userManager = new UserManager<ApplicationUser>(
-               new UserStore<ApplicationUser>(new ApplicationDbContext()));
-
-           ApplicationDbContext _db = new ApplicationDbContext();
-
-           public bool RoleExists(string name)
-           {
-               return _roleManager.RoleExists(name);
-           }
-
-           public bool CreateRole(string name, string description)
-           {
-               // Swap ApplicationRole for IdentityRole:
-               var idResult = _roleManager.Create(new ApplicationRole(name, description));
-               return idResult.Succeeded;
-           }
+            modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+        }
+    }
 
 
-           public void ClearUserRoles(string userId)
-           {
-               var user = _userManager.FindById(userId);
-               var currentRoles = new List<IdentityUserRole>();
+    public class IdentityManager
+    {
+        RoleManager<ApplicationRole> _roleManager = new RoleManager<ApplicationRole>(
+        new RoleStore<ApplicationRole>(new ApplicationDbContext()));
 
-               currentRoles.AddRange(user.Roles);
+        UserManager<ApplicationUser> _userManager = new UserManager<ApplicationUser>(
+            new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
-               foreach (var role in currentRoles)
-               {
-                   _userManager.RemoveFromRole(userId, _db.Roles.Find(role.RoleId).Name);
-               }
+        ApplicationDbContext _db = new ApplicationDbContext();
 
-           }
-       }
+        public bool RoleExists(string name)
+        {
+            return _roleManager.RoleExists(name);
+        }
+
+        public bool CreateRole(string name, string description)
+        {
+            // Swap ApplicationRole for IdentityRole:
+            var idResult = _roleManager.Create(new ApplicationRole(name, description));
+            return idResult.Succeeded;
+        }
+
+
+        public void ClearUserRoles(string userId)
+        {
+            var user = _userManager.FindById(userId);
+            var currentRoles = new List<IdentityUserRole>();
+
+            currentRoles.AddRange(user.Roles);
+
+            foreach (var role in currentRoles)
+            {
+                _userManager.RemoveFromRole(userId, _db.Roles.Find(role.RoleId).Name);
+            }
+
+        }
     }
 }

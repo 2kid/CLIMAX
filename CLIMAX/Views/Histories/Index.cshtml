@@ -44,7 +44,7 @@
             @Html.DisplayFor(modelItem => item.DateTimeStart)
         </td>
        
-@if(item.DateTimeEnd == null)
+@if(item.DateTimeEnd == null && (User.IsInRole("OIC")||User.IsInRole("Auditor")))
             {
         <td>
           
@@ -64,3 +64,4 @@ else
 }
 
 </table>
+@Html.ActionLink("Back to List","Index","Patients")

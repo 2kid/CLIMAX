@@ -2,107 +2,204 @@
 
 @{
     ViewBag.Title = "Reports - Index";
+    CLIMAX.Models.SummaryReportContainerViewModel summary = ViewBag.Summary;
 }
-<h2 class="text-center">@ViewBag.Type</h2>
-
 <div class="row">
-    <div class="col-md-4"><h5>@Model.DateStartOfReport - @Model.DateEndOfReport</h5>
-    @if(!ViewBag.isPDF)
-    { 
-        using (Html.BeginForm("GeneratePDFPatients", "Reports", new { reportString = Request.QueryString["reportString"], BranchID = Request.QueryString["BranchID"]}))
-        { 
-        <input type="submit" class="btn-primary" value="Convert to PDF"/>
-        }
-    }
+    <div class="col-md-4"> <img class="col-md-12" src="@Url.Content("~/Content/Logo Demrstrata.png")" /></div>
+    <div class="col-md-4">
+        <h2 class="text-center">@ViewBag.Type</h2>
+        <b class="text-center">@Model.DateStartOfReport - @Model.DateEndOfReport</b>
     </div>
-    <div class="col-md-offset-4 col-md-4"><h5>@ViewBag.Branch</h5><span>Generated for: <b>@ViewBag.Employee</b></span></div>
+    <div class="col-md-4"><img class="col-md-12" src="@Url.Content("~/Content/Group copy 1 1.png")" /></div>
+</div>
+<div class="form-horizontal">
+    <div class="row table-bordered">
+        <div class="form-group reports">
+            @Html.Label("Branch", htmlAttributes: new { @class = "col-md-3" })
+            <div class="col-md-5">
+                @ViewBag.Branch
+            </div>
+        </div>
+        <div class="form-group reports">
+            @Html.Label("Date Selected", htmlAttributes: new { @class = "col-md-3" })
+            <div class="col-md-5">
+                @Model.DateStartOfReport - @Model.DateEndOfReport
+            </div>
+        </div>
+        @if (ViewBag.Type == "Sales Report")
+        {
+            <div class="form-group reports">
+                @Html.Label("Total Sales", htmlAttributes: new { @class = "col-md-3" })
+                <div class="col-md-5 price">
+                    @ViewBag.TotalSales
+                </div>
+            </div>
+            <div class="form-group reports">
+                @Html.Label("Total Discount", htmlAttributes: new { @class = "col-md-3" })
+                <div class="col-md-5 price">
+                    @ViewBag.TotalDiscount
+                </div>
+            </div>
+    <div class="form-group reports">
+        @Html.Label("Total Gift Certificate Amount", htmlAttributes: new { @class = "col-md-3" })
+        <div class="col-md-5 price">
+            @ViewBag.TotalGCAmount
+        </div>
+    </div>
+            <div class="form-group reports">
+                @Html.Label("Total Revenue Medicines", htmlAttributes: new { @class = "col-md-3" })
+                <div class="col-md-5 price">
+                    @ViewBag.TotalRevenueMedicines
+                </div>
+            </div>
+            <div class="form-group reports">
+                @Html.Label("Total Revenue Treatments", htmlAttributes: new { @class = "col-md-3" })
+                <div class="col-md-5 price">
+                    @ViewBag.TotalRevenueTreatments
+                </div>
+            </div>
+        }
+        else if (ViewBag.Type == "Summary Report")
+        {
+
+            <div class="form-group reports">
+                @Html.Label("Total Cards Used", htmlAttributes: new { @class = "col-md-3" })
+                <div class="col-md-5">
+                    @summary.CardTypeCount / @summary.items.Count
+                </div>
+            </div>
+            <div class="form-group reports">
+                @Html.Label("Total Gross", htmlAttributes: new { @class = "col-md-3" })
+                <div class="col-md-5 price">
+                    @summary.TotalGrossAmount
+                </div>
+            </div>
+            <div class="form-group reports">
+                @Html.Label("Total Net", htmlAttributes: new { @class = "col-md-3" })
+                <div class="col-md-5 price">
+                    @summary.TotalNet
+                </div>
+            </div>
+        }
+        <div class="col-md-12">
+            @using (Html.BeginForm("GenerateExcelReports", "Reports", new { reportType = ViewBag.Type }))
+            {
+                <input type="submit" class="btn-primary" value="Convert to Excel" />
+            }
+            <div class="col-md-offset-4 col-md-3"><span>Generated for: <b>@ViewBag.Employee</b></span></div>
+        </div>
+
+    </div>
 </div>
 @Html.ValidationSummary("", new { @class = "text-danger" })
 @if (ViewBag.Type == "Sales Report")
-{ 
-    <table class="table">
-        <tr>
-            <th>
-                Charge Slip No.
-            </th>
-            <th>
-               Patient Name
-            </th>
-            <th>
-              Treatment
-            </th>
-            <th>
-                Treatment Qty
-            </th>
-            <th>
-              Treatment Amount
-            </th>
-            <th>
-                Medicine
-            </th>
-            <th>
-                Medicine Qty
-            </th>
-            <th>
-                Medicine Amount
-            </th>
-            <th>
-                Total
-            </th>
-            <th>
-                Discount
-            </th>
-            <th>
-                Revenue
-            </th>
-            <th>
-                Therapist
-            </th>
-        </tr>
+{
 
-    @foreach (CLIMAX.Models.ChargeSlipViewModel item in ViewBag.Transactions) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChargeSlipID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Patient)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Treatment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TreatmentQty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TreatmentAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Medicine)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MedicineQty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MedicineAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Total)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DiscountAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountDue)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Therapist)
-            </td>
-        </tr>
+    foreach (CLIMAX.Models.ChargeSlipContainerViewModel chargeslip in ViewBag.Transactions)
+    {
+        double totalTreatments = 0;
+        double totalMedicines = 0;
+        <br />
+        <div class="form-horizontal">
+            <div class="row table-bordered">
+                <div class="form-group">
+                    <span></span><span class="col-md-3">Patient: @chargeslip.Patient</span>
+                </div>
+
+                <div class="form-group reports">
+                    @Html.Label("Treatments", htmlAttributes: new { @class = "col-md-5" })
+                    <div class="col-md-3">
+                        Treatment Quantity
+                    </div>
+                    <div class="col-md-3">
+                        Treatment Amount
+                    </div>
+                </div>
+                @foreach (CLIMAX.Models.ChargeSlipViewModel items in chargeslip.items.Where(r => r.TreatmentQty != 0).ToList())
+                {
+                    <div class="form-group reports">
+                        <span class="col-md-5">
+                            @Html.DisplayFor(modelItem => items.Treatment)
+                        </span>
+                        <div class="col-md-3">
+                            @Html.DisplayFor(modelItem => items.TreatmentQty)
+                        </div>
+                        <div class="col-md-3 price">
+                            @Html.DisplayFor(modelItem => items.TreatmentAmount)
+                            @{
+                    if (items.TreatmentAmount != null)
+                    {
+                        totalTreatments = totalTreatments + items.TreatmentAmount.Value;
+                    }
+                            }
+                        </div>
+                    </div>
+
+                }
+                <div class="form-group reports">
+                    @Html.Label("Medicines", htmlAttributes: new { @class = "col-md-5" })
+                    <div class="col-md-3">
+                        Medicine Quantity
+                    </div>
+                    <div class="col-md-3">
+                        Medicine Amount
+                    </div>
+
+                </div>
+                @foreach (CLIMAX.Models.ChargeSlipViewModel items in chargeslip.items.Where(r => r.MedicineQty != 0).ToList())
+                {
+                    <div class="form-group reports">
+                        <span class="col-md-5">  @Html.DisplayFor(modelItem => items.Medicine)</span>
+                        <div class="col-md-3">
+                            @Html.DisplayFor(modelItem => items.MedicineQty)
+
+                        </div>
+                        <div class="col-md-3 price">
+                            @Html.DisplayFor(modelItem => items.MedicineAmount)
+                            @{
+                    if (items.MedicineAmount != null)
+                    {
+                        totalMedicines = totalMedicines + items.MedicineAmount.Value;
+                    }
+                            }
+                        </div>
+                    </div>
+                }
+                <div class="form-group reports">
+                    @Html.Label("Total Price Treatments", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9 price">
+                        @totalTreatments
+                    </div>
+                </div>
+                <div class="form-group reports">
+                    @Html.Label("Total Price Medicines", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9 price">
+                        @totalMedicines
+                    </div>
+                </div>
+
+                <div class="form-group reports">
+                    @Html.Label("Discounted Amount", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9 price">
+                        -@chargeslip.DiscountAmount
+                    </div>
+                </div>
+                <div class="form-group reports">
+                    @Html.Label("Gift Certificate Amount", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9 price">
+                        -@chargeslip.GiftCertificateAmt
+                    </div>
+                </div>
+                <div class="form-group reports">
+                    @Html.Label("Total Price", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9 price">
+                        @chargeslip.Total
+                    </div>
+                </div>
+            </div>
+        </div>
     }
-
-</table>
-} 
+}
 
 else if (ViewBag.Type == "Inventory Report")
 {
@@ -115,13 +212,13 @@ else if (ViewBag.Type == "Inventory Report")
                 Control
             </th>
             <th>
-               Add
+                Add
             </th>
             <th>
                 Remove
             </th>
             <th>
-               Sold
+                Sold
             </th>
             <th>
                 Balance
@@ -171,30 +268,29 @@ else if (ViewBag.Type == "Summary Report")
             </th>
         </tr>
 
-        @foreach (CLIMAX.Models.SummaryReportViewModel item in ViewBag.Summary)
+        @foreach (var item in summary.items)
         {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Patient)
                 </td>
-                @if(item.CardType != "")
-                { 
-                <td>
-                    @Html.DisplayFor(modelItem => item.CardType)
-                </td>
+                @if (item.CardType != "")
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CardType)
+                    </td>
                 }
                 else
                 {
                     <td>N/A</td>
                 }
-                <td>
+                <td class="price">
                     @Html.DisplayFor(modelItem => item.GrossAmount)
                 </td>
-                <td>
+                <td class="price">
                     @Html.DisplayFor(modelItem => item.Net)
                 </td>
             </tr>
         }
     </table>
 }
-

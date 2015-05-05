@@ -4,9 +4,11 @@
     ViewBag.Title = "Branch - Index";
 }
 
+@if (User.IsInRole("Admin")) { 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+}
 <table class="table">
     <tr>
         <th>
@@ -32,12 +34,26 @@
         <td>
             @Html.DisplayFor(modelItem => item.ContactNo)
         </td>
+        @if(User.IsInRole("Admin"))
+            {
+            if(item.BranchName != "*")
+            { 
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.BranchID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.BranchID }) |
+            @*@Html.ActionLink("Details", "Details", new { id=item.BranchID }) |*@
             @Html.ActionLink("Disable", "Disable", new { id=item.BranchID })
         </td>
-    </tr>
+        }
+        else
+            {
+                <td></td>
+            }
+        }
+        else
+        {
+            <td></td>
+        }
+        </tr>
 }
 
 </table>

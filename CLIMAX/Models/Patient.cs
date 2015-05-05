@@ -26,6 +26,7 @@ namespace CLIMAX.Models
         public DateTime BirthDate { get; set; }
         public bool Gender { get; set; }
         public string CivilStatus { get; set; }
+        [RegularExpression("^[0-9]{1,2}'[0-9]{1,2}\"$",ErrorMessage="Height is invalid")]
         public string Height { get; set; }
         public string Weight { get; set; }
    

@@ -3,9 +3,11 @@
 @{
     ViewBag.Title = "Materials - Index";
 }
+@if (User.IsInRole("Admin") || User.IsInRole("Auditor")) {
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+}
 <table class="table">
     <tr>
         <th>
@@ -37,10 +39,16 @@
         <td>
             @Html.DisplayFor(modelItem => item.Price)
         </td>
+        @if (User.IsInRole("Admin") || User.IsInRole("Auditor")) { 
         <td>
             @Html.ActionLink("Edit", "Edit", new { id = item.MaterialID }, new { @class = "btn btn-default"}) 
             @Html.ActionLink("Delete", "Delete", new { id = item.MaterialID }, new { @class = "btn btn-default" })
         </td>
+        }
+        else
+        {
+            <td></td>
+        }
     </tr>
 }
 

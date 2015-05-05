@@ -39,7 +39,7 @@ namespace CLIMAX.Models
 
         public string getColumns()
         {
-            return "EmployeeID,LastName,FirstName,MiddleName,RoleTypeID,BranchID";
+            return "EmployeeID,LastName,FirstName,MiddleName,RoleTypeID,BranchID,isEnabled";
         }
     }
 

@@ -1,3 +1,15 @@
 ﻿.additional-item{
     display: none;
 }
+
+.smallwidth{
+    width:50px;
+}
+
+.mediumwidth{
+    width:150px !important;
+}
+
+.margintop-50{
+    margin-top:50px !important;
+}

@@ -1,1 +1,3 @@
-HistoryID,SessionNo,PatientID,TreatmentID,EmployeeID,DateTimeStart,DateTimeEnd
+HistoryID,PatientID,TreatmentID,EmployeeID,DateTimeStart,DateTimeEnd
+1,1,1,3,5/4/2015 9:32:56 PM,
+2,1,1,3,5/4/2015 10:07:58 PM,

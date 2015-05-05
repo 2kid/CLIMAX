@@ -131,17 +131,24 @@
                             <dt>
                                 @Html.DisplayNameFor(model => model.LandlineNo)
                             </dt>
-
+                            @if(Model.LandlineNo != "00-0000000-000")
+                            { 
                             <dd>
                                 @Html.DisplayFor(model => model.LandlineNo)
                             </dd>
-
+                            }
+                            else
+                            {
+                                <dd>
+                                    N/A
+                                </dd>
+                            }
                             <dt>
                                 @Html.DisplayNameFor(model => model.CellphoneNo)
                             </dt>
 
                             <dd>
-                                @Html.DisplayFor(model => model.CellphoneNo)
+                                @Html.ActionLink(Model.CellphoneNo, "SMS", "Sms", new { cellNo = Model.CellphoneNo }, new { @class="alert-link"})
                             </dd>
 
                             <dt>
@@ -190,6 +197,14 @@
 
                             <dd>
                                 @Html.DisplayFor(model => model.EmergencyContactLName)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.branch.BranchName)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.branch.BranchName)
                             </dd>
                         </dl>
                     </div>                  

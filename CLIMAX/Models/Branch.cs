@@ -20,5 +20,10 @@ namespace CLIMAX.Models
         public virtual List<Patient> Patients { get; set; }
 
         public bool isEnabled { get; set; }
+
+        public string getColumns()
+        {
+            return "BranchID,BranchName,Location,ContactNo,isEnabled";
+        }
     }
 }

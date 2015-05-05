@@ -107,6 +107,36 @@ namespace CLIMAX.Controllers
             }
             return sb.ToString();
         }
+        public string DownloadBranches()
+        {
+            bool alert = CheckForInternetConnection();
+            StringBuilder sb = new StringBuilder();
+            if (alert == true)
+            {
+
+
+                sb.AppendLine(new Branch().getColumns());
+
+                foreach (var item in db.Employees.ToList())
+                {
+                    List<string> fields = new List<string>();
+                    fields.Add(item.EmployeeID.ToString());
+                    fields.Add(item.LastName);
+                    fields.Add(item.FirstName);
+                    fields.Add(item.MiddleName);
+                    fields.Add(item.roleType.ToString());
+                    fields.Add(item.BranchID.ToString());
+
+                    sb.AppendLine(string.Join(",", fields));
+                }
+
+            }
+            else if (alert == false)
+            {
+
+            }
+            return sb.ToString();
+        }
 
         public string DownloadCharSlips()
         {

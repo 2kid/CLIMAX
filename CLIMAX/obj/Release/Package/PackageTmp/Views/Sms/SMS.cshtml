@@ -19,12 +19,14 @@
                             <div class="form-horizontal">
                                 @using (Html.BeginForm())
                                 {
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                                     <p>Number of Patient</p>
-                                    @Html.TextBox("Number");
+                                    @Html.Hidden("Number", (string)ViewBag.CellNo);
+                                    <span>(+63)</span> @ViewBag.CellNo
                                     <br />
                                     <br />
                                     <p>Message</p>
-                                    @Html.TextArea("Message");
+                                    @Html.TextArea("Message", new { placeholder = "Say something to customer." });
                                     <br />
                                     <br />
                                     <input type="submit" value="Send" class="btn btn-default">
@@ -37,3 +39,16 @@
         </div>
     </div>
 </div>
+
+@Scripts.Render("~/bundles/jqueryval")
+@section scripts{
+    <script>
+    $(document).ready(function () {
+        $("#Number").keydown(filterNumeric);
+        if($("#Number").val().length == 11 && $("#Number").val().substring(0,1) == "0")
+        {
+            $("#Number").val($("#Number").val().replace("0", ""));
+        }
+    });
+    </script>
+}

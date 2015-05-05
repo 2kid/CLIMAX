@@ -35,30 +35,34 @@ namespace CLIMAX.Models
         public int EmployeeID { get; set; }
         public virtual Employee Employee { get; set; }
 
-        public bool isEnabled { get; set; }
-
         public string getColumns()
         {
             return "ChargeSlipID,DateTimePurchased,DiscountRate,AmtDiscount,AmtDue,ModeOfPayment,AmtPayment,GiftCertificateAmt,GiftCertificateNo,CheckNo,CardType,PatientID,EmployeeID";
         }
     }
 
-    public class ChargeSlipViewModel
+    public class ChargeSlipContainerViewModel
     {
-        public int? ChargeSlipID { get; set; }
-       // public int SessionNo { get; set; }
         public string Patient { get; set; }
+        public int? ChargeSlipID { get; set; }
+        public DateTime DateTimePurchased { get; set; }
+        public List<ChargeSlipViewModel> items { get; set; }
+        public double Total { get; set; }
+        public double? GiftCertificateAmt { get; set; }
+        public double? DiscountAmount { get; set; }
+        public string Therapist { get; set; }
+    }
+
+    public class ChargeSlipViewModel
+    {      
+       // public int SessionNo { get; set; }
         public string Treatment { get; set; }
         public int? TreatmentQty { get; set; }
         public double? TreatmentAmount { get; set; }
         public string Medicine { get; set; }
         public int? MedicineQty { get; set; }
-        public double? MedicineAmount { get; set; }
-        public double Total { get; set; }
-        public double? DiscountAmount { get; set; }
+        public double? MedicineAmount { get; set; }     
         public double AmountDue { get; set; }
-        public string Therapist { get; set; }
-
     }
 
     public class SurveyCode
@@ -70,7 +74,13 @@ namespace CLIMAX.Models
         public bool isUsed { get; set; }
     }
 
-
+    public class SummaryReportContainerViewModel
+    {
+        public int CardTypeCount { get; set; }
+        public double TotalGrossAmount { get; set; }
+        public double TotalNet { get; set; }
+        public List<SummaryReportViewModel> items { get; set; }
+    }
     public class SummaryReportViewModel
     {
         public string Patient { get; set; }

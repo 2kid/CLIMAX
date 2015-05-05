@@ -32,19 +32,19 @@ namespace CLIMAX.Controllers
                 if (!Regex.IsMatch(start.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
                 {
                     ModelState.AddModelError("", "The field start date is invalid");
-                    return View(auditTrail.ToList());
+                    return setPagination(page, auditTrail.OrderBy(a => a.DateTimeOfAction).ToList());
                 }
 
                 if (!Regex.IsMatch(end.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
                 {
                     ModelState.AddModelError("", "The field end date is invalid");
-                    return View(auditTrail.ToList());
+                    return setPagination(page, auditTrail.OrderBy(a => a.DateTimeOfAction).ToList());
                 }
 
                 if (start.CompareTo(end) == 1)
                 {
                     ModelState.AddModelError("", "Date started cannot be after the date ended");
-                    return View(auditTrail.ToList());
+                    return setPagination(page, auditTrail.OrderBy(a => a.DateTimeOfAction).ToList());
                 }
                end = end.AddDays(1);
                end = end.Subtract(new TimeSpan(1));
@@ -57,13 +57,18 @@ namespace CLIMAX.Controllers
                 auditTrail = auditTrail.Where(r => r.actionType.AffectedRecord.ToLower() == logType.ToLower());
             }
 
-            trails = auditTrail.ToList();
+            return setPagination(page, auditTrail.OrderBy(a=>a.DateTimeOfAction).ToList());
+        }
+
+        private ActionResult setPagination(string page, List<AuditTrail> audit)
+        {
+            trails = audit;
             int trailsPage;
             const int takeCount = 10;
-            if(int.TryParse(page,out trailsPage))
+            if (int.TryParse(page, out trailsPage))
             {
                 List<List<AuditTrail>> alltrails = new List<List<AuditTrail>>();
-                while(trails.Count != 0)
+                while (trails.Count != 0)
                 {
                     alltrails.Add(new List<AuditTrail>(trails.Take(takeCount).ToList()));
                     if (trails.Count >= takeCount)
@@ -73,12 +78,13 @@ namespace CLIMAX.Controllers
                 }
                 ViewBag.CPage = trailsPage;
                 ViewBag.LastPage = alltrails.Count;
+           if(trailsPage - 1 >= 0 && alltrails.Count > 0)
                 return View(alltrails[trailsPage - 1]);
+           else
+               return View();
             }
 
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            
-            
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);      
         }
 
         protected override void Dispose(bool disposing)

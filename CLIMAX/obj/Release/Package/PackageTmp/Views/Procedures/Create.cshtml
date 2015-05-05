@@ -4,7 +4,7 @@
 }
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
@@ -22,7 +22,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.StepNo, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.StepNo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.StepNo, new { htmlAttributes = new { @class = "form-control", min = "0", max = "999" } })
                 @Html.ValidationMessageFor(model => model.StepNo, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -41,4 +41,10 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $("#StepNo").keydown(filterNumeric);
+        });
+
+    </script>
 }

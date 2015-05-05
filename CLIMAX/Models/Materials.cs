@@ -28,7 +28,7 @@ namespace CLIMAX.Models
 
         public string getColumns()
         {
-            return "MaterialID,MaterialName,Description,Price,UnitTypeID";
+            return "MaterialID,MaterialName,Description,Price,UnitTypeID,isEnabled";
         }
 
     }

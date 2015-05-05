@@ -5,11 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
+    <link href="@Url.Content("~/Content/jquery-ui-1.7.2.custom.css")" rel="stylesheet" />
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("Styles", false)
 </head>
 <body>
+    @{
+        if (!string.IsNullOrWhiteSpace(Request.QueryString["message"]) && Request.QueryString["message"] != "[]")
+        {
+            List<CLIMAX.Models.InventoryMessageViewModel> query = Newtonsoft.Json.JsonConvert.DeserializeObject<List<CLIMAX.Models.InventoryMessageViewModel>>(Request.QueryString["message"]);
 
+            string message = "Warning! Some of your stocks are low.\nItem     -     Qty Left";
+
+            for (int index = 0; index < query.Count; index++)
+            {
+                message += "\n" + query[index].Inventory + " - ";
+                message += query[index].QtyLeft;
+            }
+            @Html.Hidden("message", message)
+        }
+    }
     <nav class="nav navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -25,39 +40,73 @@
                 <ul class="nav navbar-nav layout">
                     <li>@Html.ActionLink("Patients", "Index", "Patients") </li>
                     <li>@Html.ActionLink("Charge Slip", "Index", "ChargeSlips")</li>
-                    <li>@Html.ActionLink("Reservations", "Index", "Reservations")</li>
                     <li>@Html.ActionLink("Treatment Module", "Index", "Treatments")</li>
                     <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
-
                     <li>@Html.ActionLink("Inventory", "Index", "Inventories")</li>
-                    <li>@Html.ActionLink("Reports", "Create", "Reports")</li>
-                    <li>@Html.ActionLink("Audit Trail", "Index", "AuditTrails")</li>
+                  
+                    @if (User.IsInRole("Auditor") || User.IsInRole("OIC"))
+                    {
+                        <li>@Html.ActionLink("SMS to Customer", "SMS", "Sms")</li>
+                        <li>@Html.ActionLink("Reservations", "Index", "Reservations")</li>
+
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("Admin", "AdminIndex", "Account")</li>
+                    }
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Others <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            
-                            <li>@Html.ActionLink("Unit Type", "Index", "UnitTypes")</li>
+
+                            <li>@Html.ActionLink("Reports", "Create", "Reports")</li>
+                            <li>@Html.ActionLink("Audit Trail", "Index", "AuditTrails")</li>
                             <li>@Html.ActionLink("Surveys", "Index", "Surveys")</li>
-                            <li>@Html.ActionLink("Role Type", "Index", "RoleTypes")</li>
+                            @if (User.IsInRole("Auditor") || User.IsInRole("Admin"))
+                            {
+                                <li>@Html.ActionLink("Role Type", "Index", "RoleTypes")</li>
+                            }
+                            <li>@Html.ActionLink("Unit Type", "Index", "UnitTypes")</li>
                             <li>@Html.ActionLink("Materials", "Index", "Materials")</li>
                             <li>@Html.ActionLink("Branches", "Index", "Branches")</li>
-                            <li>@Html.ActionLink("Admin", "AdminIndex", "Account")</li>
-                    
+                            <li>@Html.ActionLink("Upload Database", "UploadDatabase", "Home")</li>                         
                         </ul>
-                        </li>
-                    </ul>
+                    </li>
+                </ul>
                 <ul class="nav navbar-default layout">
-                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <li><a  href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                    @{
+                        if (Request.IsAuthenticated)
+                        {
+                            CLIMAX.Models.ApplicationDbContext db = new CLIMAX.Models.ApplicationDbContext();
+                            int id = db.Users.Where(r => r.UserName == User.Identity.Name).Select(u => u.EmployeeID).Single();
+                            CLIMAX.Models.Employee emp = db.Employees.Find(id);
+                            <li>
+                                @emp.FirstName @emp.LastName
+                               ( @if (User.IsInRole("Admin"))
+                                {
+                                    <span>Admin</span>
+                                }
+                                else if (User.IsInRole("OIC"))
+                                {
+                                    <span>OIC</span>
+                                }
+                                else
+                                {
+                                    <span>Auditor</span>
+                                }
+                                )
+                            </li>
+                            using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                            }
+                        }
                     }
                 </ul>
-
-</div>
+            </div>
         </div>
     </nav>
-    <div class="container body-content">
+    <div class="container body-content margintop-50">
         @RenderBody()
         <hr />
     </div>
@@ -65,33 +114,101 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script>
-    function filterNumeric(e) {
-        // Allow only backspace and delete
-        if ($.inArray(e.keyCode, [46, 8, 9]) !== -1 ||
-            // Allow: Ctrl+A
-        (e.keyCode == 65 && e.ctrlKey === true) ||
-            // Allow: home, end, left, right, down, up
-        (e.keyCode >= 35 && e.keyCode <= 40)) {
-            // let it happen, don't do anything
-            return;
-        }
-        else {
-            // Ensure that it is a number and stop the keypress
-            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                e.preventDefault();
+        function filterNumeric(e) {
+            // Allow only backspace and Disable
+            if ($.inArray(e.keyCode, [46, 8, 9]) !== -1 ||
+                // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) ||
+                // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                // let it happen, don't do anything
+                return;
+            }
+            else {
+                // Ensure that it is a number and stop the keypress
+                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                    if (e.keyCode == 190 && $(this).val().indexOf(".") == -1 && $(this).hasClass("price")) {
+                        return;
+                    }
+                    e.preventDefault();
+                }
             }
         }
-    }
 
-    $(document).ready(function () {
-        $("input[type='number']").keydown(filterNumeric);
-        $("input[type='number']").change(function(){
-            if($.isNumeric($(this).val())==false)
-            {
-                $(this).val(0);
+
+        $(document).ready(function () {
+            var message = $("#message").val();
+            if (message != '' && message != undefined) {
+
+                alert(message);
+                message = '';
             }
+
+            $("input[type='number']").keydown(filterNumeric);
+            $("input[type='number']").change(function () {
+                if ($.isNumeric($(this).val()) == false) {
+                    $(this).val(0);
+                }
+            });
+
+            //$("input[class*='price']").load(function () {
+            $("input[class*='price']").ready(function () {
+                $(this).attr("placeholder", "0.00");
+            });
+
+            $("input[class*='price']").focusout(function () {
+
+                var value = $(this).val();
+                if (value == '' || value == undefined) {
+                    value = "0";
+                }
+
+                if (value.indexOf(",") != -1) {
+                    value = value.replace(",", "");
+                }
+
+                var DecimalSeparator = ".";
+                var AmountWithCommas;
+                if (value.length > 3) {
+                     AmountWithCommas = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+                else
+                {
+                    AmountWithCommas = value.toString();
+                }
+                var arParts = String(AmountWithCommas).split(DecimalSeparator);
+                var intPart = arParts[0];
+                var decPart = (arParts.length > 1 ? arParts[1] : '');
+                decPart = (decPart + '00').substr(0, 2);
+
+                value = intPart + DecimalSeparator + decPart;            
+                $(this).val(value);
+            });
+
+          
+                var element = $('*').find("[class*='price']");
+                if (element.length > 0) {
+                    for (var item = 0; item < element.length; item++) {
+                        var value = element[item].textContent;
+                        var DecimalSeparator = Number("1.2").toLocaleString().substr(1, 1);
+
+                        var AmountWithCommas = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        var arParts = String(AmountWithCommas).split(DecimalSeparator);
+                        var intPart = arParts[0];
+                        var decPart = (arParts.length > 1 ? arParts[1] : '');
+                        decPart = (decPart + '00').substr(0, 2);
+
+                        value = intPart + DecimalSeparator + decPart;
+                        $(element[item]).text(value);
+                    }
+                }
+         
+
+            $("#ui-datepicker-div").focus(function () {
+                $(this).show();
+            });
+
         });
-    });
     </script>
 </body>
 </html>
