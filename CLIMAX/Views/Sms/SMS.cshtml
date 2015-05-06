@@ -39,16 +39,3 @@
         </div>
     </div>
 </div>
-
-@Scripts.Render("~/bundles/jqueryval")
-@section scripts{
-    <script>
-    $(document).ready(function () {
-        $("#Number").keydown(filterNumeric);
-        if($("#Number").val().length == 11 && $("#Number").val().substring(0,1) == "0")
-        {
-            $("#Number").val($("#Number").val().replace("0", ""));
-        }
-    });
-    </script>
-}

@@ -39,6 +39,10 @@ namespace CLIMAX.Controllers
 
         public ActionResult SMS(string cellNo)
         {
+            if(cellNo.StartsWith("0"))
+            {
+                cellNo = cellNo.Substring(1);
+            }
             ViewBag.CellNo = cellNo;
             return View();
         }

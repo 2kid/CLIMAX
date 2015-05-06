@@ -1,9 +1,18 @@
 ﻿@model System.Web.Mvc.HandleErrorInfo
 
 @{
-    ViewBag.Title = "Error";
+    ViewBag.Title = "Error 404";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<header id="top" class="header">
+    <div class="text-vertical-center">
+        <h1>Error 404 Page Not found</h1>
+        <h3>Your process cannot proceed pls return to the previous page</h3>
+        <br>
+        <a href="javascript:history.go(-1)" class="btn btn-dark btn-lg">Click Here to go back</a>
+    </div>
+</header>
 
+@section Styles{
+    <link href="@Url.Content("~/Content/returnpage.css")" rel="stylesheet">
+}

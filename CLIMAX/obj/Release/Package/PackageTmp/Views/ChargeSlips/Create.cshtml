@@ -303,8 +303,11 @@
                     value = "0";
                 }
               
-                if (value.indexOf(",") != -1) {
-                    value = value.replace(",", "");
+                if(typeof value == "string")
+                {
+                    if (value.indexOf(",") != -1) {
+                        value = value.replace(",", "");
+                    }
                 }
 
                 var DecimalSeparator = ".";

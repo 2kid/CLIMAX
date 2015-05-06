@@ -371,7 +371,7 @@ namespace CLIMAX.Controllers
                                 Inventory inventory = db.Inventories.Where(r => r.MaterialID == material_treatment.MaterialID && r.BranchID == branchId).SingleOrDefault();
                                 if (inventory != null)
                                 {
-                                    inventory.QtyInStock -= material_treatment.Qty;
+                                    inventory.QtyInStock -= material_treatment.Qty * session.Qty;
                                     db.Entry(inventory).State = EntityState.Modified;
                                     await db.SaveChangesAsync();
                                 }

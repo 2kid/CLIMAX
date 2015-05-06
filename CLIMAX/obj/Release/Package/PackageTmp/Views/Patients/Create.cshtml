@@ -227,6 +227,15 @@
     <script src="@Url.Content("~/Scripts/jquery-ui-1.11.4.min.js")"></script>
     <script>
         $(document).ready(function () {
+
+            if ($("#LandlineNo").val() != "" &&   $("#LandlineNo").val() != undefined)
+            {
+                var array = $("#LandlineNo").val().split('-', 3)
+                $("#areaCode").val(array[0]);
+                $("#landlineNo").val(array[1]);
+                $("#extCode").val(array[2]);
+            }
+
             $("#landlineNo").keydown(filterNumeric);
             $("#extCode").keydown(filterNumeric);
             $("#EmergencyContactNo").keydown(filterNumeric);
@@ -236,7 +245,7 @@
                 var ext = $("#extCode").val();
                 if(area != "" || landline != "" || ext != "")
                 {
-                    $("#LandlineNo").val($("#areaCode") + '-' + $("#landlineNo").val() + "-" + $("#extCode").val());
+                    $("#LandlineNo").val(area + '-' + landline + "-" + ext);
                 }
                 else
                 {

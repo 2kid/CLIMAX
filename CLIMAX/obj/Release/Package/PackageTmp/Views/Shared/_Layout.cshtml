@@ -46,9 +46,7 @@
                   
                     @if (User.IsInRole("Auditor") || User.IsInRole("OIC"))
                     {
-                        <li>@Html.ActionLink("SMS to Customer", "SMS", "Sms")</li>
                         <li>@Html.ActionLink("Reservations", "Index", "Reservations")</li>
-
                     }
                     @if (User.IsInRole("Admin"))
                     {
@@ -163,9 +161,12 @@
                     value = "0";
                 }
 
-                if (value.indexOf(",") != -1) {
-                    value = value.replace(",", "");
+                if (typeof value == "string") {
+                    if (value.indexOf(",") != -1) {
+                        value = value.replace(",", "");
+                    }
                 }
+
 
                 var DecimalSeparator = ".";
                 var AmountWithCommas;

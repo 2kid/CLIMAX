@@ -148,10 +148,10 @@ $.fn.fullCalendar = function(options) {
 	
 	// would like to have this logic in EventManager, but needs to happen before options are recursively extended
 	var eventSources = options.eventSources || [];
-	Disable options.eventSources;
+	delete options.eventSources;
 	if (options.events) {
 		eventSources.push(options.events);
-		Disable options.events;
+		delete options.events;
 	}
 	
 
@@ -1241,7 +1241,7 @@ function EventManager(options, _sources) {
 			if (!event.start) {
 				event.start = event.date;
 			}
-			Disable event.date;
+			delete event.date;
 		}
 		event._start = cloneDate(event.start = parseDate(event.start, ignoreTimezone));
 		event.end = parseDate(event.end, ignoreTimezone);
@@ -1450,7 +1450,7 @@ function parseDate(s, ignoreTimezone) { // ignoreTimezone defaults to true
 
 
 function parseISO8601(s, ignoreTimezone) { // ignoreTimezone defaults to false
-	// derived from http://Disable.me.uk/2005/03/iso8601.html
+	// derived from http://delete.me.uk/2005/03/iso8601.html
 	// TODO: for a know glitch/feature, read tests/issue_206_parseDate_dst.html
 	var m = s.match(/^([0-9]{4})(-([0-9]{2})(-([0-9]{2})([T ]([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?(Z|(([-+])([0-9]{2})(:?([0-9]{2}))?))?)?)?)?$/);
 	if (!m) {

@@ -21,8 +21,8 @@
                     <div class="panel-body">
                         <div class="dataTable_wrapper">
                             <div class="form-horizontal">
-                                @using (Html.BeginForm())
-                                {
+                              @using (Html.BeginForm("Edit", "Patients", FormMethod.Post, new { id = "patientForm" }))
+                              {
                                     @Html.AntiForgeryToken()
 
                                     <div class="form-horizontal">
@@ -124,19 +124,21 @@
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.LandlineNo, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                <span class="col-md-1" style="font-size:x-large">
-                                                    @Html.DropDownList("areaCode","")
+                                                @Html.HiddenFor(model => model.LandlineNo)
+                                                <span class="col-md-2" style="font-size:x-large">
+                                                    @Html.DropDownList("areaCode", (IEnumerable<SelectListItem>)ViewBag.areaCode, "", new { @class = "col-md-12" })
                                                 </span>
-                                                <span class="col-md-4">
-                                                    @Html.TextBox("landlineNo", (string)ViewBag.landlineNo , new { @class = "form-control", maxlength = "7" })
-                                                </span>
-                                                <h4 class="col-md-1 margintop-0">local</h4>
                                                 <span class="col-md-2">
-                                                    @Html.TextBox("extCode", (string)ViewBag.extCode , new { @class = "form-control", maxlength = "3"})
+                                                    @Html.Editor("landlineNo", new { htmlAttributes = new { @class = "form-control", maxlength = "7" } })
                                                 </span>
-                                                
-                                                 @Html.ValidationMessageFor(model => model.LandlineNo, "", new { @class = "text-danger" })
-                                            </div>
+                                                <h5 class="col-md-1 margintop-0"> local</h5>
+                                                <span class="col-md-1">
+                                                    @Html.Editor("extCode", new { htmlAttributes = new { @class = "form-control", maxlength = "3" } })
+                                                </span>
+                                                (ex. 02 7263190 local 123)
+                                                <br />
+                                                @Html.ValidationMessageFor(model => model.LandlineNo, "", new { @class = "text-danger" })
+                                             </div>
                                         </div>
 
                                         <div class="form-group">
@@ -197,7 +199,7 @@
 
                                         <div class="form-group">
                                             <div class="col-md-offset-2 col-md-10">
-                                                <input type="submit" value="Save" class="btn btn-default" />
+                                                <input id="Edit" type="button" value="Save" class="btn btn-default" />
                                             </div>
                                         </div>
                                     </div>
@@ -215,16 +217,23 @@
 @Scripts.Render("~/bundles/jqueryval")
 <script src="@Url.Content("~/Scripts/jquery-ui-1.11.4.min.js")"></script>
 <script>
-    $(function () {
+    $(document).ready(function() {
+        if ($("#LandlineNo").val() != "" && $("#LandlineNo").val() != undefined) {
+            var array = $("#LandlineNo").val().split('-', 3)
+            $("#areaCode").val(array[0]);
+            $("#landlineNo").val(array[1]);
+            $("#extCode").val(array[2]);
+        }
+
         $("#landlineNo").keydown(filterNumeric);
         $("#extCode").keydown(filterNumeric);
         $("#EmergencyContactNo").keydown(filterNumeric);
-        $("#Create").click(function () {
+        $("#Edit").click(function () {
             var area = $("#areaCode").val();
             var landline = $("#landlineNo").val();
             var ext = $("#extCode").val();
             if (area != "" || landline != "" || ext != "") {
-                $("#LandlineNo").val($("#areaCode") + '-' + $("#landlineNo").val() + "-" + $("#extCode").val());
+                $("#LandlineNo").val(area + '-' + landline + "-" + ext);
             }
             else {
                 $("#LandlineNo").val("00-0000000-000");

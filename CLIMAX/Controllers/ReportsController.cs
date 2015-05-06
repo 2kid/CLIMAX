@@ -21,8 +21,7 @@ namespace CLIMAX.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         private static int employeeID;
-        private static string employeeName;
-
+    
         public ActionResult GenerateExcelReports(string reportType)//, int BranchID)//Reports report)
         {
             GridView gv = new GridView();
@@ -32,7 +31,7 @@ namespace CLIMAX.Controllers
             }
             else if (reportType == "Summary Report")
             {
-                gv.DataSource = summaryReport;
+                gv.DataSource = summaryReport.items;
             }
             else
             {
@@ -46,7 +45,7 @@ namespace CLIMAX.Controllers
                 System.Web.HttpContext.Current.Response.ClearContent();
                 System.Web.HttpContext.Current.Response.Buffer = true;
                 System.Web.HttpContext.Current.Response.AddHeader(
-               "content-disposition", string.Format("attachment; filename={0}", "Report.xls"));
+               "content-disposition", string.Format("attachment; filename={0}", "Report"+DateTime.Now.ToString("yyyy-MM-dd")+".xls"));
                 System.Web.HttpContext.Current.Response.ContentType = "application/vnd.ms-excel";
                 System.Web.HttpContext.Current.Response.Charset = "UTF-8";
                 System.Web.HttpContext.Current.Response.ContentEncoding = System.Text.Encoding.UTF8;
@@ -56,64 +55,78 @@ namespace CLIMAX.Controllers
                 {
                     using (HtmlTextWriter htw = new HtmlTextWriter(sw))
                     {
+                        if (reportType == "Summary Report")
+                        {
+                          System.Web.HttpContext.Current.Response.Write("<table><tr><td></td><td>Dermstrata</td><td></td></tr><tr><td>Total Cards Used: </td><td>" + summaryReport.CardTypeCount + "/" + summaryReport.items.Count + "</td><td></td></tr><tr><td>Total Gross: </td><td>" + summaryReport.TotalGrossAmount + "</td><td></td></tr><tr><td>Total Net: </td><td>" + summaryReport.TotalNet+"</td><td></td></tr></table>");                       
+                        }
+
+                        else if (reportType == "Inventory Report")
+                        {
+                            System.Web.HttpContext.Current.Response.Write("<h1>Dermstrata</h1>");     
+                        }
+
                         gv.RenderControl(htw);
                         System.Web.HttpContext.Current.Response.Output.Write(sw.ToString());
                         System.Web.HttpContext.Current.Response.Flush();
-
                         StringBuilder Content = new StringBuilder();
-                        double totalSales = 0;
-                        double totalDiscount = 0;
-                        double totalGiftCert = 0;
-                        double totalRevenueTreatment = 0;
-                        double totalRevenueMedicines = 0;
-                        foreach (ChargeSlipContainerViewModel container in chargeSlip)
+
+                        if (reportType == "Sales Report")
                         {
-                            ChargeSlip cs = db.ChargeSlips.Find(container.ChargeSlipID);
-                            Content.Append("<br /><table><tr><td>Patient: </td><td>" + cs.Patient.FullName + "</td><td>" + cs.DateTimePurchased + "</td></tr><tr><td>Therapist: </td><td>" + cs.Employee.FullName + "</td><td></td></tr>");
+                            double totalSales = 0;
+                            double totalDiscount = 0;
+                            double totalGiftCert = 0;
+                            double totalRevenueTreatment = 0;
+                            double totalRevenueMedicines = 0;
+                            foreach (ChargeSlipContainerViewModel container in chargeSlip)
+                            {
+                                ChargeSlip cs = db.ChargeSlips.Find(container.ChargeSlipID);
+                                Content.Append("<br /><table><tr><td>Patient: </td><td>" + cs.Patient.FullName + "</td><td>" + cs.DateTimePurchased + "</td></tr><tr><td>Therapist: </td><td>" + cs.Employee.FullName + "</td><td></td></tr>");
 
-                            if (cs.GiftCertificateAmt != null)
-                                totalGiftCert += cs.GiftCertificateAmt.Value;
-                            totalSales += cs.AmtDue;
-                            if (cs.AmtDiscount != null)
-                                totalDiscount += cs.AmtDiscount.Value;
-                            double subTotal = 0;
-                            Content.Append("<tr><th>Quantity</th><th>Item</th><th>Amount</th></tr>");
-                            foreach (Session_ChargeSlip session in db.Session_ChargeSlip.Include(a => a.treatment).Where(r => r.ChargeSlipID == cs.ChargeSlipID).ToList())
-                            {
-                                subTotal += session.treatment.TreatmentPrice * session.Qty;
-                                Content.Append("<tr><td>" + session.Qty + "</td><td>" + session.treatment.TreatmentName + "</td><td>" + session.treatment.TreatmentPrice * session.Qty + "</td></tr>");
-                                totalRevenueTreatment += (session.treatment.TreatmentPrice * session.Qty);
+                                if (cs.GiftCertificateAmt != null)
+                                    totalGiftCert += cs.GiftCertificateAmt.Value;
+                                totalSales += cs.AmtDue;
+                                if (cs.AmtDiscount != null)
+                                    totalDiscount += cs.AmtDiscount.Value;
+                                double subTotal = 0;
+                                Content.Append("<tr><th>Quantity</th><th>Item</th><th>Amount</th></tr>");
+                                foreach (Session_ChargeSlip session in db.Session_ChargeSlip.Include(a => a.treatment).Where(r => r.ChargeSlipID == cs.ChargeSlipID).ToList())
+                                {
+                                    subTotal += session.treatment.TreatmentPrice * session.Qty;
+                                    Content.Append("<tr><td>" + session.Qty + "</td><td>" + session.treatment.TreatmentName + "</td><td>" + session.treatment.TreatmentPrice * session.Qty + "</td></tr>");
+                                    totalRevenueTreatment += (session.treatment.TreatmentPrice * session.Qty);
+                                }
+                                foreach (Medicine_ChargeSlip medicine in db.Medicine_ChargeSlip.Include(a => a.Materials).Where(r => r.ChargeSlipID == cs.ChargeSlipID).ToList())
+                                {
+                                    subTotal += medicine.Materials.Price * medicine.Qty;
+                                    Content.Append("<tr><td>" + medicine.Qty + "</td><td>" + medicine.Materials.MaterialName + "</td><td>" + medicine.Materials.Price * medicine.Qty + "</td></tr>");
+                                    totalRevenueMedicines += (medicine.Materials.Price * medicine.Qty);
+                                }
+                                Content.Append("<tr><td>Sub-Total</td><td></td><td>" + subTotal + "</td></tr>");
+                                Content.Append("<tr><td>Discount</td><td></td><td>" + cs.AmtDiscount + "</td></tr>");
+                                Content.Append("<tr><td>Gift Certificate</td><td></td><td>" + cs.GiftCertificateAmt + "</td></tr>");
+                                Content.Append("<tr><th>Total</th><th></th><th>" + cs.AmtDue + "</th></tr>");
+                                Content.Append("<tr><th>Payment</th><th></th><th></th></tr>");
+                                if (cs.ModeOfPayment == "Cash")
+                                {
+                                    Content.Append("<tr><th>Cash</th><th></th><th>" + cs.AmtPayment + "</th></tr>");
+                                }
+                                else if (cs.ModeOfPayment == "Check")
+                                {
+                                    Content.Append("<tr><td>CheckNo</td><td>" + cs.CheckNo + "</td><td></td></tr>");
+                                    Content.Append("<tr><th>Check Amount</th><th></th><th>" + cs.AmtPayment + "</th></tr>");
+                                }
+                                else
+                                {
+                                    Content.Append("<tr><td>Card Type</td><td>" + cs.CardType + "</td><td></td></tr>");
+                                    Content.Append("<tr><td>Credit Amount</td><td></td><td>" + cs.AmtPayment + "</td></tr>");
+                                }
+                                Content.Append("<tr><td>Change</td><td></td><td>" + (cs.AmtPayment - cs.AmtDue) + "</th></tr>");
                             }
-                            foreach (Medicine_ChargeSlip medicine in db.Medicine_ChargeSlip.Include(a => a.Materials).Where(r => r.ChargeSlipID == cs.ChargeSlipID).ToList())
-                            {
-                                subTotal += medicine.Materials.Price * medicine.Qty;
-                                Content.Append("<tr><td>" + medicine.Qty + "</td><td>" + medicine.Materials.MaterialName + "</td><td>" + medicine.Materials.Price * medicine.Qty + "</td></tr>");
-                                totalRevenueMedicines += (medicine.Materials.Price * medicine.Qty);
-                            }
-                            Content.Append("<tr><td>Sub-Total</td><td></td><td>" + subTotal + "</td></tr>");
-                            Content.Append("<tr><td>Discount</td><td></td><td>" + cs.AmtDiscount + "</td></tr>");
-                            Content.Append("<tr><td>Gift Certificate</td><td></td><td>" + cs.GiftCertificateAmt + "</td></tr>");
-                            Content.Append("<tr><th>Total</th><th></th><th>" + cs.AmtDue + "</th></tr>");
-                            Content.Append("<tr><th>Payment</th><th></th><th></th></tr>");
-                            if (cs.ModeOfPayment == "Cash")
-                            {
-                                Content.Append("<tr><th>Cash</th><th></th><th>" + cs.AmtPayment + "</th></tr>");
-                            }
-                            else if (cs.ModeOfPayment == "Check")
-                            {
-                                Content.Append("<tr><td>CheckNo</td><td>" + cs.CheckNo + "</td><td></td></tr>");
-                                Content.Append("<tr><th>Check Amount</th><th></th><th>" + cs.AmtPayment + "</th></tr>");
-                            }
-                            else
-                            {
-                                Content.Append("<tr><td>Card Type</td><td>" + cs.CardType + "</td><td></td></tr>");
-                                Content.Append("<tr><td>Credit Amount</td><td></td><td>" + cs.AmtPayment + "</td></tr>");
-                            }
-                            Content.Append("<tr><td>Change</td><td></td><td>" + (cs.AmtPayment - cs.AmtDue) + "</th></tr>");
+                            System.Web.HttpContext.Current.Response.Write("<table><tr><th></th><th>Dermstrata</th><th></th></tr><tr><td>Total Revenue Treatments: </td><td>" + totalRevenueTreatment + "</td><td></td><tr><td>Total Revenue Medicines: </td><td>" + totalRevenueMedicines + "</td><td></td></tr><tr><td>Total Discount: </td><td>" + totalDiscount + "</td><td></td></tr><tr><td>Total Gift Certificate: </td><td>" + totalGiftCert + "</td><td></td></tr><tr><td>Total Sales: </td><td>" + totalSales+"</td><td></td></tr></table>");
+
+                          if(!Content.ToString().Equals(""))
+                            System.Web.HttpContext.Current.Response.Write(Content);
                         }
-                        System.Web.HttpContext.Current.Response.Write("<h1>Dermstrata</h1><br />Total Revenue Treatments: " + totalRevenueTreatment + "<br />Total Revenue Medicines: " + totalRevenueMedicines + "<br />Total Discount: " + totalDiscount + "<br />Total Gift Certificate: " + totalGiftCert + "<br />Total Sales: " + totalSales);
-
-                        System.Web.HttpContext.Current.Response.Write(Content);
 
                         System.Web.HttpContext.Current.Response.End();
                     }
@@ -260,16 +273,14 @@ namespace CLIMAX.Controllers
                             }
                         }
 
-                        foreach (int c in db.Medicine_ChargeSlip.Where(r => r.ChargeSlipID == audit.RecordID && r.MaterialID == item.MaterialID).Select(u => u.Qty).ToList())
+                        int? c = db.Medicine_ChargeSlip.Where(r => r.ChargeSlipID == audit.RecordID && r.MaterialID == item.MaterialID).Select(u => u.Qty).SingleOrDefault();
+                        if(c != null)
                         {
-                            sold += c;
+                            sold += c.Value;
                         }
                     }
                     item.Sold = sold;
-                    //   }
-
-                    //     foreach (InventoryReportsViewModel item in iReport)
-                    //    {
+                  
                     int add = 0;
                     int removed = 0;
                     foreach (AuditTrail audit in db.AuditTrail.Include(a => a.actionType).Where(r => report.DateStartOfReport.CompareTo(r.DateTimeOfAction) == -1 && r.actionType.AffectedRecord == "Inventory").OrderBy(b => b.DateTimeOfAction).ToList())
