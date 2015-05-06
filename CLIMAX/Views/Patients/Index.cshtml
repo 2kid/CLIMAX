@@ -21,10 +21,16 @@
                     <p>
                         @Html.ActionLink("Create New", "Create")
                     </p>
-                    @using (Html.BeginForm())
+                    @using (Html.BeginForm("Index","Patients",FormMethod.Get))
                     {
                     @Html.TextBox("searchValue")
                         <button type="submit" class="btn btn-default">Search</button>
+                    }
+
+                    @using (Html.BeginForm("Index", "Patients", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()                       
+                        <button type="submit" class="btn btn-default">Export to Excel</button>
                     }
                 </div>
 

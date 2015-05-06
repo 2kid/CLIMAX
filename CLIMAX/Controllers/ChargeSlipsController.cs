@@ -95,49 +95,7 @@ namespace CLIMAX.Controllers
 
             ViewBag.PaymentMethod = new SelectList(paymentMethods, "Value", "Text", form["PaymentMethod"]);
             List<ChargeSlip> chargeslip = db.ChargeSlips.ToList();
-            DateTime start;
-            DateTime end;
-
-            if (!string.IsNullOrEmpty(form["PaymentMethod"]))
-            {
-                chargeslip = chargeslip.Where(r => r.ModeOfPayment == form["PaymentMethod"]).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(form["searchValue"]))
-            {
-                chargeslip = chargeslip.Where(r => r.GiftCertificateNo != null && r.GiftCertificateNo.Contains(form["searchValue"])).ToList();
-
-                ViewBag.GCNumber = form["searchValue"];
-            }
-
-            if ((DateTime.TryParse(form["DateTimeStart"], out start) && DateTime.TryParse(form["DateTimeEnd"], out end)))
-            {
-                if (!Regex.IsMatch(start.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
-                {
-                    ModelState.AddModelError("DateTimeStart", "The field Date start is invalid");
-                    return View(chargeslip);
-                }
-
-                end = end.AddDays(1);
-                end = end.Subtract(new TimeSpan(1));
-
-                if (!Regex.IsMatch(end.ToString("yyyy-MM-dd"), "^((19|20|21)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|(1|2)[0-9]|3[01])+$"))
-                {
-                    ModelState.AddModelError("DateTimeEnd", "The field Date end is invalid");
-                    return View(chargeslip);
-                }
-
-                if (end.CompareTo(start) == -1)
-                {
-                    ModelState.AddModelError("", "Date Start cannot be after Date End");
-                    return View(chargeslip);
-                }
-                chargeslip = chargeslip.Where(r => end.CompareTo(r.DateTimePurchased) == 1 && r.DateTimePurchased.CompareTo(start) == 1).ToList();
-
-                ViewBag.startDate = start.ToString("yyyy-MM-dd");
-                ViewBag.endDate = end.ToString("yyyy-MM-dd");
-            }
-
+        
             ChargeSlip cs = db.ChargeSlips.Find(id);          
                 SurveyCode code = db.SurveyCode.Where(r => r.ChargeSlipID == cs.ChargeSlipID).Single();
 

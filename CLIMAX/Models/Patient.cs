@@ -85,4 +85,25 @@ namespace CLIMAX.Models
             return "PatientID,FirstName,MiddleName,LastName,BirthDate,Gender,CivilStatus,Height,Weight,HomeNo,Street,City,LandlineNo,CellphoneNo,EmailAddress,Occupation,EmergencyContactNo,EmergencyContactFName,EmergencyContactMName,EmergencyContactLName,BranchID";
         }
     }
+
+    public class PatientViewModel
+    {
+        public string PatientID { get; set; }
+        public string Name { get; set; }
+        public string BirthDate { get; set; }
+        public string Gender { get; set; }
+        public string CivilStatus { get; set; }
+        public string Height { get; set; }
+        public string Weight { get; set; }
+        public string HomeNo { get; set; }
+        public string Street { get; set; }
+        public string City { get; set; }
+        public string LandlineNo { get; set; }
+        public string CellphoneNo { get; set; }
+        public string EmailAddress { get; set; }
+        public string Occupation { get; set; }
+        public string EmergencyContactNo { get; set; }
+        public string EmergencyContactName { get; set; }
+        public int BranchID { get; set; }
+    }
 }

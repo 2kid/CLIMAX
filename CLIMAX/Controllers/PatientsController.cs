@@ -8,6 +8,9 @@ using System.Web;
 using System.Web.Mvc;
 using CLIMAX.Models;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace CLIMAX.Controllers
 {
@@ -19,13 +22,75 @@ namespace CLIMAX.Controllers
         // GET: Patients
         public ActionResult Index(FormCollection form)
         {
-            var patients = db.Patients.Where(r => r.isEnabled).Include(p => p.branch).ToList();
+            var patients = db.Patients.Include(p => p.branch).ToList();
 
             string search = form["searchValue"];
             if (!string.IsNullOrEmpty(search))
             {
                 patients = patients.Where(r => r.FullName.ToLower().Contains(search.ToLower())).ToList();
             }
+            return View(patients);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index()
+        {
+            var patients = db.Patients.Include(p => p.branch).ToList();
+             List<PatientViewModel> viewModel  = new List<PatientViewModel>();
+             foreach (Patient patient in patients.OrderBy(a => a.BranchID).ToList())
+             {
+                 PatientViewModel newItem = new PatientViewModel();
+                 newItem.BirthDate = patient.BirthDate.ToString("yyyy-MM-dd");
+                 newItem.BranchID = patient.BranchID;
+                 newItem.CellphoneNo = patient.CellphoneNo;
+                 newItem.City = patient.City;
+                 newItem.CivilStatus = patient.CivilStatus;
+                 newItem.EmailAddress = patient.EmailAddress;
+                 newItem.EmergencyContactName = patient.EmergencyContactFName + " " + patient.EmergencyContactMName + " " + patient.EmergencyContactLName;
+                 newItem.EmergencyContactNo = patient.EmergencyContactNo;
+                 newItem.Gender = (patient.Gender == true) ? "Male" : "Female";
+                 newItem.Height = patient.Height;
+                 newItem.HomeNo = patient.HomeNo.ToString();
+                 newItem.LandlineNo = patient.LandlineNo;
+                 newItem.Name = patient.FullName;
+                 newItem.Occupation = patient.Occupation;
+                 newItem.PatientID = patient.PatientID.ToString();
+                 newItem.Street = patient.Street;
+                 newItem.Weight = patient.Weight;
+                 viewModel.Add(newItem);
+             }
+       
+            GridView gv = new GridView();
+            gv.DataSource = viewModel;
+            if (gv.DataSource != null)
+            {
+                gv.DataBind();
+                System.Web.HttpContext.Current.Response.ClearContent();
+                System.Web.HttpContext.Current.Response.Buffer = true;
+                System.Web.HttpContext.Current.Response.AddHeader(
+               "content-disposition", string.Format("attachment; filename={0}", "PatientDataGenerator-" + DateTime.Now.ToString("yyyy-MM-dd") + ".xls"));
+                System.Web.HttpContext.Current.Response.ContentType = "application/vnd.ms-excel";
+                System.Web.HttpContext.Current.Response.Charset = "UTF-8";
+                System.Web.HttpContext.Current.Response.ContentEncoding = System.Text.Encoding.UTF8;
+                System.Web.HttpContext.Current.Response.Charset = "";
+
+                using (StringWriter sw = new StringWriter())
+                {
+                    using (HtmlTextWriter htw = new HtmlTextWriter(sw))
+                    {
+                        gv.RenderControl(htw);
+                        System.Web.HttpContext.Current.Response.Write("<table><tr><td>Dermstrata</td><td></td>");
+                        System.Web.HttpContext.Current.Response.Write("<td>" + DateTime.Now + "</td></tr></table><br >");
+                        System.Web.HttpContext.Current.Response.Output.Write(sw.ToString());
+                        System.Web.HttpContext.Current.Response.Flush();
+                        System.Web.HttpContext.Current.Response.End();
+                    }
+
+                    return new EmptyResult();
+                }
+            }
+
             return View(patients);
         }
 
@@ -355,7 +420,6 @@ namespace CLIMAX.Controllers
                 }
 
                 patient.BranchID = db.Patients.Where(r=>r.PatientID == patient.PatientID).Select(u=>u.BranchID).Single();
-                //  patient.LandlineNo = form["areaCode"]+form[""]
                 patient.isEnabled = true;
                 db.Entry(patient).State = EntityState.Modified;
                 int auditId = Audit.CreateAudit(patient.FullName, "Edit", "Patient", User.Identity.Name);
